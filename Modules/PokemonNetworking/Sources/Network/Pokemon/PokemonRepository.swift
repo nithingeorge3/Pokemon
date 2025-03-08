@@ -11,7 +11,7 @@ import PokemonDomain
 
 //we can split protocol. backend and SwiftData fetch
 public protocol PokemonRepositoryType: Sendable {
-    func fetchPokemon(endPoint: EndPoint) async throws -> [RecipeDomain]
+    func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain]
     func fetchRecipe(for recipeID: Int) async throws -> RecipeDomain
     func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain]
     func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool
@@ -39,21 +39,21 @@ final class RecipeRepository: PokemonRepositoryType {
         self.paginationSDRepo = paginationSDRepo
     }
     
-    func fetchPokemon(endPoint: EndPoint) async throws -> [RecipeDomain] {
+    func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain] {
         do {
-            let apiKey = try await apiKeyProvider.getRecipeAPIKey()
-            
-            let (data, response) = try await URLSession.shared.data(for: requestBuilder.buildRequest(url: endPoint.url(), apiKey: apiKey))
-            
-            let dtos = try await parser.parse(
-                data: data,
-                response: response,
-                type: RecipeResponseDTO.self
-            )
-            
-            let recipeDomains = dtos.results.map { RecipeDomain(from: $0) }
+//            let apiKey = try await apiKeyProvider.getRecipeAPIKey()
+//            
+//            let (data, response) = try await URLSession.shared.data(for: requestBuilder.buildRequest(url: endPoint.url(), apiKey: apiKey))
+//            
+//            let dtos = try await parser.parse(
+//                data: data,
+//                response: response,
+//                type: RecipeResponseDTO.self
+//            )
+//            
+//            let recipeDomains = dtos.results.map { RecipeDomain(from: $0) }
 
-            return recipeDomains
+            return [PokemonDomain(id: 1, name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/")]
             /*
             //Reach the page end or no data
             if recipeDomains.count == 0 {

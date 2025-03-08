@@ -12,7 +12,7 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
     @Bindable var viewModel: ViewModel
    
     private var isEmpty: Bool {
-        viewModel.recipes.isEmpty
+        viewModel.pokemon.isEmpty
     }
     
     var body: some View {
@@ -30,8 +30,9 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
                 if isEmpty {
                     EmptyStateView(message: "No recipes found. Please try again later.")
                 } else {
-                    PokemonGridView(favorites: viewModel.favoriteRecipes, others: viewModel.otherRecipes, hasMoreData: viewModel.paginationHandler.hasMoreData) { recipe in
-                        viewModel.send(.selectPokemon(recipe.id))
+                    EmptyView()
+                    PokemonGridView(favorites: viewModel.playlaterPokemon, others: viewModel.otherPokemon, hasMoreData: viewModel.paginationHandler.hasMoreData) { pokemon in
+                        viewModel.send(.selectPokemon(pokemon.id))
                     } onReachBottom: {
                         viewModel.send(.loadMore)
                     }
@@ -44,6 +45,7 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
     }
 }
 
+/*
 // MARK: - Previews
 #if DEBUG
 #Preview("Loading State") {
@@ -112,3 +114,5 @@ private class PreviewPaginationHandler: PaginationHandlerType {
     }
 }
 #endif
+
+*/

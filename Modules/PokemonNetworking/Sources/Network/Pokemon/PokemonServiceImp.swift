@@ -17,7 +17,7 @@ final class PokemonServiceImp: PokemonServiceProvider {
         self.pokemonRepository = pokemonRepository
     }
 
-    func fetchPokemon(endPoint: EndPoint) async throws(NetworkError) -> [RecipeDomain] {
+    func fetchPokemon(endPoint: EndPoint) async throws(NetworkError) -> [PokemonDomain] {
         do {
             return try await pokemonRepository.fetchPokemon(endPoint: endPoint)
             //add business logic

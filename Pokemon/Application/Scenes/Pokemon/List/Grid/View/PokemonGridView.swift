@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct PokemonGridView: View {
-    var favorites: [Recipe]
-    var others: [Recipe]
+    var favorites: [Pokemon]
+    var others: [Pokemon]
     var hasMoreData: Bool
-    var onRecipeTap: (Recipe) -> Void
+    var onPokemonTap: (Pokemon) -> Void
     var onReachBottom: () -> Void
     
     @State private var isFavoritesCollapsed: Bool = false
@@ -19,56 +19,55 @@ struct PokemonGridView: View {
     @State private var showProgress: Bool = false
     
     var body: some View {
-        Text("PTL")
-//        return GeometryReader { geometry in
-//            let totalWidth = geometry.size.width
-//            let spacing: CGFloat = Constants.Pokemon.listSpacing
-//            let minColumnWidth = Constants.Pokemon.listItemSize
-//            let columns = calculateColumns(totalWidth: totalWidth, spacing: spacing, minColumnWidth: minColumnWidth)
-//            let coulmnsCount = max(columns.count, 1)
-//            let padding = Constants.Pokemon.listSpacing * CGFloat(coulmnsCount - 1) / 2.0 + 32.0
-//            let gridSize = max((totalWidth - padding)/CGFloat(coulmnsCount), Constants.Pokemon.listItemSize)
-//
-//            ScrollView {
-//                LazyVGrid(columns: columns) {
-//                    if !favorites.isEmpty {
-//                        CollapsibleSection(title: "Favourites", isCollapsed: $isFavoritesCollapsed) {
-//                            recipeGrid(for: favorites, size: gridSize)
-//                        }
-//                    }
-//
-//                    if !favorites.isEmpty {
-//                        CollapsibleSection(title: "Other Recipes", isCollapsed: $isOtherCollapsed) {
-//                            recipeGrid(for: others, size: gridSize)
-//                        }
-//                    } else {
-//                        recipeGrid(for: others, size: gridSize)
-//                    }
-//
-//                    if !others.isEmpty && hasMoreData {
-//                        ProgressView()
-//                            .opacity(showProgress ? 1 : 0)
-//                            .frame(height: 50, alignment: .center)
-//                            .onAppear {
-//                                showProgress = !isOtherCollapsed
-//                                onReachBottom()
-//                            }
-//                            .onDisappear {
-//                                showProgress = false
-//                            }
-//                    }
-//                }
-//                .padding(.horizontal, 8)
-//            }
-//        }
+        return GeometryReader { geometry in
+            let totalWidth = geometry.size.width
+            let spacing: CGFloat = Constants.Pokemon.listSpacing
+            let minColumnWidth = Constants.Pokemon.listItemSize
+            let columns = calculateColumns(totalWidth: totalWidth, spacing: spacing, minColumnWidth: minColumnWidth)
+            let coulmnsCount = max(columns.count, 1)
+            let padding = Constants.Pokemon.listSpacing * CGFloat(coulmnsCount - 1) / 2.0 + 32.0
+            let gridSize = max((totalWidth - padding)/CGFloat(coulmnsCount), Constants.Pokemon.listItemSize)
+
+            ScrollView {
+                LazyVGrid(columns: columns) {
+                    if !favorites.isEmpty {
+                        CollapsibleSection(title: "Favourites", isCollapsed: $isFavoritesCollapsed) {
+                            pokemonGrid(for: favorites, size: gridSize)
+                        }
+                    }
+
+                    if !favorites.isEmpty {
+                        CollapsibleSection(title: "Other Pokemon", isCollapsed: $isOtherCollapsed) {
+                            pokemonGrid(for: others, size: gridSize)
+                        }
+                    } else {
+                        pokemonGrid(for: others, size: gridSize)
+                    }
+
+                    if !others.isEmpty && hasMoreData {
+                        ProgressView()
+                            .opacity(showProgress ? 1 : 0)
+                            .frame(height: 50, alignment: .center)
+                            .onAppear {
+                                showProgress = !isOtherCollapsed
+                                onReachBottom()
+                            }
+                            .onDisappear {
+                                showProgress = false
+                            }
+                    }
+                }
+                .padding(.horizontal, 8)
+            }
+        }
     }
     
     @ViewBuilder
-    private func recipeGrid(for recipes: [Recipe], size: CGFloat) -> some View {
-        ForEach(recipes) { recipe in
-            PokemonGridImageView(recipe: recipe, gridSize: size)
+    private func pokemonGrid(for pokemon: [Pokemon], size: CGFloat) -> some View {
+        ForEach(pokemon) { pokemon in
+            PokemonGridImageView(pokemon: pokemon, width: size, height: size)
                 .onTapGesture {
-                    onRecipeTap(recipe)
+                    onPokemonTap(pokemon)
                 }
         }
     }

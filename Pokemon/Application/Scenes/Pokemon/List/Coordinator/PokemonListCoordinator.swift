@@ -12,10 +12,10 @@ import SwiftData
 import SwiftUI
 import PokemonDomain
 
-enum RecipeListAction: Hashable {
+enum PokemonListAction: Hashable {
     case refresh
     case loadMore
-    case selectPokemon(Recipe.ID)
+    case selectPokemon(Pokemon.ID)
 }
 
 @MainActor
@@ -43,10 +43,10 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
         _tabItem = tabItem
         self.viewFactory = viewFactory
         self.modelFactory = modelFactory
-//        self.service = PokemonServiceFactory.makePokemonService(recipeSDRepo: recipeSDRepo, paginationSDRepo: paginationSDRepo)
+        self.service = PokemonServiceFactory.makePokemonService(recipeSDRepo: recipeSDRepo, paginationSDRepo: paginationSDRepo)
         
         //Testing purpose/API down/reach limit, mocking the response but recipes are not saving to switdata")
-        self.service = MockRecipeServiceFactory.makePokemonService(recipeSDRepo: recipeSDRepo, paginationSDRepo: paginationSDRepo)
+//        self.service = MockRecipeServiceFactory.makePokemonService(recipeSDRepo: recipeSDRepo, paginationSDRepo: paginationSDRepo)
         
         let paginationHandler: PaginationHandlerType = PaginationHandler()
         
@@ -64,12 +64,12 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
     }
     
     func addSubscriptions() {
-        viewModel.recipeListActionSubject
+        viewModel.pokemonListActionSubject
             .sink { [weak self] action in
                 guard let self = self else { return }
                 switch action {
-                case .selectPokemon(let recipe):
-                    self.navigationPath.append(RecipeListAction.selectPokemon(recipe))
+                case .selectPokemon(let pokemonID):
+                    self.navigationPath.append(PokemonListAction.selectPokemon(pokemonID))
                 default:
                     break
                 }

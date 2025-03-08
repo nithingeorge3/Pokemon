@@ -17,7 +17,7 @@ public protocol RecipeKeyServiceType {
 public typealias PokemonServiceProvider = PokemonServiceType & PokemonSDServiceType
 
 public protocol PokemonServiceType: Sendable {
-    func fetchPokemon(endPoint: EndPoint) async throws -> [RecipeDomain]
+    func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain]
 }
 
 public protocol PokemonSDServiceType: Sendable {

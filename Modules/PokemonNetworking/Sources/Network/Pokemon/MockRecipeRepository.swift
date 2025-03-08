@@ -24,34 +24,37 @@ final class MockRecipeRepository: PokemonRepositoryType, @unchecked Sendable {
         self.pagination = pagination
     }
     
-    func fetchPokemon(endPoint: EndPoint) async throws -> [RecipeDomain] {
-        guard let url = Bundle.module.url(forResource: self.fileName, withExtension: "json") else {
-            throw NetworkError.responseError
-        }
+    func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain] {
         
-        do {
-            let data = try Data(contentsOf: url)
-            
-            guard let mockResponse = HTTPURLResponse(
-                url: url,
-                statusCode: 200,
-                httpVersion: nil,
-                headerFields: nil
-            ) else {
-                throw NetworkError.responseError
-            }
-            
-            let dtos = try await parser.parse(data: data, response: mockResponse, type: RecipeResponseDTO.self)
-            let recipeDomains = dtos.results.map { RecipeDomain(from: $0) }
-            recipe = recipeDomains.first
-            pagination.totalCount = dtos.count
-            pagination.currentPage = 1
-
-            return recipeDomains
-        }
-        catch {
-            throw NetworkError.failedToDecode
-        }
+        return [PokemonDomain(id: 1, name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/")]
+        
+//        guard let url = Bundle.module.url(forResource: self.fileName, withExtension: "json") else {
+//            throw NetworkError.responseError
+//        }
+//        
+//        do {
+//            let data = try Data(contentsOf: url)
+//            
+//            guard let mockResponse = HTTPURLResponse(
+//                url: url,
+//                statusCode: 200,
+//                httpVersion: nil,
+//                headerFields: nil
+//            ) else {
+//                throw NetworkError.responseError
+//            }
+//            
+//            let dtos = try await parser.parse(data: data, response: mockResponse, type: RecipeResponseDTO.self)
+//            let recipeDomains = dtos.results.map { RecipeDomain(from: $0) }
+//            recipe = recipeDomains.first
+//            pagination.totalCount = dtos.count
+//            pagination.currentPage = 1
+//
+//            return recipeDomains
+//        }
+//        catch {
+//            throw NetworkError.failedToDecode
+//        }
     }
     
     func fetchRecipe(for recipeID: Int) async throws -> RecipeDomain {

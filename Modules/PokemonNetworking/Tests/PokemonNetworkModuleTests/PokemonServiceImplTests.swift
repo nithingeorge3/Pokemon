@@ -22,7 +22,7 @@ class PokemonServiceImplTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Recipe should be fetched successfully with one recipe")
         
         do {
-            let dtos = try await pokemonRepository.fetchRecipes(endPoint: .recipes(page: 0, limit: 40))
+            let dtos = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
             XCTAssertEqual(dtos.first?.name, "Low-Carb Avocado Chicken Salad")
             XCTAssertEqual(dtos.count, 10)
             expectation.fulfill()
@@ -40,7 +40,7 @@ class PokemonServiceImplTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Recipe fetch should return an empty list when no recipes are available")
         
         do {
-            let dtos = try await pokemonRepository.fetchRecipes(endPoint: .recipes(page: 0, limit: 40))
+            let dtos = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
             XCTAssertEqual(dtos.count, 0)
             expectation.fulfill()
         } catch {
@@ -57,7 +57,7 @@ class PokemonServiceImplTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Recipe fetch should fail and return an appropriate error")
         
         do {
-            _ = try await pokemonRepository.fetchRecipes(endPoint: .recipes(page: 0, limit: 40))
+            _ = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
             XCTFail("Expected an error but received data instead")
         } catch {
             XCTAssertFalse(false, "expected error happened \(error)")
@@ -74,7 +74,7 @@ class PokemonServiceImplTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Recipe's isFavorite status should update successfully")
         
         do {
-            let dtos = try await pokemonRepository.fetchRecipes(endPoint: .recipes(page: 0, limit: 40))
+            let dtos = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
             let firstToggle = try await pokemonRepository.updateFavouriteRecipe(dtos.first?.id ?? 0)
             XCTAssertTrue(firstToggle, "updated should be true")
             let secondToggle = try await pokemonRepository.updateFavouriteRecipe(dtos.first?.id ?? 0)
@@ -94,7 +94,7 @@ class PokemonServiceImplTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Recipe should be fetched successfully with one recipe")
         
         do {
-            let dtos = try await pokemonRepository.fetchRecipes(endPoint: .recipes(page: 0, limit: 40))
+            let dtos = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
             XCTAssertEqual(dtos.first?.name, "Low-Carb Avocado Chicken Salad")
             XCTAssertEqual(dtos.count, 10)
             expectation.fulfill()
@@ -112,7 +112,7 @@ class PokemonServiceImplTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Recipe pagination data should be fetched successfully with expected values")
         
         do {
-            _ = try await pokemonRepository.fetchRecipes(endPoint: .recipes(page: 0, limit: 40))
+            _ = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
             let pagination = try await pokemonRepository.fetchRecipePagination(.recipe)
             XCTAssertEqual(pagination.totalCount, 10)
             XCTAssertEqual(pagination.currentPage, 1)
