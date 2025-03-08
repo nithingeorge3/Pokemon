@@ -31,9 +31,9 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
                     EmptyStateView(message: "No recipes found. Please try again later.")
                 } else {
                     PokemonGridView(favorites: viewModel.favoriteRecipes, others: viewModel.otherRecipes, hasMoreData: viewModel.paginationHandler.hasMoreData) { recipe in
-                        viewModel.send(.userSelectedRecipe(recipe.id))
+                        viewModel.send(.selectPokemon(recipe.id))
                     } onReachBottom: {
-                        viewModel.send(.loadNextPage)
+                        viewModel.send(.loadMore)
                     }
                 }
             }

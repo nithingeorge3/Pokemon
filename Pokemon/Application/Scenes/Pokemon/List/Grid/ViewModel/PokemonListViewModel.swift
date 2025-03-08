@@ -56,11 +56,11 @@ class PokemonListViewModel: PokemonListViewModelType {
         switch action {
         case .refresh:
             Task { try await fetchRemoteRecipes() }
-        case .loadNextPage:
+        case .loadMore:
             guard paginationHandler.hasMoreData else { return }
             Task { try await fetchRemoteRecipes() }
-        case .userSelectedRecipe( let recipeID):
-            recipeListActionSubject.send(RecipeListAction.userSelectedRecipe(recipeID))
+        case .selectPokemon( let recipeID):
+            recipeListActionSubject.send(RecipeListAction.selectPokemon(recipeID))
         }
     }
     
@@ -103,8 +103,8 @@ class PokemonListViewModel: PokemonListViewModelType {
         Task {
             do {
                 let recipeDomains = try await service.fetchPokemon(
-                    endPoint: .recipes(
-                        page: paginationHandler.currentPage,
+                    endPoint: .pokemon(
+                        offset: paginationHandler.currentPage,
                         limit: Constants.Pokemon.fetchLimit
                     )
                 )

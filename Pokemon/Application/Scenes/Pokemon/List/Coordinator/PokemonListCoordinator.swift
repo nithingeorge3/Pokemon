@@ -14,8 +14,8 @@ import PokemonDomain
 
 enum RecipeListAction: Hashable {
     case refresh
-    case loadNextPage
-    case userSelectedRecipe(Recipe.ID)
+    case loadMore
+    case selectPokemon(Recipe.ID)
 }
 
 @MainActor
@@ -68,8 +68,8 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
             .sink { [weak self] action in
                 guard let self = self else { return }
                 switch action {
-                case .userSelectedRecipe(let recipe):
-                    self.navigationPath.append(RecipeListAction.userSelectedRecipe(recipe))
+                case .selectPokemon(let recipe):
+                    self.navigationPath.append(RecipeListAction.selectPokemon(recipe))
                 default:
                     break
                 }

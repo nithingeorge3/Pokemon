@@ -15,7 +15,7 @@ struct PokemonListCoordinatorView: View {
                 coordinator.viewFactory.makePokemonGridView(viewModel: coordinator.viewModel)
                 .navigationDestination(for: RecipeListAction.self) { action in
                     switch action {
-                    case .userSelectedRecipe(let recipeID):
+                    case .selectPokemon(let recipeID):
                         EmptyView()
 //                        coordinator.navigateToPokemonPlay(for: recipeID)
                     default: EmptyView()

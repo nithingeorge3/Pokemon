@@ -6,6 +6,7 @@
 //  Created by Nitin George on 06/03/2025.
 //
 
+/*
 import Combine
 import Foundation
 import Observation
@@ -41,7 +42,7 @@ class RecipesViewModel: RecipesViewModelType {
     }
     
     private func fetchRemoteRecipes() async throws {
-        service.fetchPokemon(endPoint: .recipes(page: 0, limit: 5))//Just hardcoded for listing
+        service.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 5))//Just hardcoded for listing
             .sink { [weak self] completion in
                 guard let self = self else { return }
                 switch completion {
@@ -66,3 +67,5 @@ class RecipesViewModel: RecipesViewModelType {
         state = .success
     }
 }
+
+*/

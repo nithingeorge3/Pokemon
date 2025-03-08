@@ -14,7 +14,7 @@ protocol URLBuilder {
 }
 
 public enum EndPoint: Sendable {
-    case recipes(page: Int, limit: Int)
+    case pokemon(offset: Int, limit: Int)
 }
 
 //https://pokeapi.co/api/v2/pokemon?offset=1&limit=1
@@ -26,13 +26,13 @@ extension EndPoint: URLBuilder {
         components.path = path
         
         switch self {
-        case .recipes:
+        case .pokemon:
             components.host = pokemonBaseURL
         }
         
-        if case let .recipes(page, limit) = self {
+        if case let .pokemon(offset, limit) = self {
             components.queryItems = [
-                URLQueryItem(name: "from", value: "\(page)"),
+                URLQueryItem(name: "from", value: "\(offset)"),
                 URLQueryItem(name: "size", value: "\(limit)"),
                 URLQueryItem(name: "tags", value: "under_30_minutes")
                 ]
@@ -51,16 +51,16 @@ extension EndPoint: URLBuilder {
     
     var path: String {
         switch self {
-        case .recipes:
+        case .pokemon:
             "/recipes/list"
         }
     }
 }
 
 extension EndPoint {
-    var recipeFetchInfo: (Int, Int) {
-        guard case let .recipes(page, limit) = self else { return (0, 40) }
-        return (page, limit)
+    var pokemonFetchInfo: (Int, Int) {
+        guard case let .pokemon(offset, limit) = self else { return (0, 40) }
+        return (offset, limit)
         }
 }
 

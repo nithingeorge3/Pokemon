@@ -12,9 +12,9 @@ protocol PokemonViewFactoryType {
         viewModel: ViewModel
     ) -> PokemonListView<ViewModel>
     
-    @MainActor func makePokemonListView<ViewModel: RecipesViewModelType>(
-        viewModel: ViewModel
-    ) -> RecipesView<ViewModel>
+//    @MainActor func makePokemonListView<ViewModel: RecipesViewModelType>(
+//        viewModel: ViewModel
+//    ) -> RecipesView<ViewModel>
 }
 
 final class PokemonViewFactory: PokemonViewFactoryType {
@@ -24,9 +24,9 @@ final class PokemonViewFactory: PokemonViewFactoryType {
         PokemonListView(viewModel: viewModel)
     }
     
-    @MainActor func makePokemonListView<ViewModel: RecipesViewModelType>(
-        viewModel: ViewModel
-    ) -> RecipesView<ViewModel> {
-        RecipesView(viewModel: viewModel)
-    }
+//    @MainActor func makePokemonListView<ViewModel: RecipesViewModelType>(
+//        viewModel: ViewModel
+//    ) -> RecipesView<ViewModel> {
+//        RecipesView(viewModel: viewModel)
+//    }
 }

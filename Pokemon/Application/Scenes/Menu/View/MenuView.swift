@@ -84,17 +84,17 @@ struct MenuView: View {
         case "Profile":
             ProfileView()
         case "Pokemon List":
-            pokemonListView()
+            EmptyView() //pokemonListView()
         default:
             EmptyView()
         }
     }
     
-    private func pokemonListView() -> some View {
-        let service = RecipeListServiceFactory.makeRecipeListService()
-        let viewModel = RecipesViewModel(service: service)
-        return PokemonViewFactory().makePokemonListView(viewModel: viewModel)
-    }
+//    private func pokemonListView() -> some View {
+//        let service = RecipeListServiceFactory.makeRecipeListService()
+//        let viewModel = RecipesViewModel(service: service)
+//        return PokemonViewFactory().makePokemonListView(viewModel: viewModel)
+//    }
 }
 
 // MARK: - Previews

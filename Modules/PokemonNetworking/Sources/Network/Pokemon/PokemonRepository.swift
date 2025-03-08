@@ -70,8 +70,8 @@ final class RecipeRepository: PokemonRepositoryType {
             //updating Pagination
             try await paginationSDRepo.updateRecipePagination(pagination)
             
-            let pageSize = endPoint.recipeFetchInfo.1
-            let page = endPoint.recipeFetchInfo.0
+            let pageSize = endPoint.pokemonFetchInfo.1
+            let page = endPoint.pokemonFetchInfo.0
 
             let batchRecipes = try await fetchRecipes(page: page, pageSize: pageSize)
                         
