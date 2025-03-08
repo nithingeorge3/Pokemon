@@ -101,6 +101,6 @@ struct MenuView: View {
 #if DEBUG
 #Preview {
     let items = [SidebarItem(title: "Profile", type: .navigation)]
-    MenuView(viewModel: MenuViewModel(service: RecipeServiceFactory.makeRecipeKeyService(), items: items))
+    MenuView(viewModel: MenuViewModel(service: PokemonServiceFactory.makeRecipeKeyService(), items: items))
 }
 #endif

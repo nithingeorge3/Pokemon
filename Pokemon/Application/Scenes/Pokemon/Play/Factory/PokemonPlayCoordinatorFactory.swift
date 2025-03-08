@@ -9,11 +9,11 @@ import Foundation
 import PokemonNetworking
 
 protocol PokemonPlayCoordinatorFactoryType {
-    @MainActor func makePokemonPlayCoordinator(recipeID: Recipe.ID, service: RecipeSDServiceType) -> PokemonPlayCoordinator
+    @MainActor func makePokemonPlayCoordinator(recipeID: Recipe.ID, service: PokemonSDServiceType) -> PokemonPlayCoordinator
 }
 
 final class PokemonPlayCoordinatorFactory: PokemonPlayCoordinatorFactoryType {
-    func makePokemonPlayCoordinator(recipeID: Recipe.ID, service: RecipeSDServiceType) -> PokemonPlayCoordinator {
+    func makePokemonPlayCoordinator(recipeID: Recipe.ID, service: PokemonSDServiceType) -> PokemonPlayCoordinator {
         let viewModelFactory: PokemonPlayViewModelFactoryType = PokemonPlayViewModelFactory()
         let viewFactory: PokemonPlayViewFactoryType = PokemonPlayViewFactory()
         return PokemonPlayCoordinator(

@@ -8,7 +8,7 @@
 import Foundation
 import PokemonDomain
 
-final class MockRecipeRepository: RecipeRepositoryType, @unchecked Sendable {
+final class MockRecipeRepository: PokemonRepositoryType, @unchecked Sendable {
     private let fileName: String
     private let parser: ServiceParserType
     private var recipe: RecipeDomain?
@@ -24,7 +24,7 @@ final class MockRecipeRepository: RecipeRepositoryType, @unchecked Sendable {
         self.pagination = pagination
     }
     
-    func fetchRecipes(endPoint: EndPoint) async throws -> [RecipeDomain] {
+    func fetchPokemon(endPoint: EndPoint) async throws -> [RecipeDomain] {
         guard let url = Bundle.module.url(forResource: self.fileName, withExtension: "json") else {
             throw NetworkError.responseError
         }

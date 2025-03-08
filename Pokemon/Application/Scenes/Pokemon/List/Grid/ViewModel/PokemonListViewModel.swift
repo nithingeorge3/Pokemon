@@ -27,7 +27,7 @@ protocol PokemonListViewModelType: AnyObject, Observable {
 class PokemonListViewModel: PokemonListViewModelType {
     var state: ResultState = .loading
     var recipes: [Recipe] = []
-    let service: RecipeServiceProvider
+    let service: PokemonServiceProvider
     var paginationHandler: PaginationHandlerType
     var recipeListActionSubject = PassthroughSubject<RecipeListAction, Never>()
     
@@ -42,7 +42,7 @@ class PokemonListViewModel: PokemonListViewModelType {
     }
     
     init(
-        service: RecipeServiceProvider,
+        service: PokemonServiceProvider,
         paginationHandler: PaginationHandlerType
     ) {
         self.service = service
@@ -102,7 +102,7 @@ class PokemonListViewModel: PokemonListViewModelType {
         paginationHandler.isLoading = true
         Task {
             do {
-                let recipeDomains = try await service.fetchRecipes(
+                let recipeDomains = try await service.fetchPokemon(
                     endPoint: .recipes(
                         page: paginationHandler.currentPage,
                         limit: Constants.Pokemon.fetchLimit

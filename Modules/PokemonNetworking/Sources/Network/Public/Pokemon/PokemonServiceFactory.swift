@@ -1,35 +1,35 @@
 //
-//  RecipeServiceFactory.swift
-//  RecipeNetworking
+//  PokemonServiceFactory.swift
+//  PokemonNetworking
 //
-//  Created by Nitin George on 01/03/2024.
+//  Created by Nitin George on 08/03/2024.
 //
 
 import Foundation
 import PokemonDomain
 
-public protocol RecipeKeyServiceFactoryType {
+public protocol PokemonKeyServiceFactoryType {
     static func makeRecipeKeyService() -> RecipeKeyServiceType
 }
 
-public protocol RecipeServiceFactoryType {
-    static func makeRecipeService(recipeSDRepo: RecipeSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> RecipeServiceProvider
+public protocol PokemonServiceFactoryType {
+    static func makePokemonService(recipeSDRepo: RecipeSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonServiceProvider
 }
 
-public final class RecipeServiceFactory: RecipeServiceFactoryType, RecipeKeyServiceFactoryType, @unchecked Sendable {
+public final class PokemonServiceFactory: PokemonServiceFactoryType, PokemonKeyServiceFactoryType, @unchecked Sendable {
     private static let apiKeyProvider: APIKeyProviderType = APIKeyProvider(keyChainManager: KeyChainManager.shared)
     private static let serviceParser: ServiceParserType = ServiceParser()
     private static let requestBuilder: RequestBuilderType = RequestBuilder()
     
-    public static func makeRecipeService(recipeSDRepo: RecipeSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> RecipeServiceProvider {
-        let recipeRepository: RecipeRepositoryType = RecipeRepository(
+    public static func makePokemonService(recipeSDRepo: RecipeSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonServiceProvider {
+        let pokemonRepository: PokemonRepositoryType = RecipeRepository(
             parser: serviceParser,
             requestBuilder: requestBuilder,
             apiKeyProvider: apiKeyProvider,
             recipeSDRepo: recipeSDRepo,
             paginationSDRepo: paginationSDRepo
         )
-        return RecipeServiceImp(recipeRepository: recipeRepository)
+        return PokemonServiceImp(pokemonRepository: pokemonRepository)
     }
     
     public static func makeRecipeKeyService() -> any RecipeKeyServiceType {
@@ -58,14 +58,14 @@ public final class RecipeListServiceFactory: RecipeServiceListFactoryType {
 }
 
 //just added for dev purpose
-public final class MockRecipeServiceFactory: RecipeServiceFactoryType, RecipeKeyServiceFactoryType, @unchecked Sendable {
-    public static func makeRecipeService(recipeSDRepo: RecipeSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> RecipeServiceProvider {
+public final class MockRecipeServiceFactory: PokemonServiceFactoryType, PokemonKeyServiceFactoryType, @unchecked Sendable {
+    public static func makePokemonService(recipeSDRepo: RecipeSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonServiceProvider {
         
         let pagination: PaginationDomain = PaginationDomain(id: UUID(), entityType: .recipe, totalCount: 10, currentPage: 10, lastUpdated: Date(timeIntervalSince1970: 0))
                                                         
-        let recipeRepository: RecipeRepositoryType = MockRecipeRepository(fileName: "recipe_success", parser: ServiceParser(), pagination: pagination)
+        let recipeRepository: PokemonRepositoryType = MockRecipeRepository(fileName: "pokemon_success", parser: ServiceParser(), pagination: pagination)
         
-        return RecipeServiceImp(recipeRepository: recipeRepository)
+        return PokemonServiceImp(pokemonRepository: recipeRepository)
     }
     
     public static func makeRecipeKeyService() -> any RecipeKeyServiceType {

@@ -21,13 +21,13 @@ final class PokemonPlayCoordinator: Coordinator {
     private let viewFactory: PokemonPlayViewFactoryType
     private var viewModel: PokemonPlayViewModel
     private let recipeID: Recipe.ID
-    private let service: RecipeSDServiceType
+    private let service: PokemonSDServiceType
     
     init(
         viewModelFactory: PokemonPlayViewModelFactoryType,
         viewFactory: PokemonPlayViewFactoryType,
         recipeID: Recipe.ID,
-        service: RecipeSDServiceType
+        service: PokemonSDServiceType
     ) {
         self.viewModelFactory = viewModelFactory
         self.viewFactory = viewFactory

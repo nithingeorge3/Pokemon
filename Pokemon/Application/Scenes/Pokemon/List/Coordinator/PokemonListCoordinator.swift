@@ -24,7 +24,7 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
     private let modelFactory: PokemonViewModelFactoryType
     var viewModel: PokemonListViewModel
     private let _tabItem: TabItem
-    private let service: RecipeServiceProvider
+    private let service: PokemonServiceProvider
     private var cancellables: [AnyCancellable] = []
     
     @Published var navigationPath = NavigationPath()
@@ -43,10 +43,10 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
         _tabItem = tabItem
         self.viewFactory = viewFactory
         self.modelFactory = modelFactory
-//        self.service = RecipeServiceFactory.makeRecipeService(recipeSDRepo: recipeSDRepo, paginationSDRepo: paginationSDRepo)
+//        self.service = PokemonServiceFactory.makePokemonService(recipeSDRepo: recipeSDRepo, paginationSDRepo: paginationSDRepo)
         
         //Testing purpose/API down/reach limit, mocking the response but recipes are not saving to switdata")
-        self.service = MockRecipeServiceFactory.makeRecipeService(recipeSDRepo: recipeSDRepo, paginationSDRepo: paginationSDRepo)
+        self.service = MockRecipeServiceFactory.makePokemonService(recipeSDRepo: recipeSDRepo, paginationSDRepo: paginationSDRepo)
         
         let paginationHandler: PaginationHandlerType = PaginationHandler()
         

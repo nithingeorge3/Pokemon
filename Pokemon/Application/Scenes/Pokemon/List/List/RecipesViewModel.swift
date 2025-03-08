@@ -41,7 +41,7 @@ class RecipesViewModel: RecipesViewModelType {
     }
     
     private func fetchRemoteRecipes() async throws {
-        service.fetchRecipes(endPoint: .recipes(page: 0, limit: 5))//Just hardcoded for listing
+        service.fetchPokemon(endPoint: .recipes(page: 0, limit: 5))//Just hardcoded for listing
             .sink { [weak self] completion in
                 guard let self = self else { return }
                 switch completion {

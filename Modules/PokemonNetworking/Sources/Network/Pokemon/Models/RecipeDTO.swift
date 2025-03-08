@@ -8,6 +8,19 @@
 import Foundation
 import PokemonDomain
 
+struct PokemonResponseDTO: Codable {
+    let count: Int
+    let next, previous: String
+    let results: [PokemonDTO]
+}
+
+// MARK: - Result
+struct PokemonDTO: Codable {
+    let name: String
+    let url: String
+}
+
+
 struct RecipeResponseDTO: Codable {
     let count: Int
     let results: [RecipeDTO]

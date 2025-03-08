@@ -1,8 +1,8 @@
 //
-//  RecipeRepository.swift
-//  RecipeNetworking
+//  PokemonRepository.swift
+//  PokemonNetworking
 //
-//  Created by Nitin George on 01/03/2024.
+//  Created by Nitin George on 08/03/2024.
 //
 
 import Combine
@@ -10,15 +10,15 @@ import Foundation
 import PokemonDomain
 
 //we can split protocol. backend and SwiftData fetch
-public protocol RecipeRepositoryType: Sendable {
-    func fetchRecipes(endPoint: EndPoint) async throws -> [RecipeDomain]
+public protocol PokemonRepositoryType: Sendable {
+    func fetchPokemon(endPoint: EndPoint) async throws -> [RecipeDomain]
     func fetchRecipe(for recipeID: Int) async throws -> RecipeDomain
     func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain]
     func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool
     func fetchRecipePagination(_ entityType: EntityType) async throws -> PaginationDomain
 }
 
-final class RecipeRepository: RecipeRepositoryType {
+final class RecipeRepository: PokemonRepositoryType {
     private let parser: ServiceParserType
     private let requestBuilder: RequestBuilderType
     private let apiKeyProvider: APIKeyProviderType
@@ -39,7 +39,7 @@ final class RecipeRepository: RecipeRepositoryType {
         self.paginationSDRepo = paginationSDRepo
     }
     
-    func fetchRecipes(endPoint: EndPoint) async throws -> [RecipeDomain] {
+    func fetchPokemon(endPoint: EndPoint) async throws -> [RecipeDomain] {
         do {
             let apiKey = try await apiKeyProvider.getRecipeAPIKey()
             
@@ -53,12 +53,14 @@ final class RecipeRepository: RecipeRepositoryType {
             
             let recipeDomains = dtos.results.map { RecipeDomain(from: $0) }
 
+            return recipeDomains
+            /*
             //Reach the page end or no data
             if recipeDomains.count == 0 {
                 return recipeDomains
             }
             
-            try await recipeSDRepo.saveRecipes(recipeDomains)
+//            try await recipeSDRepo.saveRecipes(recipeDomains)
             
             var pagination = try await paginationSDRepo.fetchRecipePagination(.recipe)
             pagination.totalCount = dtos.count
@@ -74,6 +76,7 @@ final class RecipeRepository: RecipeRepositoryType {
             let batchRecipes = try await fetchRecipes(page: page, pageSize: pageSize)
                         
             return batchRecipes
+            */
         } catch {
             throw NetworkError.noNetworkAndNoCache(context: error)
         }
@@ -99,7 +102,7 @@ extension RecipeRepository {
 }
 
 
-//RecipeListRepository added for combine based operation. We can add combine with RecipeRepositoryType.
+//RecipeListRepository added for combine based operation. We can add combine with PokemonRepositoryType.
 public protocol RecipeListRepositoryType {
     func fetchRecipes(endPoint: EndPoint) -> Future<[RecipeDomain], Error>
 }

@@ -48,9 +48,9 @@ class PokemonPlayViewModel: PokemonPlayViewModelType {
         return result
     }
     
-    private let service: RecipeSDServiceType
+    private let service: PokemonSDServiceType
     
-    init(recipeID: Recipe.ID, service: RecipeSDServiceType) {
+    init(recipeID: Recipe.ID, service: PokemonSDServiceType) {
         self.service = service
         self.recipeID = recipeID
         Task { await fetchRecipe() }

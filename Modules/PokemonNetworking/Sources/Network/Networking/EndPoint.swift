@@ -8,7 +8,7 @@
 import Foundation
 
 protocol URLBuilder {
-    var recipeBaseURL: String { get }
+    var pokemonBaseURL: String { get }
     var path: String { get }
     func url() throws -> URL
 }
@@ -16,6 +16,8 @@ protocol URLBuilder {
 public enum EndPoint: Sendable {
     case recipes(page: Int, limit: Int)
 }
+
+//https://pokeapi.co/api/v2/pokemon?offset=1&limit=1
 
 extension EndPoint: URLBuilder {
     func url() throws -> URL {
@@ -25,10 +27,9 @@ extension EndPoint: URLBuilder {
         
         switch self {
         case .recipes:
-            components.host = recipeBaseURL
+            components.host = pokemonBaseURL
         }
         
-        //https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes
         if case let .recipes(page, limit) = self {
             components.queryItems = [
                 URLQueryItem(name: "from", value: "\(page)"),
@@ -44,7 +45,7 @@ extension EndPoint: URLBuilder {
         return url
     }
     
-    var recipeBaseURL: String {
+    var pokemonBaseURL: String {
         "tasty.p.rapidapi.com"
     }
     

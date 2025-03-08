@@ -9,17 +9,17 @@ import Combine
 import Foundation
 import PokemonDomain
 
-final class RecipeServiceImp: RecipeServiceProvider {
-    private let recipeRepository: RecipeRepositoryType
+final class PokemonServiceImp: PokemonServiceProvider {
+    private let pokemonRepository: PokemonRepositoryType
     private let (favoritesDidChangeStream, favoritesDidChangeContinuation) = AsyncStream.makeStream(of: Int.self)
             
-    init(recipeRepository: RecipeRepositoryType) {
-        self.recipeRepository = recipeRepository
+    init(pokemonRepository: PokemonRepositoryType) {
+        self.pokemonRepository = pokemonRepository
     }
 
-    func fetchRecipes(endPoint: EndPoint) async throws(NetworkError) -> [RecipeDomain] {
+    func fetchPokemon(endPoint: EndPoint) async throws(NetworkError) -> [RecipeDomain] {
         do {
-            return try await recipeRepository.fetchRecipes(endPoint: endPoint)
+            return try await pokemonRepository.fetchPokemon(endPoint: endPoint)
             //add business logic
         } catch {
             throw NetworkError.failedToDecode
@@ -28,25 +28,25 @@ final class RecipeServiceImp: RecipeServiceProvider {
 }
 
 //SwiftData
-extension RecipeServiceImp {        
+extension PokemonServiceImp {        
     var favoritesDidChange: AsyncStream<Int> { favoritesDidChangeStream }
     
     func fetchRecipe(for recipeID: Int) async throws -> RecipeDomain {
-        try await recipeRepository.fetchRecipe(for: recipeID)
+        try await pokemonRepository.fetchRecipe(for: recipeID)
     }
     
     func fetchRecipes(page: Int = 0, pageSize: Int = 40) async throws -> [RecipeDomain] {
-        try await recipeRepository.fetchRecipes(page: page, pageSize: pageSize)
+        try await pokemonRepository.fetchRecipes(page: page, pageSize: pageSize)
     }
     
     func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool {
-        let isUpdated = try await recipeRepository.updateFavouriteRecipe(recipeID)
+        let isUpdated = try await pokemonRepository.updateFavouriteRecipe(recipeID)
         favoritesDidChangeContinuation.yield(recipeID)
         return isUpdated
     }
     
     func fetchRecipePagination(_ entityType: EntityType) async throws -> PaginationDomain {
-        return try await recipeRepository.fetchRecipePagination(entityType)
+        return try await pokemonRepository.fetchRecipePagination(entityType)
     }
 }
 
@@ -61,7 +61,7 @@ final class RecipeListServiceImp: RecipeListServiceType {
         self.recipeRepository = recipeRepository
     }
     
-    func fetchRecipes(endPoint: EndPoint) -> Future<[RecipeDomain], Error> {
+    func fetchPokemon(endPoint: EndPoint) -> Future<[RecipeDomain], Error> {
         return Future<[RecipeDomain], Error> { [weak self] promise in
             guard let self = self else {
                 return promise(.failure(NetworkError.contextDeallocated))

@@ -170,7 +170,7 @@ struct SubTitleView: View {
 public class PreviewPlayViewModel: PokemonPlayViewModelType {
     var recipe: Recipe?
     private let recipeID: Recipe.ID
-    private let service: RecipeSDServiceType
+    private let service: PokemonSDServiceType
     
     var mediaItems: [PresentedMedia] {
         var result: [PresentedMedia] = []
@@ -192,7 +192,7 @@ public class PreviewPlayViewModel: PokemonPlayViewModelType {
     }
     
     @MainActor
-    init(recipeID: Recipe.ID, service: RecipeSDServiceType = MockPreviewService()) {
+    init(recipeID: Recipe.ID, service: PokemonSDServiceType = MockPreviewService()) {
         self.recipeID = recipeID
         self.service = service
     }
@@ -245,7 +245,7 @@ extension PreviewPlayViewModel {
 }
 
 // MARK: - Mock Service
-private class MockPreviewService: RecipeSDServiceType, @unchecked Sendable {
+private class MockPreviewService: PokemonSDServiceType, @unchecked Sendable {
     var favoritesDidChange: AsyncStream<Int> {
         AsyncStream { _ in }
     }

@@ -16,7 +16,8 @@ struct PokemonListCoordinatorView: View {
                 .navigationDestination(for: RecipeListAction.self) { action in
                     switch action {
                     case .userSelectedRecipe(let recipeID):
-                        coordinator.navigateToPokemonPlay(for: recipeID)
+                        EmptyView()
+//                        coordinator.navigateToPokemonPlay(for: recipeID)
                     default: EmptyView()
                     }
                 }

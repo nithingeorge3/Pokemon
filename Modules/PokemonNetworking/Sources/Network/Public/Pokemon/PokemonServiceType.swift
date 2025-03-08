@@ -14,13 +14,13 @@ public protocol RecipeKeyServiceType {
     func deleteRecipeAPIkey() -> Bool
 }
 
-public typealias RecipeServiceProvider = RecipeServiceType & RecipeSDServiceType
+public typealias PokemonServiceProvider = PokemonServiceType & PokemonSDServiceType
 
-public protocol RecipeServiceType: Sendable {
-    func fetchRecipes(endPoint: EndPoint) async throws -> [RecipeDomain]
+public protocol PokemonServiceType: Sendable {
+    func fetchPokemon(endPoint: EndPoint) async throws -> [RecipeDomain]
 }
 
-public protocol RecipeSDServiceType: Sendable {
+public protocol PokemonSDServiceType: Sendable {
     var favoritesDidChange: AsyncStream<Int> { get }
     func fetchRecipe(for recipeID: Int) async throws -> RecipeDomain
     func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain]
@@ -30,5 +30,5 @@ public protocol RecipeSDServiceType: Sendable {
 
 //just added for showing combine
 public protocol RecipeListServiceType {
-    func fetchRecipes(endPoint: EndPoint) -> Future<[RecipeDomain], Error>
+    func fetchPokemon(endPoint: EndPoint) -> Future<[RecipeDomain], Error>
 }
