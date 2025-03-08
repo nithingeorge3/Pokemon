@@ -8,6 +8,34 @@
 import Foundation
 import PokemonDomain
 
+struct Pokemon: Identifiable, Hashable {
+    let id: Int
+    let name: String
+    let url: String
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    public static func == (lhs: Pokemon, rhs: Pokemon) -> Bool {
+        lhs.id == rhs.id
+    }
+    
+    init(id: Int, name: String, url: String) {
+        self.id = id
+        self.name = name
+        self.url = url
+    }
+}
+
+extension Pokemon {
+    init(from pokemonDomain: PokemonDomain) {
+        self.id = pokemonDomain.id
+        self.name = pokemonDomain.name
+        self.url = pokemonDomain.url
+    }
+}
+
 struct Recipe: Identifiable, Hashable {
     let id: Int
     let name: String

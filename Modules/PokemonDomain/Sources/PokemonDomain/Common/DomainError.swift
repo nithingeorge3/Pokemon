@@ -8,6 +8,20 @@
 import Foundation
 
 @frozen
+public enum PokemonError: Error {
+    case invalidURL(url: String)
+}
+
+extension PokemonError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .invalidURL(let url):
+            return "Invalid Pokemon URL: \(url)"
+        }
+    }
+}
+
+@frozen
 public enum RecipeError: Error {
     case notFound(recipeID: Int)
 }

@@ -7,6 +7,18 @@
 
 import Foundation
 
+public struct PokemonDomain: Identifiable, @unchecked Sendable {
+    public var id: Int
+    public var name: String
+    public var url: String
+    
+    public init(id: Int, name: String, url: String) {
+        self.id = id
+        self.name = name
+        self.url = url
+    }
+}
+
 public struct RecipeDomain: Identifiable, @unchecked Sendable {
     public var id: Int
     public var name: String

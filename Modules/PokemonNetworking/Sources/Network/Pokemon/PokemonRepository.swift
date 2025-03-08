@@ -83,6 +83,34 @@ final class RecipeRepository: PokemonRepositoryType {
     }
 }
 
+/*
+ class PokemonRepository {
+     func fetchPokemon() async -> Result<[PokemonDomain], Error> {
+         do {
+             let dtos = try await apiService.fetchPokemon()
+             let domains = try dtos.map { try PokemonDomain(from: $0) }
+             return .success(domains)
+         } catch let error as NetworkError {
+             return .failure(error) // Network issues
+         } catch let error as PokemonError {
+             return .failure(error) // Domain validation issues
+         } catch {
+             return .failure(NetworkError.unknown(error))
+         }
+     }
+ }
+ */
+
+/*
+ switch error {
+ case .invalidPokemonURL:
+     showAlert("Invalid Pokémon data. Please try again.")
+ case .noNetworkConnectivity:
+     showAlert("No internet connection.")
+ // ...
+ }
+ */
+
 extension RecipeRepository {
     func fetchRecipe(for recipeID: Int) async throws -> RecipeDomain {
         try await recipeSDRepo.fetchRecipe(for: recipeID)

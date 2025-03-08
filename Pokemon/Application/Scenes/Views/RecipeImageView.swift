@@ -9,6 +9,17 @@ import SwiftUI
 import Kingfisher
 
 //ToDo: need to revisit
+
+/*
+ enum PokemonImageURLBuilder {
+     static func url(forID id: Int) -> URL? {
+         URL(string: "https://raw.githubusercontent.com/.../\(id).png")
+     }
+ }
+
+ // Usage
+ KFImage(PokemonImageURLBuilder.url(forID: pokemon.id))
+ */
 struct RecipeImageView: View {
     let imageURL: URL
     let height: CGFloat
