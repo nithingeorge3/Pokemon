@@ -1,0 +1,18 @@
+{
+    "count": 10,
+    "Rsult": [
+        {
+            "id": 12,
+            "name": 123
+            "thumbnail_url": "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/45b4efeb5d2c4d29970344ae165615ab/FixedFBFinal.jpg",
+            "user_ratings": {
+                "count_negative": 75,
+                "count_positive": 845,
+                "score": 0.9184782608695652
+            },
+            "video_url": "https://vid.tasty.co/output/121934/hls24_1546897597.m3u8",
+            "yields": "Servings: 4"
+        }
+    ]
+}
+
