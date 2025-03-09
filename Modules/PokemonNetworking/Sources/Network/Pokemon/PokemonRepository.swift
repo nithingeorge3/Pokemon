@@ -21,18 +21,18 @@ public protocol PokemonRepositoryType: Sendable {
 final class PokemonRepository: PokemonRepositoryType {
     private let parser: ServiceParserType
     private let requestBuilder: RequestBuilderType
-    private let recipeSDRepo: RecipeSDRepositoryType
+    private let pokemonSDRepo: PokemonSDRepositoryType
     private let paginationSDRepo: PaginationSDRepositoryType
     
     init(
         parser: ServiceParserType,
         requestBuilder: RequestBuilderType,
-        recipeSDRepo: RecipeSDRepositoryType,
+        pokemonSDRepo: PokemonSDRepositoryType,
         paginationSDRepo: PaginationSDRepositoryType
     ) {
         self.parser = parser
         self.requestBuilder = requestBuilder
-        self.recipeSDRepo = recipeSDRepo
+        self.pokemonSDRepo = pokemonSDRepo
         self.paginationSDRepo = paginationSDRepo
     }
     
@@ -46,7 +46,7 @@ final class PokemonRepository: PokemonRepositoryType {
                 type: PokemonResponseDTO.self
             )
             
-            return try responseDTO.results.map { dto in
+            let pokemonDomains = try responseDTO.results.map { dto in
                 do {
                     return try PokemonDomain(from: dto)
                 } catch let error as PokemonError {
@@ -55,6 +55,9 @@ final class PokemonRepository: PokemonRepositoryType {
                     throw NetworkError.failedToDecode
                 }
             }
+            
+            try await pokemonSDRepo.savePokemon(pokemonDomains)
+            return pokemonDomains
             
             //handle errro late
 //            let pokemonDomains = try dtos.results.map { try PokemonDomain(from: $0) }
@@ -119,15 +122,15 @@ final class PokemonRepository: PokemonRepositoryType {
 
 extension PokemonRepository {
     func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain {
-        try await recipeSDRepo.fetchPokemon(for: pokemonID)
+        try await pokemonSDRepo.fetchPokemon(for: pokemonID)
     }
     
     func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain] {
-        try await recipeSDRepo.fetchRecipes(page: page, pageSize: pageSize)
+        try await pokemonSDRepo.fetchRecipes(page: page, pageSize: pageSize)
     }
     
     func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool {
-        try await recipeSDRepo.updateFavouriteRecipe(recipeID)
+        try await pokemonSDRepo.updateFavouriteRecipe(recipeID)
     }
     
     func fetchRecipePagination(_ entityType: EntityType) async throws -> PaginationDomain {

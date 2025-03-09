@@ -10,14 +10,14 @@ import SwiftData
 import PokemonDomain
 
 @testable import PokemonDataStore
-
+#warning()
 final class RecipeRepositoryTests: XCTestCase {
-    private var repository: RecipeSDRepositoryType!
+    private var repository: PokemonSDRepositoryType!
     private var container: ModelContainer!
     
     override func setUp() async throws {
         container = DataStoreManagerFactory.makeSharedContainer(for: "TestContainer")
-        repository = RecipeSDRepository(container: container)
+        repository = PokemonSDRepository(container: container)
     }
     
     @MainActor

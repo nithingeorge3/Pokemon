@@ -21,14 +21,14 @@ final class PokemonListCoordinatorFactory: PokemonListCoordinatorFactoryType {
         let viewFactory = PokemonViewFactory()
         
         let paginationSDRepo = PaginationSDRepository(container: container)
-        let recipeSDRepo = RecipeSDRepository(container: container)
+        let pokemonSDRepo = PokemonSDRepository(container: container)
         
         return await PokemonListCoordinator(
             tabItem: tabItem,
             viewFactory: viewFactory,
             modelFactory: modelFactory,
             paginationSDRepo: paginationSDRepo,
-            recipeSDRepo: recipeSDRepo
+            pokemonSDRepo: pokemonSDRepo
         )
     }
 }

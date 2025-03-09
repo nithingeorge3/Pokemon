@@ -1,5 +1,5 @@
 //
-//  RecipeRepository.swift
+//  PokemonSDRepository.swift
 //  RecipeDataStore
 //
 //  Created by Nitin George on 02/03/2025.
@@ -15,7 +15,7 @@ public enum SDError: Error {
     case modelObjNotFound
 }
 
-public final class RecipeSDRepository: RecipeSDRepositoryType {
+public final class PokemonSDRepository: PokemonSDRepositoryType {
     private let container: ModelContainer
     
     public init(container: ModelContainer) {
@@ -54,15 +54,15 @@ public final class RecipeSDRepository: RecipeSDRepositoryType {
         }
     }
     
-    public func saveRecipes(_ recipes: [RecipeDomain]) async throws {
+    public func savePokemon(_ pokemon: [PokemonDomain]) async throws {
         try await dataStore.performBackgroundTask { context in
-            let existing = try self.existingRecipes(ids: recipes.map(\.id), context: context)
+            let existing = try self.existingRecipes(ids: pokemon.map(\.id), context: context)
             
-            for recipe in recipes {
-                if let existingRecipe = existing[recipe.id] {
-                    existingRecipe.update(from: recipe)
+            for poke in pokemon {
+                if let existingPokemon = existing[poke.id] {
+                    existingPokemon.update(from: poke)
                 } else {
-                    context.insert(SDRecipe(from: recipe))
+                    context.insert(SDPokemon(from: poke))
                 }
             }
         }
@@ -85,9 +85,9 @@ public final class RecipeSDRepository: RecipeSDRepositoryType {
         }
     }
     
-    private func existingRecipes(ids: [Int], context: ModelContext) throws -> [Int: SDRecipe] {
-        let predicate = #Predicate<SDRecipe> { ids.contains($0.id) }
-        let descriptor = FetchDescriptor<SDRecipe>(predicate: predicate)
+    private func existingRecipes(ids: [Int], context: ModelContext) throws -> [Int: SDPokemon] {
+        let predicate = #Predicate<SDPokemon> { ids.contains($0.id) }
+        let descriptor = FetchDescriptor<SDPokemon>(predicate: predicate)
         return try context.fetch(descriptor).reduce(into: [:]) { $0[$1.id] = $1 }
     }
 }

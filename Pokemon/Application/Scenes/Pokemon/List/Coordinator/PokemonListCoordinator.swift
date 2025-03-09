@@ -38,12 +38,12 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
         viewFactory: PokemonViewFactoryType,
         modelFactory: PokemonViewModelFactoryType,
         paginationSDRepo: PaginationSDRepositoryType,
-        recipeSDRepo: RecipeSDRepositoryType
+        pokemonSDRepo: PokemonSDRepositoryType
     ) async {
         _tabItem = tabItem
         self.viewFactory = viewFactory
         self.modelFactory = modelFactory
-        self.service = PokemonServiceFactory.makePokemonService(recipeSDRepo: recipeSDRepo, paginationSDRepo: paginationSDRepo)
+        self.service = PokemonServiceFactory.makePokemonService(pokemonSDRepo: pokemonSDRepo, paginationSDRepo: paginationSDRepo)
         
         let paginationHandler: PaginationHandlerType = PaginationHandler()
         

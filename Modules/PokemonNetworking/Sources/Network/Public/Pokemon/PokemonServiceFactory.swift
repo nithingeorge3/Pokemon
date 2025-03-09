@@ -9,18 +9,18 @@ import Foundation
 import PokemonDomain
 
 public protocol PokemonServiceFactoryType {
-    static func makePokemonService(recipeSDRepo: RecipeSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonServiceProvider
+    static func makePokemonService(pokemonSDRepo: PokemonSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonServiceProvider
 }
 
 public final class PokemonServiceFactory: PokemonServiceFactoryType, @unchecked Sendable {
     private static let serviceParser: ServiceParserType = ServiceParser()
     private static let requestBuilder: RequestBuilderType = RequestBuilder()
     
-    public static func makePokemonService(recipeSDRepo: RecipeSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonServiceProvider {
+    public static func makePokemonService(pokemonSDRepo: PokemonSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonServiceProvider {
         let pokemonRepository: PokemonRepositoryType = PokemonRepository(
             parser: serviceParser,
             requestBuilder: requestBuilder,
-            recipeSDRepo: recipeSDRepo,
+            pokemonSDRepo: pokemonSDRepo,
             paginationSDRepo: paginationSDRepo
         )
         return PokemonServiceImp(pokemonRepository: pokemonRepository)
