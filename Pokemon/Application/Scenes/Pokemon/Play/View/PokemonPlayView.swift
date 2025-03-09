@@ -116,7 +116,12 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
     private var celebrationOverlay: some View {
         Group {
             if viewModel.showCelebration {
-                CelebrationView()
+                CelebrationView(
+                    config: .points(
+                        2,
+                        color: .green
+                    )
+                )
                     .transition(.opacity)
                     .allowsHitTesting(false)
             }

@@ -20,7 +20,7 @@ struct ParticleConfig {
     let minSize: CGFloat
     let maxSize: CGFloat
     
-    static let confetti = ParticleConfig(
+    static let effect = ParticleConfig(
         color: .blue,
         count: 50,
         spread: 200,
@@ -29,7 +29,22 @@ struct ParticleConfig {
     )
 }
 
+struct CelebrationConfig {
+    let text: String
+    let textColor: Color
+    let particleConfig: ParticleConfig
+    
+    static func points(_ amount: Int, color: Color = .yellow) -> CelebrationConfig {
+        CelebrationConfig(
+            text: "+\(amount) Points",
+            textColor: color,
+            particleConfig: .effect
+        )
+    }
+}
+
 struct CelebrationView: View {
+    let config: CelebrationConfig
     @State private var animate = false
     
     var body: some View {
@@ -50,10 +65,39 @@ struct CelebrationView: View {
                     )
             }
             
-            // Confetti Particles with proper configuration
-            ParticleView(config: .confetti)
+            ParticleView(config: config.particleConfig)
+            
+            AnimatedTextView(config: config)
         }
         .onAppear { animate = true }
+    }
+}
+
+struct AnimatedTextView: View {
+    let config: CelebrationConfig
+    @State private var scale: CGFloat = 0
+    @State private var opacity: Double = 0
+    
+    var body: some View {
+        Text(config.text)
+            .font(.system(size: 24, weight: .heavy, design: .rounded))
+            .foregroundColor(config.textColor)
+            .shadow(color: .black, radius: 2, x: 0, y: 2)
+            .scaleEffect(scale)
+            .opacity(opacity)
+            .onAppear(perform: animate)
+    }
+    
+    private func animate() {
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.6)) {
+            scale = 1.2
+            opacity = 1
+        }
+        
+        withAnimation(.easeIn(duration: 0.5).delay(1)) {
+            scale = 0.8
+            opacity = 0
+        }
     }
 }
 
