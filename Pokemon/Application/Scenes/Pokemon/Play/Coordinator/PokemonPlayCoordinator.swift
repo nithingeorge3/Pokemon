@@ -14,7 +14,7 @@ import PokemonDomain
 enum PokemonPlayActions {
     case load
     case selectAnswer(Pokemon)
-    case reload
+    case refresh
     case toggleFavorite
 }
 

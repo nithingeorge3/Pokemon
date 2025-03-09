@@ -19,6 +19,7 @@ public protocol PokemonRepositoryType: Sendable {
     
     //gaming
     func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain]
+    func fetchRandomUnplayedPokemon() async throws -> PokemonDomain
 }
 
 final class PokemonRepository: PokemonRepositoryType {
@@ -110,6 +111,10 @@ extension PokemonRepository {
 extension PokemonRepository {
     func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain] {
         try await pokemonSDRepo.fetchRandomOptions(excluding: id, count: count)
+    }
+    
+    func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
+        try await pokemonSDRepo.fetchRandomUnplayedPokemon()
     }
 }
 

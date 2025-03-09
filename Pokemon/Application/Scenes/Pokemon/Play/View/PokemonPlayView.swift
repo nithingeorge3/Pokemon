@@ -33,7 +33,6 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
                     .padding(.bottom, 40)
                 
 //                resultSection
-//                reloadButton
             }
         }
         .onAppear {
@@ -49,7 +48,7 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
                 .padding(.leading, 10)
             Spacer()
             RefreshButton {
-                print("handle refresh")
+                viewModel.send(.refresh)
             }
             Spacer().frame(width: 30)
         }
@@ -99,17 +98,6 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
                 }
                 .transition(.scale.combined(with: .opacity))
             }
-        }
-    }
-    
-    private var reloadButton: some View {
-        Button(action: { viewModel.send(.reload) }) {
-            Text("New Pokemon")
-                .bold()
-                .padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .clipShape(Capsule())
         }
     }
     

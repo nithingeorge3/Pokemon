@@ -31,7 +31,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     var isLoading: Bool = false
     var showCelebration: Bool = false
     
-    private let pokemonID: Pokemon.ID
+    private var pokemonID: Pokemon.ID
     private let service: PokemonSDServiceType
     private let answerService: PokemonAnswerServiceType
     
@@ -49,8 +49,8 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
             loadPokemon()
         case .selectAnswer(let pokemon):
             handleSelection(pokemon)
-        case .reload: break
-//            reloadGame()
+        case .refresh:
+            refreshGame()
         case .toggleFavorite:
             toggleFavorite()
         }
@@ -79,10 +79,43 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
                 
             } catch {
                 print("error")
-//                await handleError(error)
             }
         }
     }
+    
+    private func refreshGame() {
+        isLoading = true
+        Task {
+            do {
+                async let newPokemon = service.fetchRandomUnplayedPokemon()
+                async let options = answerService.fetchRandomOptions(excluding: pokemonID, count: 3)
+                
+                let (main, others) = await (try newPokemon, try options)
+                let allOptions = [main] + others
+                
+                self.pokemon = Pokemon(from: main)
+
+                guard let id = self.pokemon?.id else {
+                    return
+                }
+                pokemonID = id
+                
+                self.answerOptions = allOptions.map {
+                    Pokemon(from: $0)
+                }.shuffled()
+                
+                for pok in answerOptions {
+                    print("**** \(pok.name)")
+                }
+                
+                self.isLoading = false
+                
+            } catch {
+                print("error")
+            }
+        }
+    }
+    
     
     private func handleSelection(_ pokemon: Pokemon) {
         guard !showResult else { return }

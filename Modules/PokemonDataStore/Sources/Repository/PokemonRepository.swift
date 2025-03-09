@@ -131,3 +131,21 @@ public final class PokemonSDRepository: PokemonSDRepositoryType {
         return try context.fetch(descriptor).reduce(into: [:]) { $0[$1.id] = $1 }
     }
 }
+
+//ToDo ad dtest cases
+extension PokemonSDRepository {
+    public func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
+        try await dataStore.performBackgroundTask { context in
+            //add predicate later when we add user SwiftData
+            var descriptor = FetchDescriptor<SDPokemon>()
+            descriptor.fetchLimit = 50
+            
+            let pokemonList = try context.fetch(descriptor)
+            
+            guard let randomPokemon = pokemonList.randomElement() else {
+                throw SDError.modelObjNotFound
+            }
+            return try PokemonDomain(from: randomPokemon)
+        }
+    }
+}
