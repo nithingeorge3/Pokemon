@@ -259,7 +259,7 @@ private class MockPreviewService: PokemonSDServiceType, @unchecked Sendable {
     }
     
     func fetchRecipePagination(_ type: EntityType) async throws -> PaginationDomain {
-        PaginationDomain(entityType: .recipe, totalCount: 10, currentPage: 10)
+        PaginationDomain(entityType: .pokemon, totalCount: 10, currentPage: 10)
     }
     
     func fetchRecipe(id: Recipe.ID) async throws -> Recipe {

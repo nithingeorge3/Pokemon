@@ -74,7 +74,7 @@ private class PreviewPokemonListViewModel: PokemonListViewModelType {
         Recipe(id: 2, name: "Kerala Dosha", thumbnailURL: "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/video-api/assets/314886.jpg", isFavorite: false),
         Recipe(id: 3, name: "Kerala CB", thumbnailURL: "https://s3.amazonaws.com/video-api-prod/assets/654d0916588d46c5835b7a5f547a090e/BestPastaFB.jpg", isFavorite: true)
     ]
-    var pagination: Pagination? = Pagination(entityType: .recipe)
+    var pagination: Pagination? = Pagination(entityType: .pokemon)
     var favoriteRecipes: [Recipe] { recipes.filter { $0.isFavorite } }
     var otherRecipes: [Recipe] { recipes.filter { !$0.isFavorite } }
     var paginationHandler: PaginationHandlerType = PreviewPaginationHandler()

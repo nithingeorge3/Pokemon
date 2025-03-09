@@ -17,16 +17,16 @@ class PokemonServiceImplTests: XCTestCase {
         pokemonServiceImpl = nil
     }
         
-    func testFetchRecipes_SuccessResponse_ReturnRecipe() async throws {
-        pokemonRepository = MockRecipeRepository(fileName: "pokemon_success", parser: ServiceParser())
+    func testFetchPokemon_SuccessResponse_ReturnPokemon() async throws {
+        pokemonRepository = MockPokemonRepository(fileName: "pokemon_success", parser: ServiceParser())
         pokemonServiceImpl = PokemonServiceImp(pokemonRepository: pokemonRepository)
         
-        let expectation = XCTestExpectation(description: "Recipe should be fetched successfully with one recipe")
+        let expectation = XCTestExpectation(description: "Pokemon should be fetched successfully with one pokemon")
         
         do {
             let dtos = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
-            XCTAssertEqual(dtos.first?.name, "Low-Carb Avocado Chicken Salad")
-            XCTAssertEqual(dtos.count, 10)
+            XCTAssertEqual(dtos.first?.name, "ivysaur")
+            XCTAssertEqual(dtos.count, 3)
             expectation.fulfill()
         } catch {
             XCTFail("Unexpected error happened: \(error)")
@@ -35,11 +35,11 @@ class PokemonServiceImplTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
     }
     
-    func testFetchRecipes__SuccessResponse_ReturnEmptyRecipe() async throws {
-        pokemonRepository = MockRecipeRepository(fileName: "pokemon_empty", parser: ServiceParser())
+    func testFetchPokemon_SuccessResponse_ReturnEmptyPokemon() async throws {
+        pokemonRepository = MockPokemonRepository(fileName: "pokemon_empty", parser: ServiceParser())
         pokemonServiceImpl = PokemonServiceImp(pokemonRepository: pokemonRepository)
         
-        let expectation = XCTestExpectation(description: "Recipe fetch should return an empty list when no recipes are available")
+        let expectation = XCTestExpectation(description: "Pokemon fetch should return an empty list when no pokemon are available")
         
         do {
             let dtos = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
@@ -52,11 +52,11 @@ class PokemonServiceImplTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
     }
 
-    func testFetchRecipes_FailureResponse_ReturnError() async throws {
-        pokemonRepository = MockRecipeRepository(fileName: "pokemon_error", parser: ServiceParser())
+    func testFetchPokemon_FailureResponse_ReturnError() async throws {
+        pokemonRepository = MockPokemonRepository(fileName: "pokemon_error", parser: ServiceParser())
         pokemonServiceImpl = PokemonServiceImp(pokemonRepository: pokemonRepository)
         
-        let expectation = XCTestExpectation(description: "Recipe fetch should fail and return an appropriate error")
+        let expectation = XCTestExpectation(description: "Pokemon fetch should fail and return an appropriate error")
         
         do {
             _ = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
@@ -69,11 +69,11 @@ class PokemonServiceImplTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
     }
     
-    func testUpdateFavouriteRecipe() async throws {
-        pokemonRepository = MockRecipeRepository(fileName: "pokemon_success", parser: ServiceParser())
+    func testUpdateFavouritePokemon() async throws {
+        pokemonRepository = MockPokemonRepository(fileName: "pokemon_success", parser: ServiceParser())
         pokemonServiceImpl = PokemonServiceImp(pokemonRepository: pokemonRepository)
         
-        let expectation = XCTestExpectation(description: "Recipe's isFavorite status should update successfully")
+        let expectation = XCTestExpectation(description: "Pokemon's isFavorite status should update successfully")
         
         do {
             let dtos = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
@@ -89,16 +89,16 @@ class PokemonServiceImplTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
     }
     
-    func testFetchRecipe() async throws {
-        pokemonRepository = MockRecipeRepository(fileName: "pokemon_success", parser: ServiceParser())
+    func testFetchPokemon() async throws {
+        pokemonRepository = MockPokemonRepository(fileName: "pokemon_success", parser: ServiceParser())
         pokemonServiceImpl = PokemonServiceImp(pokemonRepository: pokemonRepository)
         
-        let expectation = XCTestExpectation(description: "Recipe should be fetched successfully with one recipe")
+        let expectation = XCTestExpectation(description: "Pokemon should be fetched successfully with one pokemon")
         
         do {
             let dtos = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
-            XCTAssertEqual(dtos.first?.name, "Low-Carb Avocado Chicken Salad")
-            XCTAssertEqual(dtos.count, 10)
+            XCTAssertEqual(dtos.first?.name, "ivysaur")
+            XCTAssertEqual(dtos.count, 3)
             expectation.fulfill()
         } catch {
             XCTFail("Unexpected error happened: \(error)")
@@ -107,16 +107,16 @@ class PokemonServiceImplTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
     }
     
-    func testRecipePagination() async throws {
-        pokemonRepository = MockRecipeRepository(fileName: "pokemon_success", parser: ServiceParser())
+    func testPokemonPagination() async throws {
+        pokemonRepository = MockPokemonRepository(fileName: "pokemon_success", parser: ServiceParser())
         pokemonServiceImpl = PokemonServiceImp(pokemonRepository: pokemonRepository)
         
-        let expectation = XCTestExpectation(description: "Recipe pagination data should be fetched successfully with expected values")
+        let expectation = XCTestExpectation(description: "Pokemon pagination data should be fetched successfully with expected values")
         
         do {
             _ = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
-            let pagination = try await pokemonRepository.fetchRecipePagination(.recipe)
-            XCTAssertEqual(pagination.totalCount, 10)
+            let pagination = try await pokemonRepository.fetchRecipePagination(.pokemon)
+            XCTAssertEqual(pagination.totalCount, 1304)
             XCTAssertEqual(pagination.currentPage, 1)
             XCTAssertEqual(pagination.id, UUID(uuidString: "11111111-1111-1111-1111-111111111111")!)
             XCTAssertEqual(pagination.lastUpdated, Date(timeIntervalSince1970: 0))

@@ -31,7 +31,7 @@ public class PaginationSDRepository: PaginationSDRepositoryType {
                 return PaginationDomain(from: existing)
             }
             
-            return PaginationDomain(entityType: .recipe)
+            return PaginationDomain(entityType: .pokemon)
         }
     }
     

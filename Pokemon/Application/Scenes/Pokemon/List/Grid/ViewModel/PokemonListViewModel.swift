@@ -70,7 +70,7 @@ class PokemonListViewModel: PokemonListViewModelType {
     private func loadMore() async throws {
         Task {
             do {
-                let paginationDomain = try await service.fetchRecipePagination(.recipe)
+                let paginationDomain = try await service.fetchRecipePagination(.pokemon)
                 updatePagination(Pagination(from: paginationDomain))
             } catch {
                 print("\(error)")

@@ -1,23 +1,23 @@
 //
-//  MockRecipeRepository.swift
-//  RecipeNetworking
+//  MockPokemonRepository.swift
+//  PokemonNetworking
 //
-//  Created by Nitin George on 06/03/2025.
+//  Created by Nitin George on 08/03/2025.
 //
 
 import Foundation
 import PokemonDomain
 
-final class MockRecipeRepository: PokemonRepositoryType, @unchecked Sendable {
+final class MockPokemonRepository: PokemonRepositoryType, @unchecked Sendable {
     private let fileName: String
     private let parser: ServiceParserType
-    private var recipe: RecipeDomain?
+    private var pokemon: PokemonDomain?
     private var pagination: PaginationDomain
     
     init(
         fileName: String,
         parser: ServiceParserType = ServiceParser(),
-        pagination: PaginationDomain = PaginationDomain(id: UUID(uuidString: "11111111-1111-1111-1111-111111111111")!, entityType: .recipe, totalCount: 0, currentPage: 0, lastUpdated: Date(timeIntervalSince1970: 0))
+        pagination: PaginationDomain = PaginationDomain(id: UUID(uuidString: "11111111-1111-1111-1111-111111111111")!, entityType: .pokemon, totalCount: 0, currentPage: 0, lastUpdated: Date(timeIntervalSince1970: 0))
     ) {
         self.fileName = fileName
         self.parser = parser
@@ -25,43 +25,52 @@ final class MockRecipeRepository: PokemonRepositoryType, @unchecked Sendable {
     }
     
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain] {
+        guard let url = Bundle.module.url(forResource: self.fileName, withExtension: "json") else {
+            throw NetworkError.responseError
+        }
         
-        return [PokemonDomain(id: 1, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)]
-        
-//        guard let url = Bundle.module.url(forResource: self.fileName, withExtension: "json") else {
-//            throw NetworkError.responseError
-//        }
-//        
-//        do {
-//            let data = try Data(contentsOf: url)
-//            
-//            guard let mockResponse = HTTPURLResponse(
-//                url: url,
-//                statusCode: 200,
-//                httpVersion: nil,
-//                headerFields: nil
-//            ) else {
-//                throw NetworkError.responseError
-//            }
-//            
-//            let dtos = try await parser.parse(data: data, response: mockResponse, type: RecipeResponseDTO.self)
-//            let recipeDomains = dtos.results.map { RecipeDomain(from: $0) }
-//            recipe = recipeDomains.first
-//            pagination.totalCount = dtos.count
-//            pagination.currentPage = 1
-//
-//            return recipeDomains
-//        }
-//        catch {
-//            throw NetworkError.failedToDecode
-//        }
+        do {
+            let data = try Data(contentsOf: url)
+            
+            guard let mockResponse = HTTPURLResponse(
+                url: url,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            ) else {
+                throw NetworkError.responseError
+            }
+            
+            let responseDTO = try await parser.parse(data: data, response: mockResponse, type: PokemonResponseDTO.self)
+            
+            do {
+                let pokemonDomains = try responseDTO.results.map { dto in
+                    do {
+                        return try PokemonDomain(from: dto)
+                    } catch let error as PokemonError {
+                        throw error // handle error
+                    } catch {
+                        throw NetworkError.failedToDecode
+                    }
+                }
+                
+                pokemon = pokemonDomains.first
+                pagination.totalCount = responseDTO.count
+                pagination.currentPage = 1
+                
+                return pokemonDomains
+            }
+        }
+        catch {
+            throw NetworkError.failedToDecode
+        }
     }
     
     func fetchRecipe(for recipeID: Int) async throws -> RecipeDomain {
-        guard let recipe = recipe else {
+        guard let pokemon = pokemon else {
             throw RecipeError.notFound(recipeID: recipeID)
         }
-        return recipe
+        return RecipeDomain(id: 1, name: "")
     }
     
     func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain] {
@@ -69,12 +78,12 @@ final class MockRecipeRepository: PokemonRepositoryType, @unchecked Sendable {
     }
     
     func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool {
-        guard var recipe = recipe, recipe.id == recipeID else {
+        guard var pokemon = pokemon, pokemon.id == recipeID else {
             return false
         }
-        recipe.isFavorite.toggle()
-        self.recipe = recipe
-        return recipe.isFavorite
+        pokemon.isFavorite.toggle()
+        self.pokemon = pokemon
+        return pokemon.isFavorite
     }
     
     func fetchRecipePagination(_ entityType: EntityType) async throws -> PaginationDomain {

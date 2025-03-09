@@ -41,7 +41,7 @@ class AppCoordinator: ObservableObject {
     
     private let containerName: String
     
-    init(containerName: String = "Recipe") {
+    init(containerName: String = "Pokemon") {
         self.containerName = containerName
     }
     

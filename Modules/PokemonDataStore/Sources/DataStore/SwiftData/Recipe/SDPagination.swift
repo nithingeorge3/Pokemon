@@ -19,7 +19,7 @@ public class SDPagination {
     public var lastUpdated: Date
     
     public var entityType: EntityType {
-        get { EntityType(rawValue: entityTypeRaw) ?? .recipe }
+        get { EntityType(rawValue: entityTypeRaw) ?? .pokemon }
         set { entityTypeRaw = newValue.rawValue }
     }
     
