@@ -21,6 +21,5 @@ struct PokemonListCoordinatorView: View {
                     }
                 }
             }
-            .navigationBarTitle("Recipe")
         }
 }

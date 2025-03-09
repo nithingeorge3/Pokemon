@@ -31,58 +31,6 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
         .withCustomBackButton()
         .withCustomNavigationTitle(title: "Play Pokemon")
     }
-    
-
-    @ViewBuilder
-    private func detailSection(for recipe: Recipe) -> some View {
-        Group {
-            SubTitleView(title: "Description")
-
-            DescriptionText(description: recipe.description)
-        }
-        .padding(.horizontal, 8)
-    }
-    
-    private struct DescriptionText: View {
-        let description: String?
-        
-        var body: some View {
-            Group {
-                if let description = description, !description.isEmpty {
-                    Text(description)
-                        .descriptionStyle()
-                } else {
-                    DescriptionEmptyState()
-                }
-            }
-            .transition(.opacity)
-        }
-    }
-    
-    private struct DescriptionEmptyState: View {
-        var body: some View {
-            HStack(spacing: 8) {
-                Image(systemName: "text.bubble")
-                    .foregroundColor(.secondary)
-                
-                Text("Description unavailable")
-                    .foregroundColor(.secondary.opacity(0.8))
-            }
-            .font(.subheadline)
-            .accessibilityElement(children: .combine)
-        }
-    }
-}
-
-private extension Text {
-    func descriptionStyle() -> some View {
-        self
-            .font(.body)
-            .lineSpacing(6)
-            .foregroundColor(.primary.opacity(0.9))
-            .fixedSize(horizontal: false, vertical: true)
-            .lineLimit(nil)
-    }
 }
 
 struct SubTitleView: View {

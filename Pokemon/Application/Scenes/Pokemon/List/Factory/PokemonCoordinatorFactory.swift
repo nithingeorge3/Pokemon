@@ -17,7 +17,7 @@ protocol PokemonListCoordinatorFactoryType {
 final class PokemonListCoordinatorFactory: PokemonListCoordinatorFactoryType {
     func makePokemonListCoordinator(container: ModelContainer) async -> PokemonListCoordinator {
         let tabItem = TabItem(title: "Pokemon", icon: "house.fill", badgeCount: 0, color: .black)
-        let modelFactory = RecipesViewModelFactory()
+        let modelFactory = PokemonViewModelFactory()
         let viewFactory = PokemonViewFactory()
         
         let paginationSDRepo = PaginationSDRepository(container: container)
