@@ -16,6 +16,7 @@ protocol PokemonPlayViewModelType: AnyObject, Observable {
     var selectedAnswer: Pokemon? { get set }
     var showResult: Bool { get set }
     var isLoading: Bool { get set }
+    var showCelebration: Bool { get }
     
     func send(_ action: PokemonPlayActions)
 }
@@ -28,6 +29,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     var selectedAnswer: Pokemon?
     var showResult: Bool = false
     var isLoading: Bool = false
+    var showCelebration: Bool = false
     
     private let pokemonID: Pokemon.ID
     private let service: PokemonSDServiceType
@@ -88,7 +90,10 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         showResult = true
         
         if pokemon.id == self.pokemon?.id {
-            // Handle correct answer scoring
+            showCelebration = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self.showCelebration = false
+            }
         }
     }
     

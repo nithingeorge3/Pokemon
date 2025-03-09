@@ -93,7 +93,7 @@ extension PokemonRepositoryTests {
     func test_fetchRandomOptions_sortsByIdDescending() async throws {
         let result = try await repository.fetchRandomOptions(excluding: 5, count: 3)
         
-        let ids = result.map(\.id) //4,3,2
+        let ids = result.map(\.id)
         XCTAssertEqual(ids, [4, 3, 2].filter { $0 != 5 }.prefix(3).sorted(by: >))
     }
     

@@ -24,9 +24,14 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
             } else {
                 gameHeaderView
                     .padding(.top, 8)
-                imageSection
+                ZStack {
+                    imageSection
+                    celebrationOverlay
+                }
+                
                 answerGrid
                     .padding(.bottom, 40)
+                
 //                resultSection
 //                reloadButton
             }
@@ -107,9 +112,18 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
                 .clipShape(Capsule())
         }
     }
+    
+    private var celebrationOverlay: some View {
+        Group {
+            if viewModel.showCelebration {
+                CelebrationView()
+                    .transition(.opacity)
+                    .allowsHitTesting(false)
+            }
+        }
+    }
 }
 
-// MARK: - Answer Button Component
 struct AnswerButton: View {
     let pokemon: Pokemon
     let isSelected: Bool
