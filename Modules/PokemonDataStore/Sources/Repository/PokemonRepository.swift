@@ -1,6 +1,6 @@
 //
 //  PokemonSDRepository.swift
-//  RecipeDataStore
+//  PokemonDataStore
 //
 //  Created by Nitin George on 02/03/2025.
 //
@@ -73,15 +73,15 @@ public final class PokemonSDRepository: PokemonSDRepositoryType {
             let predicate = #Predicate<SDPokemon> { $0.id == pokemonID }
             let descriptor = FetchDescriptor<SDPokemon>(predicate: predicate)
 
-            guard let existingRecipe = try context.fetch(descriptor).first else {
+            guard let existingPokemon = try context.fetch(descriptor).first else {
                 throw SDError.modelObjNotFound
             }
 
-            existingRecipe.isFavorite.toggle()
+            existingPokemon.isFavorite.toggle()
 
             try context.save()
 
-            return existingRecipe.isFavorite
+            return existingPokemon.isFavorite
         }
     }
     

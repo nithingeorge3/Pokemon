@@ -23,7 +23,9 @@ public protocol PokemonSDServiceType: Sendable {
     func fetchPokemonPagination(_ type: EntityType) async throws -> PaginationDomain
 }
 
+/*
 //just added for showing combine
-public protocol RecipeListServiceType {
-    func fetchPokemon(endPoint: EndPoint) -> Future<[RecipeDomain], Error>
+public protocol PokemonListServiceType {
+    func fetchPokemon(endPoint: EndPoint) -> Future<[PokemonDomain], Error>
 }
+*/

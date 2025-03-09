@@ -1,6 +1,6 @@
 //
 //  Extension.swift
-//  RecipeDataStore
+//  PokemonDataStore
 //
 //  Created by Nitin George on 02/03/2025.
 //
@@ -13,7 +13,6 @@ extension ModelContainer {
         do {
             let schema = Schema([
                 SDPokemon.self,
-                SDRecipe.self,
                 SDPagination.self
             ])
             
@@ -31,7 +30,6 @@ extension ModelContainer {
     static func makeTestContainer() -> ModelContainer {
         let schema = Schema([
             SDPokemon.self,
-            SDRecipe.self,
             SDPagination.self
         ])
         

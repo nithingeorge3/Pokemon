@@ -1,6 +1,6 @@
 //
 //  PaginationSDRepository.swift
-//  RecipeDataStore
+//  PokemonDataStore
 //
 //  Created by Nitin George on 04/03/2025.
 //

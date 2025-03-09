@@ -9,15 +9,15 @@
 import SwiftUI
 
 //just added for listing with combine.
-struct RecipeListImageView: View {
-    let recipe: Recipe
+struct PokemonListImageView: View {
+    let pokemon: Pokemon
     let gridSize: CGFloat
     
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
             Group {
-                if let url = recipe.thumbnailURL.validatedURL {
-                    RecipeImageView(imageURL: url, height: gridSize)
+                if let url = pokemon.thumbnailURL.validatedURL {
+                    PokemonImageView(imageURL: url, height: gridSize)
                         .cornerRadius(10)
                 } else {
                     Image(Constants.Pokemon.placeholderImage)
@@ -29,14 +29,14 @@ struct RecipeListImageView: View {
             }
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(recipe.name)
+                Text(pokemon.name)
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.primary)
                     .lineSpacing(4)
                     .multilineTextAlignment(.leading)
                     .fixedSize(horizontal: false, vertical: true)
                 
-                if let description = recipe.description?.trimmingCharacters(in: .whitespacesAndNewlines), !description.isEmpty {
+                if let description = pokemon.description?.trimmingCharacters(in: .whitespacesAndNewlines), !description.isEmpty {
                     Text(description)
                         .font(.caption)
                         .foregroundColor(.secondary)

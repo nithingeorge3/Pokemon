@@ -1,5 +1,5 @@
 //
-//  RecipeServiceParser.swift
+//  PokemonServiceParser.swift
 //  PokemonNetworking
 //
 //  Created by Nitin George on 08/03/2024.
@@ -24,7 +24,7 @@ final class ServiceParser: ServiceParserType {
             let decodedObject = try decoder.decode(T.self, from: data)
             return decodedObject
         } catch let decodingError {
-            print("RecipeParser - Decoding error: \(decodingError)")
+            print("PokemonParser - Decoding error: \(decodingError)")
             throw NetworkError.failedToDecode
         } 
     }

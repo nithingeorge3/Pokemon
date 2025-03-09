@@ -17,13 +17,6 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
     var body: some View {
         Group {
             Text(viewModel.pokemon?.name ?? "Loading")
-//            if let recipe = viewModel.recipe {
-//                content(for: recipe)
-//            } else {
-//                ProgressView()
-//                    .progressViewStyle(.circular)
-//                    .scaleEffect(1.5)
-//            }
         }
         .onAppear {
             viewModel.send(.load)

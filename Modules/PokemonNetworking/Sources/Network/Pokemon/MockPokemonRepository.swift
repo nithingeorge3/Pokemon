@@ -68,7 +68,7 @@ final class MockPokemonRepository: PokemonRepositoryType, @unchecked Sendable {
     
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain {
         guard let pokemon = pokemon else {
-            throw RecipeError.notFound(recipeID: pokemonID)
+            throw PokemonError.notFound(pokemonID: pokemonID)
         }
         return pokemon
     }

@@ -36,23 +36,3 @@ extension PokemonDomain {
         return id
     }
 }
-
-extension RecipeDomain {
-    init(from dto: RecipeDTO) {
-        let country = Country(from: dto.country ?? .unknown)
-        let rating = UserRatingsDomain(id: dto.id, countNegative: dto.userRatings?.countNegative, countPositive: dto.userRatings?.countPositive, score: dto.userRatings?.score)
-        
-        self.init(
-            id: dto.id,
-            name: dto.name,
-            description: dto.description,
-            country: country,
-            thumbnailURL: dto.thumbnailURL,
-            originalVideoURL: dto.originalVideoURL,
-            createdAt: dto.createdAt,
-            approvedAt: dto.approvedAt,
-            yields: dto.yields,
-            userRatings: rating
-        )
-    }
-}

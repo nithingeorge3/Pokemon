@@ -91,8 +91,8 @@ struct MenuView: View {
     }
     
 //    private func pokemonListView() -> some View {
-//        let service = RecipeListServiceFactory.makeRecipeListService()
-//        let viewModel = RecipesViewModel(service: service)
+//        let service = PokemonListServiceFactory.makePokemonListService()
+//        let viewModel = PokemonViewModel(service: service)
 //        return PokemonViewFactory().makePokemonListView(viewModel: viewModel)
 //    }
 }

@@ -50,32 +50,33 @@ extension PokemonServiceImp {
     }
 }
 
-
+/*
 //just added for showing combine
-final class RecipeListServiceImp: RecipeListServiceType {
-    private let recipeRepository: RecipeListRepositoryType
+final class PokemonListServiceImp: PokemonListServiceType {
+    private let pokemonRepository: PokemonListRepositoryType
     private var cancellables: Set<AnyCancellable> = []
 
             
-    init(recipeRepository: RecipeListRepositoryType) {
-        self.recipeRepository = recipeRepository
+    init(pokemonRepository: PokemonListRepositoryType) {
+        self.pokemonRepository = pokemonRepository
     }
     
-    func fetchPokemon(endPoint: EndPoint) -> Future<[RecipeDomain], Error> {
-        return Future<[RecipeDomain], Error> { [weak self] promise in
+    func fetchPokemon(endPoint: EndPoint) -> Future<[PokemonDomain], Error> {
+        return Future<[PokemonDomain], Error> { [weak self] promise in
             guard let self = self else {
                 return promise(.failure(NetworkError.contextDeallocated))
             }
-            recipeRepository.fetchRecipes(endPoint: endPoint)
+            pokemonRepository.fetchPokemon(endPoint: endPoint)
                 .receive(on: RunLoop.main)
                 .sink { completion in
                     if case .failure(let error) = completion {
                         promise(.failure(error))
                     }
-                } receiveValue: { recipes in
-                    promise(.success(recipes))
+                } receiveValue: { pokemon in
+                    promise(.success(pokemon))
                 }
                 .store(in: &cancellables)
         }
     }
 }
+*/

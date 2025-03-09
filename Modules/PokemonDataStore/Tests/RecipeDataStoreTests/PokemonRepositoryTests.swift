@@ -1,6 +1,6 @@
 //
 //  PokemonRepositoryTests.swift
-//  RecipeDataSource
+//  PokemonDataSource
 //
 //  Created by Nitin George on 06/03/2025.
 //
@@ -30,7 +30,8 @@ final class PokemonRepositoryTests: XCTestCase {
     @MainActor
     private func clearData() async throws {
         let context = ModelContext(container)
-        try context.delete(model: SDRecipe.self)
+        try context.delete(model: SDPokemon.self)
+        try context.delete(model: SDPagination.self)
         try context.save()
     }
 }
@@ -77,26 +78,24 @@ extension PokemonRepositoryTests {
         XCTAssertEqual(page1.count, 2)
         XCTAssertEqual(page1.map(\.id), [8, 7])
     }
- 
-#warning("")
+     
+    func testUpdateFavoritePokemon() async throws {
+        let pokemon = PokemonDomain(id: 1, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)
+        try await repository.savePokemon([pokemon])
+        
+        let isFavoriteAfterFirstUpdate = try await repository.updateFavouritePokemon(1)
+        XCTAssertTrue(isFavoriteAfterFirstUpdate)
+        
+        let isFavoriteAfterSecondUpdate = try await repository.updateFavouritePokemon(1)
+        XCTAssertFalse(isFavoriteAfterSecondUpdate)
+    }
     
-//    func testUpdateFavoritePokemon() async throws {
-//        let recipe = RecipeDomain(id: 1, name: "Biriyani", isFavorite: false)
-//        try await repository.saveRecipes([recipe])
-//        
-//        let isFavoriteAfterFirstUpdate = try await repository.updateFavouritePokemon(1)
-//        XCTAssertTrue(isFavoriteAfterFirstUpdate)
-//        
-//        let isFavoriteAfterSecondUpdate = try await repository.updateFavouritePokemon(1)
-//        XCTAssertFalse(isFavoriteAfterSecondUpdate)
-//    }
-    
-//    func testUpdateFavoriteRecipeNotFound() async {
-//        do {
-//            _ = try await repository.updateFavouritePokemon(100)
-//            XCTFail("Expected an error because the pokemon does not exist, but no error found")
-//        } catch {
-//            XCTAssertEqual(error as? SDError, SDError.modelObjNotFound)
-//        }
-//    }
+    func testUpdateFavoritePokemonNotFound() async {
+        do {
+            _ = try await repository.updateFavouritePokemon(100)
+            XCTFail("Expected an error because the pokemon does not exist, but no error found")
+        } catch {
+            XCTAssertEqual(error as? SDError, SDError.modelObjNotFound)
+        }
+    }
 }
