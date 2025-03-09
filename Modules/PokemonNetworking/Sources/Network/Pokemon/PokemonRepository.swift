@@ -12,7 +12,7 @@ import PokemonDomain
 //we can split protocol. backend and SwiftData fetch
 public protocol PokemonRepositoryType: Sendable {
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain]
-    func fetchRecipe(for recipeID: Int) async throws -> RecipeDomain
+    func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain
     func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain]
     func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool
     func fetchRecipePagination(_ entityType: EntityType) async throws -> PaginationDomain
@@ -118,8 +118,8 @@ final class PokemonRepository: PokemonRepositoryType {
  */
 
 extension PokemonRepository {
-    func fetchRecipe(for recipeID: Int) async throws -> RecipeDomain {
-        try await recipeSDRepo.fetchRecipe(for: recipeID)
+    func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain {
+        try await recipeSDRepo.fetchPokemon(for: pokemonID)
     }
     
     func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain] {

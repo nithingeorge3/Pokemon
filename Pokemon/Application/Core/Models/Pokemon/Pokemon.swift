@@ -1,8 +1,10 @@
 //
 //  Recipe.swift
-//  Recipes
 //
-//  Created by Nitin George on 02/03/2025.
+//  Pokemon.swift
+//  Pokemon
+//
+//  Created by Nitin George on 08/03/2025.
 //
 
 import Foundation

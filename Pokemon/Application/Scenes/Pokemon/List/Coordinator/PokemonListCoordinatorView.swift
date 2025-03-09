@@ -1,8 +1,8 @@
 //
 //  PokemonListCoordinatorView.swift
-//  Recipe
+//  Pokemon
 //
-//  Created by Nitin George on 01/03/2025.
+//  Created by Nitin George on 08/03/2025.
 //
 
 import SwiftUI
@@ -16,8 +16,7 @@ struct PokemonListCoordinatorView: View {
                 .navigationDestination(for: PokemonListAction.self) { action in
                     switch action {
                     case .selectPokemon(let pokemonID):
-                        EmptyView()
-//                        coordinator.navigateToPokemonPlay(for: recipeID)
+                        coordinator.navigateToPokemonPlay(for: pokemonID)
                     default: EmptyView()
                     }
                 }

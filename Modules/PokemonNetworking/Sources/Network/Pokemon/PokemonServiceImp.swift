@@ -1,8 +1,8 @@
 //
-//  RecipeServiceImp.swift
-//  RecipeNetworking
+//  PokemonServiceImp.swift
+//  PokemonNetworking
 //
-//  Created by Nitin George on 01/03/2024.
+//  Created by Nitin George on 08/03/2024.
 //
 
 import Combine
@@ -30,9 +30,9 @@ final class PokemonServiceImp: PokemonServiceProvider {
 //SwiftData
 extension PokemonServiceImp {        
     var favoritesDidChange: AsyncStream<Int> { favoritesDidChangeStream }
-    
-    func fetchRecipe(for recipeID: Int) async throws -> RecipeDomain {
-        try await pokemonRepository.fetchRecipe(for: recipeID)
+
+    func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain {
+        try await pokemonRepository.fetchPokemon(for: pokemonID)
     }
     
     func fetchRecipes(page: Int = 0, pageSize: Int = 40) async throws -> [RecipeDomain] {

@@ -1,8 +1,8 @@
 //
-//  RecipeDTO.swift
-//  RecipeNetworking
+//  PokemonDTO.swift
+//  PokemonNetworking
 //
-//  Created by Nitin George on 01/03/2024.
+//  Created by Nitin George on 08/03/2024.
 //
 
 import Foundation

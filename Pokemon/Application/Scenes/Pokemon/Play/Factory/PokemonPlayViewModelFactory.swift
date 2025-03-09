@@ -1,18 +1,18 @@
 //
-//  RecipeDetailViewModelFactory.swift
-//  Recipes
+//  PokemonPlayViewModelFactoryType.swift
+//  Pokemon
 //
-//  Created by Nitin George on 01/03/2025.
+//  Created by Nitin George on 08/03/2025.
 //
 
 import PokemonNetworking
 
 protocol PokemonPlayViewModelFactoryType {
-    @MainActor func makePokemonPlayViewModel(recipeID: Recipe.ID, service: PokemonSDServiceType) -> PokemonPlayViewModel
+    @MainActor func makePokemonPlayViewModel(pokemonID: Pokemon.ID, service: PokemonSDServiceType) -> PokemonPlayViewModel
 }
 
 final class PokemonPlayViewModelFactory: PokemonPlayViewModelFactoryType {
-    @MainActor func makePokemonPlayViewModel(recipeID: Recipe.ID, service: PokemonSDServiceType) -> PokemonPlayViewModel {
-        PokemonPlayViewModel(recipeID: recipeID, service: service)
+    @MainActor func makePokemonPlayViewModel(pokemonID: Pokemon.ID, service: PokemonSDServiceType) -> PokemonPlayViewModel {
+        PokemonPlayViewModel(pokemonID: pokemonID, service: service)
     }
 }

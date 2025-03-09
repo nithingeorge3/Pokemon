@@ -1,8 +1,8 @@
 //
-//  RecipeDetailView.swift
-//  Recipes
+//  PokemonPlayView.swift
+//  Pokemon
 //
-//  Created by Nitin George on 01/03/2025.
+//  Created by Nitin George on 08/03/2025.
 //
 
 import SwiftUI
@@ -250,7 +250,7 @@ private class MockPreviewService: PokemonSDServiceType, @unchecked Sendable {
         AsyncStream { _ in }
     }
     
-    func fetchRecipe(for recipeID: Int) async throws -> RecipeDomain {
+    func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain {
         RecipeDomain(id: 999, name: "Mock Recipe")
     }
     

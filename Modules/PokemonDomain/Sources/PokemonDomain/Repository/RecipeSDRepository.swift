@@ -14,7 +14,7 @@ public protocol PaginationSDRepositoryType: Sendable {
 }
 
 public protocol RecipeSDRepositoryType: Sendable {
-    func fetchRecipe(for recipeID: Int) async throws -> RecipeDomain
+    func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain
     func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain]
     func saveRecipes(_ recipes: [RecipeDomain]) async throws
     func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool

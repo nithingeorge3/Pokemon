@@ -1,8 +1,8 @@
 //
-//  RecipeDetailViewModel.swift
-//  Recipes
+//  PokemonPlayViewModel.swift
+//  Pokemon
 //
-//  Created by Nitin George on 01/03/2025.
+//  Created by Nitin George on 08/03/2025.
 //
 
 import Foundation
@@ -32,7 +32,7 @@ protocol PokemonPlayViewModelType: AnyObject, Observable {
 @Observable
 class PokemonPlayViewModel: PokemonPlayViewModelType {    
     var recipe: Recipe?
-    private let recipeID: Recipe.ID
+    private let pokemonID: Pokemon.ID
     
     var mediaItems: [PresentedMedia] {
         var result: [PresentedMedia] = []
@@ -50,10 +50,10 @@ class PokemonPlayViewModel: PokemonPlayViewModelType {
     
     private let service: PokemonSDServiceType
     
-    init(recipeID: Recipe.ID, service: PokemonSDServiceType) {
+    init(pokemonID: Pokemon.ID, service: PokemonSDServiceType) {
         self.service = service
-        self.recipeID = recipeID
-        Task { await fetchRecipe() }
+        self.pokemonID = pokemonID
+        Task { await fetchPokemon() }
     }
     
     func send(_ action: RecipeDetailActions) {
@@ -62,19 +62,19 @@ class PokemonPlayViewModel: PokemonPlayViewModelType {
             recipe?.isFavorite.toggle()
             Task {
                 do {
-                    recipe?.isFavorite = try await service.updateFavouriteRecipe(recipeID)
+                    recipe?.isFavorite = try await service.updateFavouriteRecipe(pokemonID)
                 } catch {
                     print("failed to upadte SwiftData: errro \(error)")
                 }
             }
         case .load:
-            Task { await fetchRecipe() }
+            Task { await fetchPokemon() }
         }
     }
     
-    private func fetchRecipe() async {
+    private func fetchPokemon() async {
         do {
-            let recipeDomain = try await service.fetchRecipe(for: recipeID)
+            let recipeDomain = try await service.fetchPokemon(for: pokemonID)
             self.recipe = Recipe(from: recipeDomain)
         } catch {
             print("Error: \(error)")

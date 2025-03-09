@@ -1,8 +1,8 @@
 //
 //  RecipeListViewModel.swift
-//  Recipes
+//  Pokemon
 //
-//  Created by Nitin George on 01/03/2025.
+//  Created by Nitin George on 08/03/2025.
 //
 
 import Combine
@@ -14,7 +14,7 @@ import PokemonDomain
 @MainActor
 protocol PokemonListViewModelType: AnyObject, Observable {
     var pokemon: [Pokemon] { get }
-    var playlaterPokemon: [Pokemon] { get }
+    var favoritePokemon: [Pokemon] { get }
     var otherPokemon: [Pokemon] { get }
     var paginationHandler: PaginationHandlerType { get }
     var pokemonListActionSubject: PassthroughSubject<PokemonListAction, Never> { get  set }
@@ -33,7 +33,7 @@ class PokemonListViewModel: PokemonListViewModelType {
     
     private var updateTask: Task<Void, Never>?
     
-    var playlaterPokemon: [Pokemon] {
+    var favoritePokemon: [Pokemon] {
         pokemon.filter { $0.isFavorite }
     }
     

@@ -1,8 +1,8 @@
 //
 //  PokemonListCoordinator.swift
-//  Recipes
+//  Pokemon
 //
-//  Created by Nitin George on 01/03/2025.
+//  Created by Nitin George on 08/03/2025.
 //
 
 import Combine
@@ -76,8 +76,8 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
 }
 
 extension PokemonListCoordinator {
-    func navigateToPokemonPlay(for recipeID: Recipe.ID) -> some View {
-        let playCoordinator = PokemonPlayCoordinatorFactory().makePokemonPlayCoordinator(recipeID: recipeID, service: service)
-        return playCoordinator.start()
+    func navigateToPokemonPlay(for pokemonID: Recipe.ID) -> some View {
+        let playCoordinator = PokemonPlayCoordinatorFactory().makePokemonPlayCoordinator(pokemonID: pokemonID, service: service)
+        return EmptyView()//playCoordinator.start()
     }
 }

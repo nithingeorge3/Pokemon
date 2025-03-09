@@ -1,8 +1,8 @@
 //
 //  RecipesListView.swift
-//  Recipes
+//  Pokemon
 //
-//  Created by Nitin George on 01/03/2025.
+//  Created by Nitin George on 08/03/2025.
 //
 
 import SwiftUI
@@ -31,7 +31,7 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
                     EmptyStateView(message: "No pokemon found. Please try again later.")
                 } else {
                     EmptyView()
-                    PokemonGridView(favorites: viewModel.playlaterPokemon, others: viewModel.otherPokemon, hasMoreData: viewModel.paginationHandler.hasMoreData) { pokemon in
+                    PokemonGridView(favorites: viewModel.favoritePokemon, others: viewModel.otherPokemon, hasMoreData: viewModel.paginationHandler.hasMoreData) { pokemon in
                         viewModel.send(.selectPokemon(pokemon.id))
                     } onReachBottom: {
                         viewModel.send(.loadMore)
@@ -45,20 +45,20 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
     }
 }
 
-/*
+
 // MARK: - Previews
 #if DEBUG
 #Preview("Loading State") {
     PokemonListView(viewModel: PreviewPokemonListViewModel(state: .loading))
 }
 
-#Preview("Success State with Recipes") {
+#Preview("Success State with Pokemon") {
     PokemonListView(viewModel: PreviewPokemonListViewModel(state: .success))
 }
 
 #Preview("Empty State") {
     let vm = PreviewPokemonListViewModel(state: .success)
-    vm.recipes = []
+    vm.pokemon = []
     return PokemonListView(viewModel: vm)
 }
 
@@ -68,24 +68,25 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
     ))
 }
 
-private class PreviewPokemonListViewModel: PokemonListViewModelType {    
-    var recipes: [Recipe] = [
-        Recipe(id: 1, name: "Kerala Chicken", thumbnailURL: "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/45b4efeb5d2c4d29970344ae165615ab/FixedFBFinal.jpg" ,isFavorite: true),
-        Recipe(id: 2, name: "Kerala Dosha", thumbnailURL: "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/video-api/assets/314886.jpg", isFavorite: false),
-        Recipe(id: 3, name: "Kerala CB", thumbnailURL: "https://s3.amazonaws.com/video-api-prod/assets/654d0916588d46c5835b7a5f547a090e/BestPastaFB.jpg", isFavorite: true)
+private class PreviewPokemonListViewModel: PokemonListViewModelType {
+    var pokemon: [Pokemon] = [
+        Pokemon(id: 1, name: "ivysaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!, isFavorite: false),
+        Pokemon(id: 2, name: "venusaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!, isFavorite: true),
+        Pokemon(id: 3, name: "charmander", url: URL(string: "https://pokeapi.co/api/v2/pokemon/3/")!, isFavorite: false)
     ]
+    
     var pagination: Pagination? = Pagination(entityType: .pokemon)
-    var favoriteRecipes: [Recipe] { recipes.filter { $0.isFavorite } }
-    var otherRecipes: [Recipe] { recipes.filter { !$0.isFavorite } }
+    var favoritePokemon: [Pokemon] { pokemon.filter { $0.isFavorite } }
+    var otherPokemon: [Pokemon] { pokemon.filter { !$0.isFavorite } }
     var paginationHandler: PaginationHandlerType = PreviewPaginationHandler()
-    var recipeListActionSubject = PassthroughSubject<RecipeListAction, Never>()
+    var pokemonListActionSubject = PassthroughSubject<PokemonListAction, Never>()
     var state: ResultState
     
     init(state: ResultState) {
         self.state = state
     }
     
-    func send(_ action: RecipeListAction) {
+    func send(_ action: PokemonListAction) {
     }
 }
 
@@ -114,5 +115,3 @@ private class PreviewPaginationHandler: PaginationHandlerType {
     }
 }
 #endif
-
-*/

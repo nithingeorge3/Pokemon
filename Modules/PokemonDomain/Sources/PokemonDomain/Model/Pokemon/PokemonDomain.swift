@@ -1,8 +1,8 @@
 //
-//  RecipeDTO.swift
-//  RecipeNetworking
+//  PokemonDomain.swift
+//  PokemonDomain
 //
-//  Created by Nitin George on 02/03/2025.
+//  Created by Nitin George on 08/03/2025.
 //
 
 import Foundation

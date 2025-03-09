@@ -1,8 +1,8 @@
 //
-//  PaginationDTO.swift
-//  RecipeDomain
+//  PaginationDomain.swift
+//  PokemonDomain
 //
-//  Created by Nitin George on 04/03/2025.
+//  Created by Nitin George on 08/03/2025.
 //
 
 import Foundation

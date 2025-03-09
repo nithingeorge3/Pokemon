@@ -1,8 +1,8 @@
 //
 //  PokemonPlayCoordinator.swift
-//  Recipes
+//  Pokemon
 //
-//  Created by Nitin George on 01/03/2025.
+//  Created by Nitin George on 08/03/2025.
 //
 
 import SwiftUI
@@ -20,20 +20,20 @@ final class PokemonPlayCoordinator: Coordinator {
     private let viewModelFactory: PokemonPlayViewModelFactoryType
     private let viewFactory: PokemonPlayViewFactoryType
     private var viewModel: PokemonPlayViewModel
-    private let recipeID: Recipe.ID
+    private let pokemonID: Pokemon.ID
     private let service: PokemonSDServiceType
     
     init(
         viewModelFactory: PokemonPlayViewModelFactoryType,
         viewFactory: PokemonPlayViewFactoryType,
-        recipeID: Recipe.ID,
+        pokemonID: Pokemon.ID,
         service: PokemonSDServiceType
     ) {
         self.viewModelFactory = viewModelFactory
         self.viewFactory = viewFactory
-        self.recipeID = recipeID
+        self.pokemonID = pokemonID
         self.service = service
-        self.viewModel = viewModelFactory.makePokemonPlayViewModel(recipeID: recipeID, service: service)
+        self.viewModel = viewModelFactory.makePokemonPlayViewModel(pokemonID: pokemonID, service: service)
     }
     
     func start() -> some View {

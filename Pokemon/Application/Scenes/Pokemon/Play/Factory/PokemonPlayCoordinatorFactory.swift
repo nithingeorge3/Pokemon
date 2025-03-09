@@ -1,25 +1,25 @@
 //
-//  PokemonDetailCoordinatorFactory.swift
-//  Recipes
+//  PokemonPlayCoordinatorFactoryType.swift
+//  Pokemon
 //
-//  Created by Nitin George on 01/03/2025.
+//  Created by Nitin George on 08/03/2025.
 //
 
 import Foundation
 import PokemonNetworking
 
 protocol PokemonPlayCoordinatorFactoryType {
-    @MainActor func makePokemonPlayCoordinator(recipeID: Recipe.ID, service: PokemonSDServiceType) -> PokemonPlayCoordinator
+    @MainActor func makePokemonPlayCoordinator(pokemonID: Pokemon.ID, service: PokemonSDServiceType) -> PokemonPlayCoordinator
 }
 
 final class PokemonPlayCoordinatorFactory: PokemonPlayCoordinatorFactoryType {
-    func makePokemonPlayCoordinator(recipeID: Recipe.ID, service: PokemonSDServiceType) -> PokemonPlayCoordinator {
+    func makePokemonPlayCoordinator(pokemonID: Pokemon.ID, service: PokemonSDServiceType) -> PokemonPlayCoordinator {
         let viewModelFactory: PokemonPlayViewModelFactoryType = PokemonPlayViewModelFactory()
         let viewFactory: PokemonPlayViewFactoryType = PokemonPlayViewFactory()
         return PokemonPlayCoordinator(
             viewModelFactory: viewModelFactory,
             viewFactory: viewFactory,
-            recipeID: recipeID,
+            pokemonID: pokemonID,
             service: service
         )
     }
