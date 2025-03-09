@@ -9,14 +9,13 @@ import Foundation
 import SwiftData
 
 public protocol PaginationSDRepositoryType: Sendable {
-    func fetchRecipePagination(_ entityType: EntityType) async throws -> PaginationDomain
-    func updateRecipePagination(_ pagination: PaginationDomain) async throws
+    func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain
+    func updatePokemonPagination(_ pagination: PaginationDomain) async throws
 }
 
 public protocol PokemonSDRepositoryType: Sendable {
-    func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain
-    func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain]
-//    func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain]
+    func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain
+    func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain]
     func savePokemon(_ pokemon: [PokemonDomain]) async throws
-    func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool
+    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool
 }

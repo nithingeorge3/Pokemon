@@ -62,7 +62,7 @@ class PokemonPlayViewModel: PokemonPlayViewModelType {
             recipe?.isFavorite.toggle()
             Task {
                 do {
-                    recipe?.isFavorite = try await service.updateFavouriteRecipe(pokemonID)
+                    recipe?.isFavorite = try await service.updateFavouritePokemon(pokemonID)
                 } catch {
                     print("failed to upadte SwiftData: errro \(error)")
                 }
@@ -73,11 +73,11 @@ class PokemonPlayViewModel: PokemonPlayViewModelType {
     }
     
     private func fetchPokemon() async {
-        do {
-            let recipeDomain = try await service.fetchPokemon(for: pokemonID)
-            self.recipe = Recipe(from: recipeDomain)
-        } catch {
-            print("Error: \(error)")
-        }
+//        do {
+//            let recipeDomain = try await service.fetchPokemon(for: pokemonID)
+//            self.recipe = Recipe(from: recipeDomain)
+//        } catch {
+//            print("Error: \(error)")
+//        }
     }
 }

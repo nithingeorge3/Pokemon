@@ -38,7 +38,7 @@ final class PaginationRepositoryTests: XCTestCase {
 
 extension PaginationRepositoryTests {
     func testFetchInitialPagination() async throws {
-        let pagination = try await repository.fetchRecipePagination(.pokemon)
+        let pagination = try await repository.fetchPokemonPagination(.pokemon)
         
         XCTAssertEqual(pagination.entityType, .pokemon)
         XCTAssertEqual(pagination.totalCount, 0)
@@ -52,8 +52,8 @@ extension PaginationRepositoryTests {
             currentPage: 2
         )
         
-        try await repository.updateRecipePagination(pagination)
-        let fetched = try await repository.fetchRecipePagination(.pokemon)
+        try await repository.updatePokemonPagination(pagination)
+        let fetched = try await repository.fetchPokemonPagination(.pokemon)
         
         XCTAssertEqual(fetched.totalCount, 100)
         XCTAssertEqual(fetched.currentPage, 2)
@@ -61,11 +61,11 @@ extension PaginationRepositoryTests {
     
     func testUpdate_ModifiesExisting_Pagination() async throws {
         let initial = PaginationDomain(entityType: .pokemon, totalCount: 50, currentPage: 1)
-        try await repository.updateRecipePagination(initial)
+        try await repository.updatePokemonPagination(initial)
         
         let updated = PaginationDomain(entityType: .pokemon, totalCount: 50, currentPage: 2)
-        try await repository.updateRecipePagination(updated)
-        let fetched = try await repository.fetchRecipePagination(.pokemon)
+        try await repository.updatePokemonPagination(updated)
+        let fetched = try await repository.fetchPokemonPagination(.pokemon)
         
         XCTAssertEqual(fetched.currentPage, 2)
         XCTAssertEqual(fetched.totalCount, 50)
@@ -77,8 +77,8 @@ extension PaginationRepositoryTests {
         let startDate = Date()
         let pagination = PaginationDomain(entityType: .pokemon)
         
-        try await repository.updateRecipePagination(pagination)
-        let fetched = try await repository.fetchRecipePagination(.pokemon)
+        try await repository.updatePokemonPagination(pagination)
+        let fetched = try await repository.fetchPokemonPagination(.pokemon)
         
         XCTAssertGreaterThan(fetched.lastUpdated, startDate)
         XCTAssertLessThan(fetched.lastUpdated, Date())

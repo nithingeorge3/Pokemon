@@ -66,19 +66,19 @@ final class MockPokemonRepository: PokemonRepositoryType, @unchecked Sendable {
         }
     }
     
-    func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain {
+    func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain {
         guard let pokemon = pokemon else {
             throw RecipeError.notFound(recipeID: pokemonID)
         }
-        return RecipeDomain(id: 1, name: "")
+        return pokemon
     }
     
-    func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain] {
+    func fetchPokemon(offset: Int = 0, pageSize: Int = 40) async throws -> [PokemonDomain] {
         return []
     }
     
-    func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool {
-        guard var pokemon = pokemon, pokemon.id == recipeID else {
+    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
+        guard var pokemon = pokemon, pokemon.id == pokemonID else {
             return false
         }
         pokemon.isFavorite.toggle()
@@ -86,7 +86,7 @@ final class MockPokemonRepository: PokemonRepositoryType, @unchecked Sendable {
         return pokemon.isFavorite
     }
     
-    func fetchRecipePagination(_ entityType: EntityType) async throws -> PaginationDomain {
+    func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain {
         pagination
     }
 }

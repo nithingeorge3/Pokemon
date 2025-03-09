@@ -84,9 +84,9 @@ class PokemonServiceImplTests: XCTestCase {
         
         do {
             let dtos = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
-            let firstToggle = try await pokemonRepository.updateFavouriteRecipe(dtos.first?.id ?? 0)
+            let firstToggle = try await pokemonRepository.updateFavouritePokemon(dtos.first?.id ?? 0)
             XCTAssertTrue(firstToggle, "updated should be true")
-            let secondToggle = try await pokemonRepository.updateFavouriteRecipe(dtos.first?.id ?? 0)
+            let secondToggle = try await pokemonRepository.updateFavouritePokemon(dtos.first?.id ?? 0)
             XCTAssertFalse(secondToggle, "updated should be false")
             expectation.fulfill()
         } catch {
@@ -122,7 +122,7 @@ class PokemonServiceImplTests: XCTestCase {
         
         do {
             _ = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
-            let pagination = try await pokemonRepository.fetchRecipePagination(.pokemon)
+            let pagination = try await pokemonRepository.fetchPokemonPagination(.pokemon)
             XCTAssertEqual(pagination.totalCount, 1304)
             XCTAssertEqual(pagination.currentPage, 1)
             XCTAssertEqual(pagination.id, UUID(uuidString: "11111111-1111-1111-1111-111111111111")!)

@@ -27,36 +27,36 @@ public final class PokemonSDRepository: PokemonSDRepositoryType {
         DataStoreManager(container: self.container)
     }
     
-    public func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain {
+    public func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain {
         try await dataStore.performBackgroundTask { context in
-            let predicate = #Predicate<SDRecipe> { $0.id == pokemonID }
-            let descriptor = FetchDescriptor<SDRecipe>(predicate: predicate)
+            let predicate = #Predicate<SDPokemon> { $0.id == pokemonID }
+            let descriptor = FetchDescriptor<SDPokemon>(predicate: predicate)
 
-            guard let recipe = try context.fetch(descriptor).first else {
+            guard let pokemon = try context.fetch(descriptor).first else {
                 throw SDError.modelObjNotFound
             }
-            return RecipeDomain(from: recipe)
+            return try PokemonDomain(from: pokemon)
         }
     }
     
-    public func fetchRecipes(page: Int = 0, pageSize: Int = 40) async throws -> [RecipeDomain] {
+    public func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain] {
         try await dataStore.performBackgroundTask { context in
-            let offset = page * pageSize
+            let offset = offset * pageSize
             
-            var descriptor = FetchDescriptor<SDRecipe>(
+            var descriptor = FetchDescriptor<SDPokemon>(
                 predicate: nil,
-                sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
+                sortBy: [SortDescriptor(\.id, order: .reverse)]
             )
             descriptor.fetchLimit = pageSize
             descriptor.fetchOffset = offset
 
-            return try context.fetch(descriptor).map(RecipeDomain.init)
+            return try context.fetch(descriptor).map(PokemonDomain.init)
         }
     }
     
     public func savePokemon(_ pokemon: [PokemonDomain]) async throws {
         try await dataStore.performBackgroundTask { context in
-            let existing = try self.existingRecipes(ids: pokemon.map(\.id), context: context)
+            let existing = try self.existingPokemon(ids: pokemon.map(\.id), context: context)
             
             for poke in pokemon {
                 if let existingPokemon = existing[poke.id] {
@@ -68,10 +68,10 @@ public final class PokemonSDRepository: PokemonSDRepositoryType {
         }
     }
     
-    public func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool {
+    public func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
         try await dataStore.performBackgroundTask { context in
-            let predicate = #Predicate<SDRecipe> { $0.id == recipeID }
-            let descriptor = FetchDescriptor<SDRecipe>(predicate: predicate)
+            let predicate = #Predicate<SDPokemon> { $0.id == pokemonID }
+            let descriptor = FetchDescriptor<SDPokemon>(predicate: predicate)
 
             guard let existingRecipe = try context.fetch(descriptor).first else {
                 throw SDError.modelObjNotFound
@@ -85,7 +85,7 @@ public final class PokemonSDRepository: PokemonSDRepositoryType {
         }
     }
     
-    private func existingRecipes(ids: [Int], context: ModelContext) throws -> [Int: SDPokemon] {
+    private func existingPokemon(ids: [Int], context: ModelContext) throws -> [Int: SDPokemon] {
         let predicate = #Predicate<SDPokemon> { ids.contains($0.id) }
         let descriptor = FetchDescriptor<SDPokemon>(predicate: predicate)
         return try context.fetch(descriptor).reduce(into: [:]) { $0[$1.id] = $1 }

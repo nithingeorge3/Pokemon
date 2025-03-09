@@ -16,19 +16,20 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
    
     var body: some View {
         Group {
-            if let recipe = viewModel.recipe {
-                content(for: recipe)
-            } else {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .scaleEffect(1.5)
-            }
+            Text(viewModel.recipe?.name ?? "Loading")
+//            if let recipe = viewModel.recipe {
+//                content(for: recipe)
+//            } else {
+//                ProgressView()
+//                    .progressViewStyle(.circular)
+//                    .scaleEffect(1.5)
+//            }
         }
         .onAppear {
             viewModel.send(.load)
         }
         .withCustomBackButton()
-        .withCustomNavigationTitle(title: viewModel.recipe?.name ?? "Recipe Details")
+        .withCustomNavigationTitle(title: viewModel.recipe?.name ?? "Pokemon")
     }
     
     @ViewBuilder
@@ -201,7 +202,7 @@ public class PreviewPlayViewModel: PokemonPlayViewModelType {
         switch action {
         case .toggleFavorite:
             recipe?.isFavorite.toggle()
-            Task { try? await service.updateFavouriteRecipe(recipeID) }
+            Task { try? await service.updateFavouritePokemon(recipeID) }
         case .load:
             break
         }
@@ -250,15 +251,15 @@ private class MockPreviewService: PokemonSDServiceType, @unchecked Sendable {
         AsyncStream { _ in }
     }
     
-    func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain {
-        RecipeDomain(id: 999, name: "Mock Recipe")
+    func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain {
+        PokemonDomain(id: 1, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)
     }
     
-    func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain] {
+    func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain] {
         []
     }
     
-    func fetchRecipePagination(_ type: EntityType) async throws -> PaginationDomain {
+    func fetchPokemonPagination(_ type: EntityType) async throws -> PaginationDomain {
         PaginationDomain(entityType: .pokemon, totalCount: 10, currentPage: 10)
     }
     
@@ -266,7 +267,7 @@ private class MockPreviewService: PokemonSDServiceType, @unchecked Sendable {
         Recipe(id: 999, name: "Mock Recipe")
     }
     
-    func updateFavouriteRecipe(_ id: Int) async throws -> Bool {
+    func updateFavouritePokemon(_ id: Int) async throws -> Bool {
         true
     }
 }

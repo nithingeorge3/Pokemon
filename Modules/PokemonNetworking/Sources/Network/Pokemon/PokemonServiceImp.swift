@@ -31,22 +31,22 @@ final class PokemonServiceImp: PokemonServiceProvider {
 extension PokemonServiceImp {        
     var favoritesDidChange: AsyncStream<Int> { favoritesDidChangeStream }
 
-    func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain {
+    func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain {
         try await pokemonRepository.fetchPokemon(for: pokemonID)
     }
     
-    func fetchRecipes(page: Int = 0, pageSize: Int = 40) async throws -> [RecipeDomain] {
-        try await pokemonRepository.fetchRecipes(page: page, pageSize: pageSize)
+    func fetchPokemon(offset: Int = 0, pageSize: Int = 40) async throws -> [PokemonDomain] {
+        try await pokemonRepository.fetchPokemon(offset: offset, pageSize: pageSize)
     }
     
-    func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool {
-        let isUpdated = try await pokemonRepository.updateFavouriteRecipe(recipeID)
-        favoritesDidChangeContinuation.yield(recipeID)
+    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
+        let isUpdated = try await pokemonRepository.updateFavouritePokemon(pokemonID)
+        favoritesDidChangeContinuation.yield(pokemonID)
         return isUpdated
     }
     
-    func fetchRecipePagination(_ entityType: EntityType) async throws -> PaginationDomain {
-        return try await pokemonRepository.fetchRecipePagination(entityType)
+    func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain {
+        return try await pokemonRepository.fetchPokemonPagination(entityType)
     }
 }
 

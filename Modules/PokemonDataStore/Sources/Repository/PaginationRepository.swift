@@ -22,7 +22,7 @@ public class PaginationSDRepository: PaginationSDRepositoryType {
         DataStoreManager(container: self.container)
     }
     
-    public func fetchRecipePagination(_ entityType: EntityType) async throws -> PaginationDomain {
+    public func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain {
         try await dataStore.performBackgroundTask { context in            
             let predicate = #Predicate<SDPagination> { $0.entityTypeRaw == entityType.rawValue }
             let descriptor = FetchDescriptor(predicate: predicate)
@@ -35,7 +35,7 @@ public class PaginationSDRepository: PaginationSDRepositoryType {
         }
     }
     
-    public func updateRecipePagination(_ pagination: PaginationDomain) async throws {
+    public func updatePokemonPagination(_ pagination: PaginationDomain) async throws {
         try await dataStore.performBackgroundTask { context in
             let type = pagination.entityType
             let predicate = #Predicate<SDPagination> { $0.entityTypeRaw == type.rawValue }

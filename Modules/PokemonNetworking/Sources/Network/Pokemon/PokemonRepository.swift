@@ -12,10 +12,10 @@ import PokemonDomain
 //we can split protocol. backend and SwiftData fetch
 public protocol PokemonRepositoryType: Sendable {
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain]
-    func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain
-    func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain]
-    func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool
-    func fetchRecipePagination(_ entityType: EntityType) async throws -> PaginationDomain
+    func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain
+    func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain]
+    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool
+    func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain
 }
 
 final class PokemonRepository: PokemonRepositoryType {
@@ -56,85 +56,50 @@ final class PokemonRepository: PokemonRepositoryType {
                 }
             }
             
-            try await pokemonSDRepo.savePokemon(pokemonDomains)
-            return pokemonDomains
-            
-            //handle errro late
-//            let pokemonDomains = try dtos.results.map { try PokemonDomain(from: $0) }
-
-//            return pokemonDomains // [PokemonDomain(id: 1, name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/")]
-            /*
-            //Reach the page end or no data
-            if recipeDomains.count == 0 {
-                return recipeDomains
+            if pokemonDomains.count == 0 {
+                return pokemonDomains
             }
             
-//            try await recipeSDRepo.saveRecipes(recipeDomains)
+            try await pokemonSDRepo.savePokemon(pokemonDomains)
+//            return pokemonDomains
             
-            var pagination = try await paginationSDRepo.fetchRecipePagination(.recipe)
-            pagination.totalCount = dtos.count
+            var pagination = try await paginationSDRepo.fetchPokemonPagination(.pokemon)
+            pagination.totalCount = responseDTO.count
             pagination.currentPage += 1
             pagination.lastUpdated = Date()
             
             //updating Pagination
-            try await paginationSDRepo.updateRecipePagination(pagination)
+            try await paginationSDRepo.updatePokemonPagination(pagination)
+            
             
             let pageSize = endPoint.pokemonFetchInfo.1
-            let page = endPoint.pokemonFetchInfo.0
+            let offset = endPoint.pokemonFetchInfo.0
 
-            let batchRecipes = try await fetchRecipes(page: page, pageSize: pageSize)
+            let batchPokemon = try await fetchPokemon(offset: offset, pageSize: pageSize)
                         
-            return batchRecipes
-            */
+            return batchPokemon
+            
         } catch {
             throw NetworkError.noNetworkAndNoCache(context: error)
         }
     }
 }
 
-/*
- class PokemonRepository {
-     func fetchPokemon() async -> Result<[PokemonDomain], Error> {
-         do {
-             let dtos = try await apiService.fetchPokemon()
-             let domains = try dtos.map { try PokemonDomain(from: $0) }
-             return .success(domains)
-         } catch let error as NetworkError {
-             return .failure(error) // Network issues
-         } catch let error as PokemonError {
-             return .failure(error) // Domain validation issues
-         } catch {
-             return .failure(NetworkError.unknown(error))
-         }
-     }
- }
- */
-
-/*
- switch error {
- case .invalidPokemonURL:
-     showAlert("Invalid Pokémon data. Please try again.")
- case .noNetworkConnectivity:
-     showAlert("No internet connection.")
- // ...
- }
- */
-
 extension PokemonRepository {
-    func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain {
+    func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain {
         try await pokemonSDRepo.fetchPokemon(for: pokemonID)
     }
     
-    func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain] {
-        try await pokemonSDRepo.fetchRecipes(page: page, pageSize: pageSize)
+    func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain] {
+        try await pokemonSDRepo.fetchPokemon(offset: offset, pageSize: pageSize)
     }
     
-    func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool {
-        try await pokemonSDRepo.updateFavouriteRecipe(recipeID)
+    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
+        try await pokemonSDRepo.updateFavouritePokemon(pokemonID)
     }
     
-    func fetchRecipePagination(_ entityType: EntityType) async throws -> PaginationDomain {
-        try await paginationSDRepo.fetchRecipePagination(entityType)
+    func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain {
+        try await paginationSDRepo.fetchPokemonPagination(entityType)
     }
 }
 

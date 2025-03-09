@@ -17,10 +17,10 @@ public protocol PokemonServiceType: Sendable {
 
 public protocol PokemonSDServiceType: Sendable {
     var favoritesDidChange: AsyncStream<Int> { get }
-    func fetchPokemon(for pokemonID: Int) async throws -> RecipeDomain
-    func fetchRecipes(page: Int, pageSize: Int) async throws -> [RecipeDomain]
-    func updateFavouriteRecipe(_ recipeID: Int) async throws -> Bool
-    func fetchRecipePagination(_ type: EntityType) async throws -> PaginationDomain
+    func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain
+    func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain]
+    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool
+    func fetchPokemonPagination(_ type: EntityType) async throws -> PaginationDomain
 }
 
 //just added for showing combine

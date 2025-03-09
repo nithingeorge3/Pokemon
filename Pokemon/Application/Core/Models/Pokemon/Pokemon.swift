@@ -14,7 +14,7 @@ struct Pokemon: Identifiable, Hashable {
     let id: Int
     let name: String
     let url: URL
-    let isFavorite: Bool
+    var isFavorite: Bool
     
     init(id: Int, name: String, url: URL, isFavorite: Bool) {
         self.id = id

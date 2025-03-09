@@ -47,12 +47,9 @@ class PokemonListViewModel: PokemonListViewModelType {
     ) {
         self.service = service
         self.paginationHandler = paginationHandler
-//        Task { try await loadMore() }
-//        Task { try await fetchLocalPokemon() }
-//        listeningFavoritesChanges()
-        
-        //temp code
-        Task { try await fetchRemotePokemon() }
+        Task { try await fetchPagination() }
+        Task { try await fetchLocalPokemon() }
+        listeningFavoritesChanges()
     }
     
     func send(_ action: PokemonListAction) {
@@ -67,10 +64,10 @@ class PokemonListViewModel: PokemonListViewModelType {
         }
     }
     
-    private func loadMore() async throws {
+    private func fetchPagination() async throws {
         Task {
             do {
-                let paginationDomain = try await service.fetchRecipePagination(.pokemon)
+                let paginationDomain = try await service.fetchPokemonPagination(.pokemon)
                 updatePagination(Pagination(from: paginationDomain))
             } catch {
                 print("\(error)")
@@ -79,23 +76,23 @@ class PokemonListViewModel: PokemonListViewModelType {
     }
     
     private func fetchLocalPokemon() async throws {
-//        Task {
-//            do {
-//                let recipeDomains = try await service.fetchRecipes(
-//                        page: 0,
-//                        pageSize: Constants.Pokemon.fetchLimit
-//                    )
-//                
-//                let storedRecipes = recipeDomains.map { Recipe(from: $0) }
-//                
-//                if storedRecipes.count > 0 {
-//                    recipes = storedRecipes
-//                    state = .success
-//                }
-//            } catch {
-//                state = .failed(error: error)
-//            }
-//        }
+        Task {
+            do {
+                let pokemonDomains = try await service.fetchPokemon(
+                        offset: 0,
+                        pageSize: Constants.Pokemon.fetchLimit
+                    )
+                
+                let storedPokemon = pokemonDomains.map { Pokemon(from: $0) }
+                
+                if storedPokemon.count > 0 {
+                    pokemon = storedPokemon
+                    state = .success
+                }
+            } catch {
+                state = .failed(error: error)
+            }
+        }
     }
     
     private func fetchRemotePokemon() async throws {
@@ -133,19 +130,19 @@ class PokemonListViewModel: PokemonListViewModelType {
         paginationHandler.updateFromDomain(pagination)
     }
     
-//    private func listeningFavoritesChanges() {
-//        updateTask = Task { [weak self] in
-//            guard let self = self else { return }
-//            for await recipeID in self.service.favoritesDidChange {
-//                self.updatePokemonFavoritesStatus(recipeID: recipeID)
-//            }
-//        }
-//    }
+    private func listeningFavoritesChanges() {
+        updateTask = Task { [weak self] in
+            guard let self = self else { return }
+            for await pokemonID in self.service.favoritesDidChange {
+                self.updatePokemonFavoritesStatus(pokemonID: pokemonID)
+            }
+        }
+    }
     
-//    private func updatePokemonFavoritesStatus(recipeID: Int) {
-//        guard let index = recipes.firstIndex(where: { $0.id == recipeID }) else { return }
-//        if recipes.count > index - 1 {
-//            recipes[index].isFavorite.toggle()
-//        }
-//    }
+    private func updatePokemonFavoritesStatus(pokemonID: Int) {
+        guard let index = pokemon.firstIndex(where: { $0.id == pokemonID }) else { return }
+        if pokemon.count > index - 1 {
+            pokemon[index].isFavorite.toggle()
+        }
+    }
 }
