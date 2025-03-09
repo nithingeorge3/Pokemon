@@ -47,7 +47,7 @@ class PokemonListViewModel: PokemonListViewModelType {
     ) {
         self.service = service
         self.paginationHandler = paginationHandler
-        Task { try await fetchPagination() }
+        Task { try await fetchPokemonPagination() }
         Task { try await fetchLocalPokemon() }
         listeningFavoritesChanges()
     }
@@ -64,7 +64,7 @@ class PokemonListViewModel: PokemonListViewModelType {
         }
     }
     
-    private func fetchPagination() async throws {
+    private func fetchPokemonPagination() async throws {
         Task {
             do {
                 let paginationDomain = try await service.fetchPokemonPagination(.pokemon)
@@ -108,8 +108,11 @@ class PokemonListViewModel: PokemonListViewModelType {
                         limit: Constants.Pokemon.fetchLimit
                     )
                 )
+                
                 let newPokemon = pokemonDomains.map { Pokemon(from: $0) }
                 updatePokemon(with: newPokemon)
+                
+                try await fetchPokemonPagination()
             } catch {
                 if pokemon.count == 0 {
                     state = .failed(error: error)

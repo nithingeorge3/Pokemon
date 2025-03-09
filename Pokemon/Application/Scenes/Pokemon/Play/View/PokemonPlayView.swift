@@ -31,8 +31,6 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
                 
                 answerGrid
                     .padding(.bottom, 40)
-                
-//                resultSection
             }
         }
         .onAppear {
@@ -82,23 +80,6 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
             }
         }
         .padding(.horizontal)
-    }
-    
-    private var resultSection: some View {
-        Group {
-            if viewModel.showResult, let correctPokemon = viewModel.pokemon {
-                VStack {
-                    Text(correctPokemon.name.capitalized)
-                        .font(.title.bold())
-                    PokemonImageView(
-                        pokemonID: correctPokemon.id,
-                        width: 100,
-                        height: 100
-                    )
-                }
-                .transition(.scale.combined(with: .opacity))
-            }
-        }
     }
     
     private var celebrationOverlay: some View {

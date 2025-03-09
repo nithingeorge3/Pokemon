@@ -85,6 +85,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     
     private func refreshGame() {
         isLoading = true
+        resetGame()
         Task {
             do {
                 async let newPokemon = service.fetchRandomUnplayedPokemon()
@@ -104,10 +105,6 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
                     Pokemon(from: $0)
                 }.shuffled()
                 
-                for pok in answerOptions {
-                    print("**** \(pok.name)")
-                }
-                
                 self.isLoading = false
                 
             } catch {
@@ -115,7 +112,6 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
             }
         }
     }
-    
     
     private func handleSelection(_ pokemon: Pokemon) {
         guard !showResult else { return }
@@ -130,10 +126,9 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         }
     }
     
-    private func reloadGame() {
+    private func resetGame() {
         showResult = false
         selectedAnswer = nil
-        loadPokemon()
     }
     
     private func toggleFavorite() {
@@ -148,44 +143,3 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         }
     }
 }
-//
-//@Observable
-//class PokemonPlayViewModel_: PokemonPlayViewModelType {
-//    var pokemon: Pokemon?
-//    private let pokemonID: Pokemon.ID
-//    private let service: PokemonSDServiceType
-//    private let answerService: PokemonAnswerServiceType
-//    
-//    init(pokemonID: Pokemon.ID, service: PokemonSDServiceType, answerService: PokemonAnswerServiceType) {
-//        self.service = service
-//        self.answerService = answerService
-//        self.pokemonID = pokemonID
-//        Task { await fetchPokemon() }
-//    }
-//    
-//    func send(_ action: PokemonPlayActions) {
-//        switch action {
-//        case .toggleFavorite:
-//            pokemon?.isFavorite.toggle()
-//            Task {
-//                do {
-//                    pokemon?.isFavorite = try await service.updateFavouritePokemon(pokemonID)
-//                } catch {
-//                    print("failed to upadte SwiftData: errro \(error)")
-//                }
-//            }
-//        case .load:
-//            Task { await fetchPokemon() }
-//        default: break
-//        }
-//    }
-//    
-//    private func fetchPokemon() async {
-//        do {
-//            let pokemonDomain = try await service.fetchPokemon(for: pokemonID)
-//            self.pokemon = Pokemon(from: pokemonDomain)
-//        } catch {
-//            print("Error: \(error)")
-//        }
-//    }
-//}
