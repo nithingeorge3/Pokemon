@@ -9,11 +9,6 @@ import Foundation
 import PokemonDomain
 import Combine
 
-public protocol RecipeKeyServiceType {
-    @discardableResult
-    func deleteRecipeAPIkey() -> Bool
-}
-
 public typealias PokemonServiceProvider = PokemonServiceType & PokemonSDServiceType
 
 public protocol PokemonServiceType: Sendable {

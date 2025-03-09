@@ -11,16 +11,12 @@ import PokemonDataStore
 import SwiftData
 
 class MenuViewModel: ObservableObject {
-    private let service: RecipeKeyServiceType
     let items: [SidebarItem]
     
-    init(service: RecipeKeyServiceType, items: [SidebarItem]) {
-        self.service = service
+    init(items: [SidebarItem]) {
         self.items = items
     }
     
      func performLogOut() {
-         service.deleteRecipeAPIkey()
-         //clearing API on logout. I just added this code.
     }
 }

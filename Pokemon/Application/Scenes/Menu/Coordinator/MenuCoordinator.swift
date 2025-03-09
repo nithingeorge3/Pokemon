@@ -22,8 +22,6 @@ final class MenuCoordinator: Coordinator, TabItemProviderType {
     }
     
     func start() -> some View {
-        //makeRecipeKeyService(): this for handling APIKey, I just added for KeyDeletion on logout
-        let service = PokemonServiceFactory.makeRecipeKeyService()
-        return menuViewFactory.makeMenuView(service: service)
+        return menuViewFactory.makeMenuView()
     }
 }

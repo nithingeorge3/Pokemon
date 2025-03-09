@@ -10,7 +10,7 @@ import PokemonNetworking
 
 @MainActor
 protocol MenuViewFactoryType {
-    func makeMenuView(service: RecipeKeyServiceType) -> MenuView
+    func makeMenuView() -> MenuView
 }
 
 final class MenuViewFactory: MenuViewFactoryType {
@@ -20,7 +20,7 @@ final class MenuViewFactory: MenuViewFactoryType {
         self.menuViewModelFactory = menuViewModelFactory
     }
     
-    func makeMenuView(service: RecipeKeyServiceType) -> MenuView {
-        MenuView(viewModel: menuViewModelFactory.makeMenuViewModel(service: service))
+    func makeMenuView() -> MenuView {
+        MenuView(viewModel: menuViewModelFactory.makeMenuViewModel())
     }
 }

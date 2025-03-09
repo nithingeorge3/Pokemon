@@ -8,15 +8,11 @@
 import Foundation
 import PokemonDomain
 
-public protocol PokemonKeyServiceFactoryType {
-    static func makeRecipeKeyService() -> RecipeKeyServiceType
-}
-
 public protocol PokemonServiceFactoryType {
     static func makePokemonService(recipeSDRepo: RecipeSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonServiceProvider
 }
 
-public final class PokemonServiceFactory: PokemonServiceFactoryType, PokemonKeyServiceFactoryType, @unchecked Sendable {
+public final class PokemonServiceFactory: PokemonServiceFactoryType, @unchecked Sendable {
     private static let serviceParser: ServiceParserType = ServiceParser()
     private static let requestBuilder: RequestBuilderType = RequestBuilder()
     
@@ -28,11 +24,6 @@ public final class PokemonServiceFactory: PokemonServiceFactoryType, PokemonKeyS
             paginationSDRepo: paginationSDRepo
         )
         return PokemonServiceImp(pokemonRepository: pokemonRepository)
-    }
-    
-    public static func makeRecipeKeyService() -> any RecipeKeyServiceType {
-        let recipeKeyRepo: RecipeKeyRepositoryType = RecipeKeyRepository(keyChainManager: KeyChainManager.shared)
-        return RecipeKeyService(recipeKeyRepo: recipeKeyRepo)
     }
 }
 
