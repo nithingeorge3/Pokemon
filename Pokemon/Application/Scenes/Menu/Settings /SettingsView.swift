@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct ProfileView: View {
+struct SettingsView: View {
     var body: some View {
         VStack {
-            Text("Profile View")
+            Text("Settings View")
                 .font(.largeTitle)
                 .foregroundColor(.gray)
         }
         .withCustomBackButton()
-        .withCustomNavigationTitle(title: "Profile")
+        .withCustomNavigationTitle(title: "Settings")
     }
 }

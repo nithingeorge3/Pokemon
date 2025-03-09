@@ -82,7 +82,9 @@ struct MenuView: View {
     private func destinationView(for item: SidebarItem) -> some View {
         switch item.title {
         case "Profile":
-            ProfileView()
+            SettingsView()
+        case "Preferences":
+            makePreferencesView()
         case "Pokemon List":
             EmptyView() //pokemonListView()
         default:
@@ -95,12 +97,17 @@ struct MenuView: View {
 //        let viewModel = PokemonViewModel(service: service)
 //        return PokemonViewFactory().makePokemonListView(viewModel: viewModel)
 //    }
+    
+    private func makePreferencesView() -> some View {
+        let viewModel = PreferencesViewModel()
+        return PreferencesView(viewModel: viewModel)
+    }
 }
 
 // MARK: - Previews
 #if DEBUG
 #Preview {
-    let items = [SidebarItem(title: "Profile", type: .navigation)]
+    let items = [SidebarItem(title: "Preferences", type: .navigation)]
     MenuView(viewModel: MenuViewModel(items: items))
 }
 #endif
