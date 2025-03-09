@@ -10,7 +10,8 @@ import Combine
 
 struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
     @Bindable var viewModel: ViewModel
-   
+    @State private var score: Int = 10
+    
     private var isEmpty: Bool {
         viewModel.pokemon.isEmpty
     }
@@ -42,6 +43,7 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
             viewModel.send(.refresh)
         }
         .withCustomNavigationTitle(title: "Pokemon")
+        .withCustomNavigationScore(GameScoreView(score: $score, size: 12))
     }
 }
 

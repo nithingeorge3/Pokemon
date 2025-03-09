@@ -10,9 +10,10 @@ import PokemonDomain
 import SwiftData
 
 @frozen
-public enum SDError: Error {
+public enum SDError: Error, Equatable {
     case modelNotFound
     case modelObjNotFound
+    case invalidRequest(reason: String)
 }
 
 public final class PokemonSDRepository: PokemonSDRepositoryType {
@@ -45,12 +46,51 @@ public final class PokemonSDRepository: PokemonSDRepositoryType {
             
             var descriptor = FetchDescriptor<SDPokemon>(
                 predicate: nil,
-                sortBy: [SortDescriptor(\.id, order: .reverse)]
+                sortBy: [SortDescriptor(\.id, order: .forward)]
             )
             descriptor.fetchLimit = pageSize
             descriptor.fetchOffset = offset
 
             return try context.fetch(descriptor).map(PokemonDomain.init)
+        }
+    }
+    
+    public func fetchPokemon_(for pokemonID: Int) async throws -> PokemonDomain {
+        try await dataStore.performBackgroundTask { context in
+            let predicate = #Predicate<SDPokemon> { $0.id == pokemonID }
+            let descriptor = FetchDescriptor<SDPokemon>(predicate: predicate)
+
+            guard let pokemon = try context.fetch(descriptor).first else {
+                throw SDError.modelObjNotFound
+            }
+            return try PokemonDomain(from: pokemon)
+        }
+    }
+    
+    public func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain] {
+        guard count > 0 else {
+            throw SDError.invalidRequest(reason: "Count must be greater than zero")
+        }
+        
+        return try await dataStore.performBackgroundTask { context in
+            let predicate = #Predicate<SDPokemon> { $0.id != id }
+            var descriptor = FetchDescriptor<SDPokemon>(predicate: predicate)
+            descriptor.fetchLimit = count
+            descriptor.sortBy = [.init(\.id, order: .reverse)]
+            
+            let pokemon = try context.fetch(descriptor)
+            
+            let pokemonDomains = try pokemon.map { pokemon in
+                do {
+                    return try PokemonDomain(from: pokemon)
+                } catch let error as PokemonError {
+                    throw error // handle error
+                } catch {
+                    throw SDError.modelNotFound
+                }
+            }
+            
+            return pokemonDomains
         }
     }
     

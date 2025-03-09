@@ -12,6 +12,10 @@ public protocol PokemonServiceFactoryType {
     static func makePokemonService(pokemonSDRepo: PokemonSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonServiceProvider
 }
 
+public protocol PokemonAnswerServiceFactoryType {
+    static func makePokemonAnswerService(pokemonSDRepo: PokemonSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonAnswerServiceType
+}
+
 public final class PokemonServiceFactory: PokemonServiceFactoryType, @unchecked Sendable {
     private static let serviceParser: ServiceParserType = ServiceParser()
     private static let requestBuilder: RequestBuilderType = RequestBuilder()
@@ -26,6 +30,22 @@ public final class PokemonServiceFactory: PokemonServiceFactoryType, @unchecked 
         return PokemonServiceImp(pokemonRepository: pokemonRepository)
     }
 }
+
+public final class PokemonAnswerServiceFactory: PokemonAnswerServiceFactoryType, @unchecked Sendable {
+    private static let serviceParser: ServiceParserType = ServiceParser()
+    private static let requestBuilder: RequestBuilderType = RequestBuilder()
+    
+    public static func makePokemonAnswerService(pokemonSDRepo: PokemonSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonAnswerServiceType {
+        let pokemonRepository: PokemonRepositoryType = PokemonRepository(
+            parser: serviceParser,
+            requestBuilder: requestBuilder,
+            pokemonSDRepo: pokemonSDRepo,
+            paginationSDRepo: paginationSDRepo
+        )
+        return PokemonAnswerServiceImp(pokemonRepository: pokemonRepository)
+    }
+}
+
 
 /*
 //just added for showing combine. In production I will only use Async/await or combine based on the decision

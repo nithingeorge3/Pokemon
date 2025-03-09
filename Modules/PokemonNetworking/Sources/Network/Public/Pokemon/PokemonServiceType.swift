@@ -15,6 +15,12 @@ public protocol PokemonServiceType: Sendable {
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain]
 }
 
+//gaming specific
+public protocol PokemonAnswerServiceType: Sendable {
+    func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain]
+}
+
+
 public protocol PokemonSDServiceType: Sendable {
     var favoritesDidChange: AsyncStream<Int> { get }
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain

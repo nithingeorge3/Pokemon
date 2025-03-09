@@ -16,6 +16,7 @@ public protocol PaginationSDRepositoryType: Sendable {
 public protocol PokemonSDRepositoryType: Sendable {
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain]
+    func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain]
     func savePokemon(_ pokemon: [PokemonDomain]) async throws
     func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool
 }

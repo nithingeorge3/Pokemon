@@ -27,6 +27,9 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
     private let service: PokemonServiceProvider
     private var cancellables: [AnyCancellable] = []
     
+    private var paginationSDRepo: PaginationSDRepositoryType
+    private var pokemonSDRepo: PokemonSDRepositoryType
+    
     @Published var navigationPath = NavigationPath()
     
     var tabItem: TabItem {
@@ -43,6 +46,9 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
         _tabItem = tabItem
         self.viewFactory = viewFactory
         self.modelFactory = modelFactory
+        self.paginationSDRepo = paginationSDRepo
+        self.pokemonSDRepo = pokemonSDRepo
+        
         self.service = PokemonServiceFactory.makePokemonService(pokemonSDRepo: pokemonSDRepo, paginationSDRepo: paginationSDRepo)
         
         let paginationHandler: PaginationHandlerType = PaginationHandler()
@@ -77,7 +83,9 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
 
 extension PokemonListCoordinator {
     func navigateToPokemonPlay(for pokemonID: Pokemon.ID) -> some View {
-        let playCoordinator = PokemonPlayCoordinatorFactory().makePokemonPlayCoordinator(pokemonID: pokemonID, service: service)
+        let answerService: PokemonAnswerServiceType = PokemonAnswerServiceFactory.makePokemonAnswerService(pokemonSDRepo: pokemonSDRepo, paginationSDRepo: paginationSDRepo)
+        
+        let playCoordinator = PokemonPlayCoordinatorFactory().makePokemonPlayCoordinator(pokemonID: pokemonID, service: service, answerService: answerService)
         return playCoordinator.start()
     }
 }

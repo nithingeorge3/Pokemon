@@ -12,29 +12,134 @@ import PokemonNetworking
 
 struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
     @Bindable var viewModel: ViewModel
-    @State private var selectedIndex: Int = 0
-   
+    @State private var rotationAngle: Double = 0
+    @State private var score: Int = 10
+    
     var body: some View {
-        Group {
-            Text(viewModel.pokemon?.name ?? "Loading")
+        VStack(spacing: 20) {
+            if viewModel.isLoading {
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .scaleEffect(1.5)
+            } else {
+                gameHeaderView
+                    .padding(.top, 8)
+                imageSection
+                answerGrid
+                    .padding(.bottom, 40)
+//                resultSection
+//                reloadButton
+            }
         }
         .onAppear {
             viewModel.send(.load)
         }
         .withCustomBackButton()
-        .withCustomNavigationTitle(title: "Play Pokemon")
+        .withCustomNavigationTitle(title: "Pokemon")
+    }
+    
+    private var gameHeaderView: some View {
+        HStack(alignment: .top, spacing: 8) {
+            GameScoreView(score: $score)
+                .padding(.leading, 10)
+            Spacer()
+            RefreshButton {
+                print("handle refresh")
+            }
+            Spacer().frame(width: 30)
+        }
+    }
+    
+    private var imageSection: some View {
+        VStack {
+            if let pokemon = viewModel.pokemon {
+                PokemonImageView(
+                    pokemonID: pokemon.id,
+                    width: 200,
+                    height: 200
+                )
+                .blur(radius: viewModel.showResult ? 0 : 10)
+                .animation(.easeInOut, value: viewModel.showResult)
+            }
+        }
+    }
+    
+    private var answerGrid: some View {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2)) {
+            ForEach(viewModel.answerOptions) { pokemon in
+                AnswerButton(
+                    pokemon: pokemon,
+                    isSelected: viewModel.selectedAnswer?.id == pokemon.id,
+                    showResult: viewModel.showResult,
+                    isCorrect: pokemon.id == viewModel.pokemon?.id
+                ) {
+                    viewModel.send(.selectAnswer(pokemon))
+                }
+            }
+        }
+        .padding(.horizontal)
+    }
+    
+    private var resultSection: some View {
+        Group {
+            if viewModel.showResult, let correctPokemon = viewModel.pokemon {
+                VStack {
+                    Text(correctPokemon.name.capitalized)
+                        .font(.title.bold())
+                    PokemonImageView(
+                        pokemonID: correctPokemon.id,
+                        width: 100,
+                        height: 100
+                    )
+                }
+                .transition(.scale.combined(with: .opacity))
+            }
+        }
+    }
+    
+    private var reloadButton: some View {
+        Button(action: { viewModel.send(.reload) }) {
+            Text("New Pokemon")
+                .bold()
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .clipShape(Capsule())
+        }
     }
 }
 
-struct SubTitleView: View {
-    let title: String
+// MARK: - Answer Button Component
+struct AnswerButton: View {
+    let pokemon: Pokemon
+    let isSelected: Bool
+    let showResult: Bool
+    let isCorrect: Bool
+    let action: () -> Void
+    
+    var backgroundColor: Color {
+        if showResult {
+            return isCorrect ? .green : (isSelected ? .red : .gray)
+        }
+        return isSelected ? .blue : .gray
+    }
     
     var body: some View {
-        Text(title)
-            .font(.title2)
-            .fontWeight(.semibold)
+        Button(action: action) {
+            Text(pokemon.name.capitalized)
+                .font(.headline)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(backgroundColor)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+                .scaleEffect(isSelected ? 1.05 : 1)
+                .animation(.spring(), value: isSelected)
+        }
+        .disabled(showResult)
     }
 }
+
 //
 //// MARK: - Previews
 //#if DEBUG

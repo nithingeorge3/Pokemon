@@ -9,13 +9,16 @@ import Combine
 import Foundation
 import PokemonDomain
 
-//we can split protocol. backend and SwiftData fetch
+//we need to split PokemonRepositoryType protocol. backend, SwiftData and gaming fetch
 public protocol PokemonRepositoryType: Sendable {
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain]
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain]
     func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain
+    
+    //gaming
+    func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain]
 }
 
 final class PokemonRepository: PokemonRepositoryType {
@@ -100,6 +103,13 @@ extension PokemonRepository {
     
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain {
         try await paginationSDRepo.fetchPokemonPagination(entityType)
+    }
+}
+
+//Gaming specific. later creata a sperate Repo for gaming
+extension PokemonRepository {
+    func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain] {
+        try await pokemonSDRepo.fetchRandomOptions(excluding: id, count: count)
     }
 }
 
