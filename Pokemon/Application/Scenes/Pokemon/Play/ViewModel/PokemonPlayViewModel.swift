@@ -9,45 +9,17 @@ import Foundation
 import PokemonNetworking
 import Observation
 
-enum PresentedMedia: Identifiable {
-    case image(URL)
-    case video(URL)
-    
-    var id: String {
-        switch self {
-        case .image(let url): return "\(url.absoluteString)"
-        case .video(let url): return "\(url.absoluteString)"
-        }
-    }
-}
-
 @MainActor
 protocol PokemonPlayViewModelType: AnyObject, Observable {
-    var recipe: Recipe? { get set }
-    var mediaItems: [PresentedMedia] { get }
+    var pokemon: Pokemon? { get set }
     
-    func send(_ action: RecipeDetailActions)
+    func send(_ action: PokemonPlayActions)
 }
 
 @Observable
 class PokemonPlayViewModel: PokemonPlayViewModelType {    
-    var recipe: Recipe?
+    var pokemon: Pokemon?
     private let pokemonID: Pokemon.ID
-    
-    var mediaItems: [PresentedMedia] {
-        var result: [PresentedMedia] = []
-        
-        if let imageURL = recipe?.thumbnailURL.validatedURL {
-            result.append(.image(imageURL))
-        }
-        
-        if let videoURL = recipe?.originalVideoURL.validatedURL {
-            result.append(.video(videoURL))
-        }
-        
-        return result
-    }
-    
     private let service: PokemonSDServiceType
     
     init(pokemonID: Pokemon.ID, service: PokemonSDServiceType) {
@@ -56,13 +28,13 @@ class PokemonPlayViewModel: PokemonPlayViewModelType {
         Task { await fetchPokemon() }
     }
     
-    func send(_ action: RecipeDetailActions) {
+    func send(_ action: PokemonPlayActions) {
         switch action {
         case .toggleFavorite:
-            recipe?.isFavorite.toggle()
+            pokemon?.isFavorite.toggle()
             Task {
                 do {
-                    recipe?.isFavorite = try await service.updateFavouritePokemon(pokemonID)
+                    pokemon?.isFavorite = try await service.updateFavouritePokemon(pokemonID)
                 } catch {
                     print("failed to upadte SwiftData: errro \(error)")
                 }
@@ -73,11 +45,11 @@ class PokemonPlayViewModel: PokemonPlayViewModelType {
     }
     
     private func fetchPokemon() async {
-//        do {
-//            let recipeDomain = try await service.fetchPokemon(for: pokemonID)
-//            self.recipe = Recipe(from: recipeDomain)
-//        } catch {
-//            print("Error: \(error)")
-//        }
+        do {
+            let pokemonDomain = try await service.fetchPokemon(for: pokemonID)
+            self.pokemon = Pokemon(from: pokemonDomain)
+        } catch {
+            print("Error: \(error)")
+        }
     }
 }

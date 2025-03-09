@@ -76,8 +76,8 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
 }
 
 extension PokemonListCoordinator {
-    func navigateToPokemonPlay(for pokemonID: Recipe.ID) -> some View {
+    func navigateToPokemonPlay(for pokemonID: Pokemon.ID) -> some View {
         let playCoordinator = PokemonPlayCoordinatorFactory().makePokemonPlayCoordinator(pokemonID: pokemonID, service: service)
-        return EmptyView()//playCoordinator.start()
+        return playCoordinator.start()
     }
 }

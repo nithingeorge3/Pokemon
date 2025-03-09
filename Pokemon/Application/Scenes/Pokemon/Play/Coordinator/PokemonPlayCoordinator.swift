@@ -11,7 +11,7 @@ import PokemonDataStore
 import SwiftData
 import PokemonDomain
 
-enum RecipeDetailActions {
+enum PokemonPlayActions {
     case toggleFavorite
     case load
 }
