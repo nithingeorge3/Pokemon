@@ -28,7 +28,7 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
                     }
                 case .success:
                 if isEmpty {
-                    EmptyStateView(message: "No recipes found. Please try again later.")
+                    EmptyStateView(message: "No pokemon found. Please try again later.")
                 } else {
                     EmptyView()
                     PokemonGridView(favorites: viewModel.playlaterPokemon, others: viewModel.otherPokemon, hasMoreData: viewModel.paginationHandler.hasMoreData) { pokemon in
@@ -41,7 +41,7 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
         }.onAppear {
             viewModel.send(.refresh)
         }
-        .withCustomNavigationTitle(title: "Recipes")
+        .withCustomNavigationTitle(title: "Pokemon")
     }
 }
 

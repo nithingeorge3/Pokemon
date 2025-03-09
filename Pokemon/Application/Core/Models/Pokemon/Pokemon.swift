@@ -11,10 +11,10 @@ import PokemonDomain
 struct Pokemon: Identifiable, Hashable {
     let id: Int
     let name: String
-    let url: String
+    let url: URL
     let isFavorite: Bool
     
-    init(id: Int, name: String, url: String, isFavorite: Bool) {
+    init(id: Int, name: String, url: URL, isFavorite: Bool) {
         self.id = id
         self.name = name
         self.url = url

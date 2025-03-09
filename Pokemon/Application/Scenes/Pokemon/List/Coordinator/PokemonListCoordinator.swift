@@ -45,9 +45,6 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
         self.modelFactory = modelFactory
         self.service = PokemonServiceFactory.makePokemonService(recipeSDRepo: recipeSDRepo, paginationSDRepo: paginationSDRepo)
         
-        //Testing purpose/API down/reach limit, mocking the response but recipes are not saving to switdata")
-//        self.service = MockRecipeServiceFactory.makePokemonService(recipeSDRepo: recipeSDRepo, paginationSDRepo: paginationSDRepo)
-        
         let paginationHandler: PaginationHandlerType = PaginationHandler()
         
         let vm = await modelFactory.makePokemonListViewModel(

@@ -18,42 +18,48 @@ public protocol PokemonRepositoryType: Sendable {
     func fetchRecipePagination(_ entityType: EntityType) async throws -> PaginationDomain
 }
 
-final class RecipeRepository: PokemonRepositoryType {
+final class PokemonRepository: PokemonRepositoryType {
     private let parser: ServiceParserType
     private let requestBuilder: RequestBuilderType
-    private let apiKeyProvider: APIKeyProviderType
     private let recipeSDRepo: RecipeSDRepositoryType
     private let paginationSDRepo: PaginationSDRepositoryType
     
     init(
         parser: ServiceParserType,
         requestBuilder: RequestBuilderType,
-        apiKeyProvider: APIKeyProviderType,
         recipeSDRepo: RecipeSDRepositoryType,
         paginationSDRepo: PaginationSDRepositoryType
     ) {
         self.parser = parser
         self.requestBuilder = requestBuilder
-        self.apiKeyProvider = apiKeyProvider
         self.recipeSDRepo = recipeSDRepo
         self.paginationSDRepo = paginationSDRepo
     }
     
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain] {
         do {
-//            let apiKey = try await apiKeyProvider.getRecipeAPIKey()
-//            
-//            let (data, response) = try await URLSession.shared.data(for: requestBuilder.buildRequest(url: endPoint.url(), apiKey: apiKey))
-//            
-//            let dtos = try await parser.parse(
-//                data: data,
-//                response: response,
-//                type: RecipeResponseDTO.self
-//            )
-//            
-//            let recipeDomains = dtos.results.map { RecipeDomain(from: $0) }
+            let (data, response) = try await URLSession.shared.data(for: requestBuilder.buildRequest(url: endPoint.url()))
+            
+            let responseDTO = try await parser.parse(
+                data: data,
+                response: response,
+                type: PokemonResponseDTO.self
+            )
+            
+            return try responseDTO.results.map { dto in
+                do {
+                    return try PokemonDomain(from: dto)
+                } catch let error as PokemonError {
+                    throw error // handle error
+                } catch {
+                    throw NetworkError.failedToDecode
+                }
+            }
+            
+            //handle errro late
+//            let pokemonDomains = try dtos.results.map { try PokemonDomain(from: $0) }
 
-            return [PokemonDomain(id: 1, name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/")]
+//            return pokemonDomains // [PokemonDomain(id: 1, name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/")]
             /*
             //Reach the page end or no data
             if recipeDomains.count == 0 {
@@ -111,7 +117,7 @@ final class RecipeRepository: PokemonRepositoryType {
  }
  */
 
-extension RecipeRepository {
+extension PokemonRepository {
     func fetchRecipe(for recipeID: Int) async throws -> RecipeDomain {
         try await recipeSDRepo.fetchRecipe(for: recipeID)
     }
@@ -155,10 +161,8 @@ final class RecipeListRepository: RecipeListRepositoryType {
             }
             
             do {
-                //We ned to save this in keychain. same as Async/await impliemntataion
-                let apiKey = "c36446da42msh685aa9134d41e0ep10f9cdjsnaa15ec2198b5"
                 let url = try endPoint.url()
-                URLSession.shared.dataTaskPublisher(for: requestBuilder.buildRequest(url: url, apiKey: apiKey))
+                URLSession.shared.dataTaskPublisher(for: requestBuilder.buildRequest(url: url))
                     .mapError { error -> Error in
                         return NetworkError.responseError
                     }

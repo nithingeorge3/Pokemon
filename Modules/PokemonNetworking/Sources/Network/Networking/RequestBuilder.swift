@@ -8,21 +8,15 @@
 import Foundation
 
 protocol RequestBuilderType: Sendable {
-    func buildRequest(url: URL, apiKey: String?) -> URLRequest
+    func buildRequest(url: URL) -> URLRequest
 }
 
 final class RequestBuilder: RequestBuilderType {
-    func buildRequest(url: URL, apiKey: String? = nil) -> URLRequest {
+    func buildRequest(url: URL) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("application/json",
                          forHTTPHeaderField: "Content-Type")
-        request.addValue("tasty.p.rapidapi.com",
-                         forHTTPHeaderField: "x-rapidapi-host")
-        if let apiKey = apiKey {
-            request.addValue(apiKey,
-                             forHTTPHeaderField: "x-rapidapi-key")
-        }
         print("****request: \(request)")
         return request
     }

@@ -9,14 +9,20 @@ import Foundation
 
 @frozen
 public enum PokemonError: Error {
-    case invalidURL(url: String)
+    case invalidPokemonURL(url: String)
+    case invalidIDFormat(url: String)
+    case emptyPathComponents(url: String)
 }
 
 extension PokemonError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .invalidURL(let url):
+        case .invalidPokemonURL(let url):
             return "Invalid Pokemon URL: \(url)"
+        case .invalidIDFormat(let url):
+            return "Invalid Pokemon ID format: \(url)"
+        case .emptyPathComponents(let url):
+            return "Empty path components in URL: \(url)"
         }
     }
 }

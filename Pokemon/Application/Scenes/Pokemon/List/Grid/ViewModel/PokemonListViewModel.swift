@@ -34,11 +34,11 @@ class PokemonListViewModel: PokemonListViewModelType {
     private var updateTask: Task<Void, Never>?
     
     var playlaterPokemon: [Pokemon] {
-        pokemon//.filter { $0.isFavorite }
+        pokemon.filter { $0.isFavorite }
     }
     
     var otherPokemon: [Pokemon] {
-        pokemon//.filter { !$0.isFavorite }
+        pokemon.filter { !$0.isFavorite }
     }
     
     init(
@@ -52,16 +52,16 @@ class PokemonListViewModel: PokemonListViewModelType {
 //        listeningFavoritesChanges()
         
         //temp code
-        Task { try await fetchRemoteRecipes() }
+        Task { try await fetchRemotePokemon() }
     }
     
     func send(_ action: PokemonListAction) {
         switch action {
         case .refresh:
-            Task { try await fetchRemoteRecipes() }
+            Task { try await fetchRemotePokemon() }
         case .loadMore:
             guard paginationHandler.hasMoreData else { return }
-            Task { try await fetchRemoteRecipes() }
+            Task { try await fetchRemotePokemon() }
         case .selectPokemon( let recipeID):
             pokemonListActionSubject.send(PokemonListAction.selectPokemon(recipeID))
         }
@@ -98,7 +98,7 @@ class PokemonListViewModel: PokemonListViewModelType {
 //        }
     }
     
-    private func fetchRemoteRecipes() async throws {
+    private func fetchRemotePokemon() async throws {
         guard !paginationHandler.isLoading else {
             return
         }
@@ -113,7 +113,6 @@ class PokemonListViewModel: PokemonListViewModelType {
                 )
                 let newPokemon = pokemonDomains.map { Pokemon(from: $0) }
                 updatePokemon(with: newPokemon)
-                try await loadMore()
             } catch {
                 if pokemon.count == 0 {
                     state = .failed(error: error)

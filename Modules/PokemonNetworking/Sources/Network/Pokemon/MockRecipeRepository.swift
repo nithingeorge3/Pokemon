@@ -26,7 +26,7 @@ final class MockRecipeRepository: PokemonRepositoryType, @unchecked Sendable {
     
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain] {
         
-        return [PokemonDomain(id: 1, name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/")]
+        return [PokemonDomain(id: 1, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)]
         
 //        guard let url = Bundle.module.url(forResource: self.fileName, withExtension: "json") else {
 //            throw NetworkError.responseError

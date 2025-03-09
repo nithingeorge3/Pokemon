@@ -17,15 +17,13 @@ public protocol PokemonServiceFactoryType {
 }
 
 public final class PokemonServiceFactory: PokemonServiceFactoryType, PokemonKeyServiceFactoryType, @unchecked Sendable {
-    private static let apiKeyProvider: APIKeyProviderType = APIKeyProvider(keyChainManager: KeyChainManager.shared)
     private static let serviceParser: ServiceParserType = ServiceParser()
     private static let requestBuilder: RequestBuilderType = RequestBuilder()
     
     public static func makePokemonService(recipeSDRepo: RecipeSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonServiceProvider {
-        let pokemonRepository: PokemonRepositoryType = RecipeRepository(
+        let pokemonRepository: PokemonRepositoryType = PokemonRepository(
             parser: serviceParser,
             requestBuilder: requestBuilder,
-            apiKeyProvider: apiKeyProvider,
             recipeSDRepo: recipeSDRepo,
             paginationSDRepo: paginationSDRepo
         )
@@ -54,22 +52,5 @@ public final class RecipeListServiceFactory: RecipeServiceListFactoryType {
             requestBuilder: requestBuilder
         )
         return RecipeListServiceImp(recipeRepository: recipeRepository)
-    }
-}
-
-//just added for dev purpose
-public final class MockRecipeServiceFactory: PokemonServiceFactoryType, PokemonKeyServiceFactoryType, @unchecked Sendable {
-    public static func makePokemonService(recipeSDRepo: RecipeSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonServiceProvider {
-        
-        let pagination: PaginationDomain = PaginationDomain(id: UUID(), entityType: .recipe, totalCount: 10, currentPage: 10, lastUpdated: Date(timeIntervalSince1970: 0))
-                                                        
-        let recipeRepository: PokemonRepositoryType = MockRecipeRepository(fileName: "pokemon_success", parser: ServiceParser(), pagination: pagination)
-        
-        return PokemonServiceImp(pokemonRepository: recipeRepository)
-    }
-    
-    public static func makeRecipeKeyService() -> any RecipeKeyServiceType {
-        let recipeKeyRepo: RecipeKeyRepositoryType = RecipeKeyRepository(keyChainManager: KeyChainManager.shared)
-        return RecipeKeyService(recipeKeyRepo: recipeKeyRepo)
     }
 }

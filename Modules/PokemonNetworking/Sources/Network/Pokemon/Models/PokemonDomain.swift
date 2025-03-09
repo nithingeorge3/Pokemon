@@ -10,19 +10,30 @@ import PokemonDomain
 
 extension PokemonDomain {
     init(from dto: PokemonDTO) throws {
-        guard let id = Self.extractPokemonID(from: dto.url) else {
-            throw PokemonError.invalidURL(url: dto.url)
+        guard let url = URL(string: dto.url) else {
+            throw PokemonError.invalidPokemonURL(url: dto.url)
         }
-        self.init(
-            id: id,
-            name: dto.name,
-            url: dto.url
-        )
+        let id = try Self.extractPokemonID(from: url)
+        self.init(id: id, name: dto.name, url: url)
     }
-
-    private static func extractPokemonID(from urlString: String) -> Int? {
-        let components = urlString.split(separator: "/").filter { !$0.isEmpty }
-        return components.last.flatMap { Int($0) }
+    
+    private static func extractPokemonID(from url: URL) throws -> Int {
+        let trimmedURLString = url.absoluteString.trimmingCharacters(in: ["/"])
+        guard let trimmedURL = URL(string: trimmedURLString) else {
+            throw PokemonError.invalidPokemonURL(url: url.absoluteString)
+        }
+        
+        let components = trimmedURL.pathComponents.filter { !$0.isEmpty }
+        guard !components.isEmpty else {
+            throw PokemonError.emptyPathComponents(url: url.absoluteString)
+        }
+        
+        guard let lastComponent = components.last,
+              let id = Int(lastComponent) else {
+            throw PokemonError.invalidIDFormat(url: url.absoluteString)
+        }
+        
+        return id
     }
 }
 

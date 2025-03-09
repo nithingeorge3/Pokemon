@@ -17,42 +17,39 @@ public enum EndPoint: Sendable {
     case pokemon(offset: Int, limit: Int)
 }
 
-//https://pokeapi.co/api/v2/pokemon?offset=1&limit=1
-
 extension EndPoint: URLBuilder {
     func url() throws -> URL {
         var components = URLComponents()
         components.scheme = "https"
+        components.host = pokemonBaseURL
         components.path = path
         
         switch self {
-        case .pokemon:
-            components.host = pokemonBaseURL
-        }
-        
-        if case let .pokemon(offset, limit) = self {
+        case .pokemon(let offset, let limit):
             components.queryItems = [
-                URLQueryItem(name: "from", value: "\(offset)"),
-                URLQueryItem(name: "size", value: "\(limit)"),
-                URLQueryItem(name: "tags", value: "under_30_minutes")
-                ]
+                URLQueryItem(name: "offset", value: "\(offset)"),
+                URLQueryItem(name: "limit", value: "\(limit)")
+            ]
         }
         
         guard let url = components.url else {
-            throw NetworkError.invalidURL(message: "Sorry, unable to constrcut URL for \(self)", debugInfo: components.debugDescription)
+            throw NetworkError.invalidURL(
+                message: "Failed to construct URL for \(self)",
+                debugInfo: "Components: \(components)"
+            )
         }
         
         return url
     }
     
-    var pokemonBaseURL: String {
-        "tasty.p.rapidapi.com"
+     var pokemonBaseURL: String {
+        "pokeapi.co"
     }
     
-    var path: String {
+     var path: String {
         switch self {
         case .pokemon:
-            "/recipes/list"
+            return "/api/v2/pokemon"
         }
     }
 }

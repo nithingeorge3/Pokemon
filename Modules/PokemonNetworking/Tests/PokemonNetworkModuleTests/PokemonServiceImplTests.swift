@@ -8,9 +8,11 @@ class PokemonServiceImplTests: XCTestCase {
     private var pokemonServiceImpl: PokemonServiceType!
     
     override func setUp() {
+        super.setUp()
     }
     
     override func tearDown() {
+        super.tearDown()
         pokemonRepository = nil
         pokemonServiceImpl = nil
     }
