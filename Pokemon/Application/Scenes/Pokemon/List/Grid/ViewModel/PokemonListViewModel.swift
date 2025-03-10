@@ -52,7 +52,6 @@ class PokemonListViewModel: PokemonListViewModelType {
         self.service = service
         self.userService = userService
         self.paginationHandler = paginationHandler
-//        Task { try await currentUser() }
         Task { try await fetchPokemonPagination() }
         Task { try await fetchLocalPokemon() }
         listeningFavoritesChanges()

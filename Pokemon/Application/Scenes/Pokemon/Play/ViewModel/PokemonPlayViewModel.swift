@@ -35,33 +35,47 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     
     private var pokemonID: Pokemon.ID
     private let service: PokemonSDServiceType
-//    private let userService: PokemonUserServiceType
+    private let userService: PokemonUserServiceType
     private let answerService: PokemonAnswerServiceType
     
     init(pokemonID: Pokemon.ID,
          service: PokemonSDServiceType,
-//         userService: PokemonUserServiceType,
-         answerService: PokemonAnswerServiceType) {
+         userService: PokemonUserServiceType,
+         answerService: PokemonAnswerServiceType)
+    {
         self.pokemonID = pokemonID
         self.service = service
-//        self.userService = userService
+        self.userService = userService
         self.answerService = answerService
     }
     
     func send(_ action: PokemonPlayActions) {
         switch action {
         case .load:
-            loadPokemon()
+            Task { await fetchCurrentScore() }
+            Task { await loadPokemon() }
         case .selectAnswer(let pokemon):
             Task { try await handleSelection(pokemon) }
         case .refresh:
-            refreshGame()
+            Task { await refreshGame() }
         case .toggleFavorite:
             toggleFavorite()
         }
     }
     
-    private func loadPokemon() {
+    private func fetchCurrentScore() async {
+        Task {
+            do {
+                let userDomain = try await userService.getCurrentUser()
+                let user = User(from: userDomain)
+                currentScore = user.score
+            } catch {
+                print("unable to find user")
+            }
+        }
+    }
+    
+    private func loadPokemon() async {
         isLoading = true
         Task {
             do {
@@ -76,10 +90,6 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
                     Pokemon(from: $0)
                 }.shuffled()
                 
-                for pok in answerOptions {
-                    print("**** \(pok.name)")
-                }
-                
                 self.isLoading = false
                 
             } catch {
@@ -88,7 +98,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         }
     }
     
-    private func refreshGame() {
+    private func refreshGame() async {
         isLoading = true
         resetGame()
         Task {
@@ -126,8 +136,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         if pokemon.id == self.pokemon?.id {
             do {
                 try await answerService.updateScore(Constants.Pokemon.gamePoint)
-                
-                currentScore += Constants.Pokemon.gamePoint
+                Task { await fetchCurrentScore() }
             } catch {
                 print("failed to update user score: \(error)")
             }

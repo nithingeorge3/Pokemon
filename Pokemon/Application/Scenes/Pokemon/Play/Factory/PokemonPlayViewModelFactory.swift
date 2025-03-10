@@ -8,11 +8,11 @@
 import PokemonNetworking
 
 protocol PokemonPlayViewModelFactoryType {
-    @MainActor func makePokemonPlayViewModel(pokemonID: Pokemon.ID, service: PokemonSDServiceType, answerService: PokemonAnswerServiceType) -> PokemonPlayViewModel
+    @MainActor func makePokemonPlayViewModel(pokemonID: Pokemon.ID, service: PokemonSDServiceType, userService: PokemonUserServiceType, answerService: PokemonAnswerServiceType) -> PokemonPlayViewModel
 }
 
 final class PokemonPlayViewModelFactory: PokemonPlayViewModelFactoryType {
-    @MainActor func makePokemonPlayViewModel(pokemonID: Pokemon.ID, service: PokemonSDServiceType, answerService: PokemonAnswerServiceType) -> PokemonPlayViewModel {
-        PokemonPlayViewModel(pokemonID: pokemonID, service: service, answerService: answerService)
+    @MainActor func makePokemonPlayViewModel(pokemonID: Pokemon.ID, service: PokemonSDServiceType, userService: PokemonUserServiceType, answerService: PokemonAnswerServiceType) -> PokemonPlayViewModel {
+        PokemonPlayViewModel(pokemonID: pokemonID, service: service, userService: userService ,answerService: answerService)
     }
 }

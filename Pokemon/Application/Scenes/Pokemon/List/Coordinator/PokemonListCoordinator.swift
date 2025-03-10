@@ -93,7 +93,7 @@ extension PokemonListCoordinator {
     func navigateToPokemonPlay(for pokemonID: Pokemon.ID) -> some View {
         let answerService: PokemonAnswerServiceType = PokemonAnswerServiceFactory.makePokemonAnswerService(userSDRepo: userSDRepo, pokemonSDRepo: pokemonSDRepo, paginationSDRepo: paginationSDRepo)
         
-        let playCoordinator = PokemonPlayCoordinatorFactory().makePokemonPlayCoordinator(pokemonID: pokemonID, service: service, answerService: answerService)
+        let playCoordinator = PokemonPlayCoordinatorFactory().makePokemonPlayCoordinator(pokemonID: pokemonID, service: service, userService: userService, answerService: answerService)
         return playCoordinator.start()
     }
 }

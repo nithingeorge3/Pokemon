@@ -31,13 +31,14 @@ final class PokemonPlayCoordinator: Coordinator {
         viewFactory: PokemonPlayViewFactoryType,
         pokemonID: Pokemon.ID,
         service: PokemonSDServiceType,
+        userService: PokemonUserServiceType,
         answerService: PokemonAnswerServiceType
     ) {
         self.viewModelFactory = viewModelFactory
         self.viewFactory = viewFactory
         self.pokemonID = pokemonID
         self.service = service
-        self.viewModel = viewModelFactory.makePokemonPlayViewModel(pokemonID: pokemonID, service: service, answerService: answerService)
+        self.viewModel = viewModelFactory.makePokemonPlayViewModel(pokemonID: pokemonID, service: service, userService: userService , answerService: answerService)
     }
     
     func start() -> some View {
