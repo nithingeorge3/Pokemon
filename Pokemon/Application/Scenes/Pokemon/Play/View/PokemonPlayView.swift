@@ -13,7 +13,6 @@ import PokemonNetworking
 struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
     @Bindable var viewModel: ViewModel
     @State private var rotationAngle: Double = 0
-    @State private var score: Int = 10
     
     var body: some View {
         VStack(spacing: 20) {
@@ -42,7 +41,7 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
     
     private var gameHeaderView: some View {
         HStack(alignment: .top, spacing: 8) {
-            GameScoreView(score: score)
+            GameScoreView(score: viewModel.currentScore)
                 .padding(.leading, 10)
             Spacer()
             RefreshButton {

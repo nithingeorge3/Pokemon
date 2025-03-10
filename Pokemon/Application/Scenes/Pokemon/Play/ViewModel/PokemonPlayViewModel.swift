@@ -12,7 +12,7 @@ import Observation
 @MainActor
 protocol PokemonPlayViewModelType: AnyObject, Observable {
     var pokemon: Pokemon? { get set }
-    var user: User? { get set }
+    var currentScore: Int { get set }
     var answerOptions: [Pokemon] { get set }
     var selectedAnswer: Pokemon? { get set }
     var showResult: Bool { get set }
@@ -26,7 +26,7 @@ protocol PokemonPlayViewModelType: AnyObject, Observable {
 @Observable
 final class PokemonPlayViewModel: PokemonPlayViewModelType {
     var pokemon: Pokemon?
-    var user: User?
+    var currentScore = 0
     var answerOptions: [Pokemon] = []
     var selectedAnswer: Pokemon?
     var showResult: Bool = false
@@ -126,6 +126,8 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         if pokemon.id == self.pokemon?.id {
             do {
                 try await answerService.updateScore(Constants.Pokemon.gamePoint)
+                
+                currentScore += Constants.Pokemon.gamePoint
             } catch {
                 print("failed to update user score: \(error)")
             }
