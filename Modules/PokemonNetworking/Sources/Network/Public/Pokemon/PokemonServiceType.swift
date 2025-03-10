@@ -20,6 +20,10 @@ public protocol PokemonAnswerServiceType: Sendable {
     func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain]
 }
 
+public protocol PokemonUserServiceType: Sendable {
+    func getCurrentUser() async throws -> UserDomain
+}
+
 
 public protocol PokemonSDServiceType: Sendable {
     var favoritesDidChange: AsyncStream<Int> { get }

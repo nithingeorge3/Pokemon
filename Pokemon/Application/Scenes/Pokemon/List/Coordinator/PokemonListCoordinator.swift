@@ -25,10 +25,12 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
     var viewModel: PokemonListViewModel
     private let _tabItem: TabItem
     private let service: PokemonServiceProvider
+    private let userService: PokemonUserServiceType
     private var cancellables: [AnyCancellable] = []
     
     private var paginationSDRepo: PaginationSDRepositoryType
     private var pokemonSDRepo: PokemonSDRepositoryType
+    private var userSDRepo: UserSDRepositoryType
     
     @Published var navigationPath = NavigationPath()
     
@@ -40,21 +42,27 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
         tabItem: TabItem,
         viewFactory: PokemonViewFactoryType,
         modelFactory: PokemonViewModelFactoryType,
+        userSDRepo: UserSDRepositoryType,
         paginationSDRepo: PaginationSDRepositoryType,
         pokemonSDRepo: PokemonSDRepositoryType
     ) async {
         _tabItem = tabItem
         self.viewFactory = viewFactory
         self.modelFactory = modelFactory
+        self.userSDRepo = userSDRepo
         self.paginationSDRepo = paginationSDRepo
         self.pokemonSDRepo = pokemonSDRepo
         
-        self.service = PokemonServiceFactory.makePokemonService(pokemonSDRepo: pokemonSDRepo, paginationSDRepo: paginationSDRepo)
+        //I need to create a seperate repository for user interaction. so that that we can avoid unwanted injection
+        self.service = PokemonServiceFactory.makePokemonService(userSDRepo: userSDRepo, pokemonSDRepo: pokemonSDRepo, paginationSDRepo: paginationSDRepo)
+        
+        self.userService = PokemonUserServiceFactory.makePokemonUserService(userSDRepo: userSDRepo, pokemonSDRepo: pokemonSDRepo, paginationSDRepo: paginationSDRepo)
         
         let paginationHandler: PaginationHandlerType = PaginationHandler()
         
         let vm = await modelFactory.makePokemonListViewModel(
             service: service,
+            userService: userService,
             paginationHandler: paginationHandler
         )
 
@@ -83,7 +91,7 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
 
 extension PokemonListCoordinator {
     func navigateToPokemonPlay(for pokemonID: Pokemon.ID) -> some View {
-        let answerService: PokemonAnswerServiceType = PokemonAnswerServiceFactory.makePokemonAnswerService(pokemonSDRepo: pokemonSDRepo, paginationSDRepo: paginationSDRepo)
+        let answerService: PokemonAnswerServiceType = PokemonAnswerServiceFactory.makePokemonAnswerService(userSDRepo: userSDRepo, pokemonSDRepo: pokemonSDRepo, paginationSDRepo: paginationSDRepo)
         
         let playCoordinator = PokemonPlayCoordinatorFactory().makePokemonPlayCoordinator(pokemonID: pokemonID, service: service, answerService: answerService)
         return playCoordinator.start()

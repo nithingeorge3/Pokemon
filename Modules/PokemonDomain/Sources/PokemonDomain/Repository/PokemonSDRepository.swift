@@ -25,5 +25,7 @@ public protocol PokemonSDRepositoryType: Sendable {
 public protocol UserSDRepositoryType: Sendable {
     func getOrCreateGuest() async throws -> UserDomain
     func updateScore(_ points: Int) async throws
+    //future for more user
+    //func updateScore(_ points: Int, for userId: UUID) async throws
     func getCurrentUser() async throws -> UserDomain
 }

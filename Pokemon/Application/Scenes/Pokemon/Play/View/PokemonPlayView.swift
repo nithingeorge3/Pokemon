@@ -42,7 +42,7 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
     
     private var gameHeaderView: some View {
         HStack(alignment: .top, spacing: 8) {
-            GameScoreView(score: $score)
+            GameScoreView(score: score)
                 .padding(.leading, 10)
             Spacer()
             RefreshButton {

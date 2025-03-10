@@ -20,6 +20,9 @@ public protocol PokemonRepositoryType: Sendable {
     //gaming
     func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain]
     func fetchRandomUnplayedPokemon() async throws -> PokemonDomain
+    
+    //user
+    func getOrCreateGuest() async throws -> UserDomain
 }
 
 final class PokemonRepository: PokemonRepositoryType {
@@ -27,17 +30,20 @@ final class PokemonRepository: PokemonRepositoryType {
     private let requestBuilder: RequestBuilderType
     private let pokemonSDRepo: PokemonSDRepositoryType
     private let paginationSDRepo: PaginationSDRepositoryType
+    private let userSDRepo: UserSDRepositoryType
     
     init(
         parser: ServiceParserType,
         requestBuilder: RequestBuilderType,
         pokemonSDRepo: PokemonSDRepositoryType,
-        paginationSDRepo: PaginationSDRepositoryType
+        paginationSDRepo: PaginationSDRepositoryType,
+        userSDRepo: UserSDRepositoryType
     ) {
         self.parser = parser
         self.requestBuilder = requestBuilder
         self.pokemonSDRepo = pokemonSDRepo
         self.paginationSDRepo = paginationSDRepo
+        self.userSDRepo =  userSDRepo
     }
     
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain] {
@@ -115,6 +121,13 @@ extension PokemonRepository {
     
     func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
         try await pokemonSDRepo.fetchRandomUnplayedPokemon()
+    }
+}
+
+//User specific
+extension PokemonRepository {
+    func getOrCreateGuest() async throws -> UserDomain {
+        try await userSDRepo.getOrCreateGuest()
     }
 }
 

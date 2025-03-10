@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct GameScoreView: View {
-    @Binding var score: Int
+    var score: Int
+//    @Binding var score: Int
     var size: CGFloat = 24
     
     var body: some View {

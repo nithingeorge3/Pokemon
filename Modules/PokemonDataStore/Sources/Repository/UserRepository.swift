@@ -9,7 +9,7 @@ import Foundation
 import PokemonDomain
 import SwiftData
 
-final class UserSDRepository: UserSDRepositoryType {
+public final class UserSDRepository: UserSDRepositoryType {
     private let container: ModelContainer
     
     public init(container: ModelContainer) {
@@ -21,7 +21,7 @@ final class UserSDRepository: UserSDRepositoryType {
         DataStoreManager(container: self.container)
     }
     
-    func getOrCreateGuest() async throws -> UserDomain {
+    public func getOrCreateGuest() async throws -> UserDomain {
         try await dataStore.performBackgroundTask { context in
             let predicate = #Predicate<SDUser> { $0.isGuest }
             let descriptor = FetchDescriptor<SDUser>(
@@ -33,17 +33,15 @@ final class UserSDRepository: UserSDRepositoryType {
             if let guest = existing.first {
                 return UserDomain(from: guest)
             }
-            
-            let domainUser = UserDomain(isGuest: true, lastActive: Date())
-            let newGuest = SDUser(from: domainUser)
-            context.insert(newGuest)
-            try context.save()
-            return UserDomain(from: newGuest)
-        }
 
+            let newUser = SDUser(id: UUID(), score: 0, email: "guest@pokemon.com", isGuest: true, lastActive: Date())
+            context.insert(newUser)
+            try context.save()
+            return UserDomain(from: newUser)
+        }
     }
     
-    func updateScore(_ points: Int) async throws {
+    public func updateScore(_ points: Int) async throws {
         try await dataStore.performBackgroundTask { context in
             let predicate = #Predicate<SDUser> { $0.isGuest }
             let descriptor = FetchDescriptor<SDUser>(
@@ -61,7 +59,7 @@ final class UserSDRepository: UserSDRepositoryType {
         }
     }
     
-    func getCurrentUser() async throws -> UserDomain {
+    public func getCurrentUser() async throws -> UserDomain {
         // For future multi-user: Check auth state
         return try await getOrCreateGuest()
     }

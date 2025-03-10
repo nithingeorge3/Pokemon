@@ -107,3 +107,10 @@ extension MockPokemonRepository {
         return [PokemonDomain(id: 1, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)]
     }
 }
+
+//User
+extension MockPokemonRepository {
+    func getOrCreateGuest() async throws -> UserDomain {
+        UserDomain(isGuest: true, lastActive: Date(timeIntervalSince1970: 0))
+    }
+}
