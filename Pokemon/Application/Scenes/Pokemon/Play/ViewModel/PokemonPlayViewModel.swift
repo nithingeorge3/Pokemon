@@ -12,12 +12,14 @@ import Observation
 @MainActor
 protocol PokemonPlayViewModelType: AnyObject, Observable {
     var pokemon: Pokemon? { get set }
-    var currentScore: Int { get set }
     var answerOptions: [Pokemon] { get set }
     var selectedAnswer: Pokemon? { get set }
     var showResult: Bool { get set }
     var isLoading: Bool { get set }
+    
+    var currentScore: Int { get }
     var showCelebration: Bool { get }
+    var silhouetteMode: Bool { get }
     
     func send(_ action: PokemonPlayActions)
 }
@@ -26,14 +28,21 @@ protocol PokemonPlayViewModelType: AnyObject, Observable {
 @Observable
 final class PokemonPlayViewModel: PokemonPlayViewModelType {
     var pokemon: Pokemon?
-    var currentScore = 0
     var answerOptions: [Pokemon] = []
     var selectedAnswer: Pokemon?
     var showResult: Bool = false
     var isLoading: Bool = false
-    var showCelebration: Bool = false
+
+    private var user: User?
+
+    var currentScore: Int {
+        user?.score ?? 0
+    }
+    var showCelebration = false
+    var silhouetteMode: Bool {
+        user?.preference.enableSilhouetteMode ?? true
+    }
     
-    var showWinAnimation: Bool = false
     private var pokemonID: Pokemon.ID
     private let service: PokemonSDServiceType
     private let userService: PokemonUserServiceType
@@ -68,9 +77,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         Task {
             do {
                 let userDomain = try await userService.getCurrentUser()
-                let user = User(from: userDomain)
-                currentScore = user.score
-                showCelebration = user.preference.showWinAnimation
+                user = User(from: userDomain)
             } catch {
                 print("unable to find user")
             }
@@ -137,13 +144,14 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         
         if pokemon.id == self.pokemon?.id {
             do {
-                showCelebration = showWinAnimation
+                showCelebration = user?.preference.showWinAnimation ?? false
+                
                 try await answerService.updateScore(Constants.Pokemon.gamePoint)
                 Task { await fetchUserInfo() }
             } catch {
                 print("failed to update user score: \(error)")
             }
-            showCelebration = true
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.showCelebration = false
             }
