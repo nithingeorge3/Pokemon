@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import SwiftData
+import PokemonDataStore
 
 @MainActor
 protocol MenuCoordinatorFactoryType {
-    func makeMenuCoordinator() -> MenuCoordinator
+    func makeMenuCoordinator(container: ModelContainer) -> MenuCoordinator
 }
 
 final class MenuCoordinatorFactory: MenuCoordinatorFactoryType {
@@ -19,8 +21,13 @@ final class MenuCoordinatorFactory: MenuCoordinatorFactoryType {
         self.menuViewFactory = menuViewFactory
     }
     
-    func makeMenuCoordinator() -> MenuCoordinator {
+    func makeMenuCoordinator(container: ModelContainer) -> MenuCoordinator {
         let tabItem = TabItem(title: "Menu", icon: "line.horizontal.3", badgeCount: nil, color: .black)
-        return MenuCoordinator(menuViewFactory: menuViewFactory, tabItem: tabItem)
+       
+        let userSDRepo = UserSDRepository(container: container)
+        let paginationSDRepo = PaginationSDRepository(container: container)
+        let pokemonSDRepo = PokemonSDRepository(container: container)
+        
+        return MenuCoordinator(menuViewFactory: menuViewFactory, tabItem: tabItem, userSDRepo: userSDRepo, paginationSDRepo: paginationSDRepo, pokemonSDRepo: pokemonSDRepo)
     }
 }

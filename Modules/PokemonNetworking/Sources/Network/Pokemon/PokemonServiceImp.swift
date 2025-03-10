@@ -20,7 +20,11 @@ final class PokemonServiceImp: PokemonServiceProvider {
     func fetchPokemon(endPoint: EndPoint) async throws(NetworkError) -> [PokemonDomain] {
         do {
             return try await pokemonRepository.fetchPokemon(endPoint: endPoint)
-            //add business logic
+//            let allPokemon = try await pokemonRepository.fetchPokemon(endPoint: endPoint)
+//            return allPokemon
+//                .shuffled()
+//                .map { $0 }
+            
         } catch {
             throw NetworkError.failedToDecode
         }
@@ -35,8 +39,17 @@ extension PokemonServiceImp {
         try await pokemonRepository.fetchPokemon(for: pokemonID)
     }
     
+    func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
+        try await pokemonRepository.fetchRandomUnplayedPokemon()
+    }
+    
     func fetchPokemon(offset: Int = 0, pageSize: Int = 40) async throws -> [PokemonDomain] {
-        try await pokemonRepository.fetchPokemon(offset: offset, pageSize: pageSize)
+        return try await pokemonRepository.fetchPokemon(offset: offset, pageSize: pageSize)
+        
+//        let allPokemon = try await pokemonRepository.fetchPokemon(offset: offset, pageSize: pageSize)
+//        return allPokemon
+//            .shuffled()
+//            .map { $0 }
     }
     
     func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
@@ -49,34 +62,3 @@ extension PokemonServiceImp {
         return try await pokemonRepository.fetchPokemonPagination(entityType)
     }
 }
-
-/*
-//just added for showing combine
-final class PokemonListServiceImp: PokemonListServiceType {
-    private let pokemonRepository: PokemonListRepositoryType
-    private var cancellables: Set<AnyCancellable> = []
-
-            
-    init(pokemonRepository: PokemonListRepositoryType) {
-        self.pokemonRepository = pokemonRepository
-    }
-    
-    func fetchPokemon(endPoint: EndPoint) -> Future<[PokemonDomain], Error> {
-        return Future<[PokemonDomain], Error> { [weak self] promise in
-            guard let self = self else {
-                return promise(.failure(NetworkError.contextDeallocated))
-            }
-            pokemonRepository.fetchPokemon(endPoint: endPoint)
-                .receive(on: RunLoop.main)
-                .sink { completion in
-                    if case .failure(let error) = completion {
-                        promise(.failure(error))
-                    }
-                } receiveValue: { pokemon in
-                    promise(.success(pokemon))
-                }
-                .store(in: &cancellables)
-        }
-    }
-}
-*/

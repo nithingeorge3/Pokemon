@@ -29,7 +29,7 @@ struct CustomBackButtonModifier: ViewModifier {
 }
 
 struct CustomNavigationTitle: ViewModifier {
-    @State var title: String = "News"
+    @State var title: String = "Pokemon"
     func body(content: Content) -> some View {
         content
             .navigationBarTitleDisplayMode(.inline)
@@ -43,6 +43,34 @@ struct CustomNavigationTitle: ViewModifier {
     }
 }
 
+struct CustomNavigationScoreView<ScoreContent: View>: ViewModifier {
+    let scoreContent: ScoreContent
+
+    func body(content: Content) -> some View {
+        content
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    scoreContent
+                }
+            }
+    }
+}
+
+//struct CustomNavigationScoreView<Content: View>: ViewModifier {
+//    let content: Content
+//
+//    func body(content base: ContentOf<Self>) -> some View {
+//        base
+//            .navigationBarTitleDisplayMode(.inline)
+//            .toolbar {
+//                ToolbarItem(placement: .principal) {
+//                    self.content
+//                }
+//            }
+//    }
+//}
+
 extension View {
     func withCustomBackButton(action: (() -> Void)? = nil) -> some View {
         modifier(CustomBackButtonModifier(action: action))
@@ -50,5 +78,9 @@ extension View {
     
     func withCustomNavigationTitle(title: String) -> some View {
         modifier(CustomNavigationTitle(title: title))
+    }
+    
+    func withCustomNavigationScore<Content: View>(_ view: Content) -> some View {
+        self.modifier(CustomNavigationScoreView(scoreContent: view))
     }
 }

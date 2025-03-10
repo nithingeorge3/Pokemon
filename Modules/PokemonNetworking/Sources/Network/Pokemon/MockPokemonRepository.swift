@@ -73,6 +73,12 @@ final class MockPokemonRepository: PokemonRepositoryType, @unchecked Sendable {
         return pokemon
     }
     
+    func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
+        let id = randomNumber()
+        
+        return PokemonDomain(id: id, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/\(id)/")!)
+    }
+    
     func fetchPokemon(offset: Int = 0, pageSize: Int = 40) async throws -> [PokemonDomain] {
         return []
     }
@@ -88,5 +94,36 @@ final class MockPokemonRepository: PokemonRepositoryType, @unchecked Sendable {
     
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain {
         pagination
+    }
+    
+    private func randomNumber() -> Int {
+        Int.random(in: 1...50)
+    }
+}
+
+//Gaming
+extension MockPokemonRepository {
+    func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain] {
+        return [PokemonDomain(id: 1, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)]
+    }
+    
+    func updateScore(_ points: Int) async throws {
+        
+    }
+}
+
+//User
+extension MockPokemonRepository {
+    func getOrCreateGuest() async throws -> UserDomain {
+        UserDomain(isGuest: true, lastActive: Date(timeIntervalSince1970: 0))
+    }
+    
+    
+    func updatePreferences(_ newPref: PreferenceDomain) async throws {
+        
+    }
+    
+    func getCurrentPreferences() async throws -> PreferenceDomain {
+        PreferenceDomain()
     }
 }

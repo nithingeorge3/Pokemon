@@ -10,7 +10,8 @@ import Combine
 
 struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
     @Bindable var viewModel: ViewModel
-   
+    @State private var score: Int = 10
+    
     private var isEmpty: Bool {
         viewModel.pokemon.isEmpty
     }
@@ -42,6 +43,7 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
             viewModel.send(.refresh)
         }
         .withCustomNavigationTitle(title: "Pokemon")
+        .withCustomNavigationScore(GameScoreView(score: viewModel.user?.score ?? 0, size: 12))
     }
 }
 
@@ -69,6 +71,8 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
 }
 
 private class PreviewPokemonListViewModel: PokemonListViewModelType {
+    var user: User?
+    
     var pokemon: [Pokemon] = [
         Pokemon(id: 1, name: "ivysaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!, isFavorite: false),
         Pokemon(id: 2, name: "venusaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!, isFavorite: true),
@@ -83,7 +87,11 @@ private class PreviewPokemonListViewModel: PokemonListViewModelType {
     var state: ResultState
     
     init(state: ResultState) {
+        let id = UUID(uuidString: "11111111-1111-1111-1111-111111111111")!
+        let date = Date()
+        
         self.state = state
+        self.user = User(id: id, name: "test", score: 10, email: "test@test.com", isGuest: true, lastActive: date, preference: Preference(id: id, showWinAnimation: false, enableSilhouetteMode: true, lastUpdated: date))
     }
     
     func send(_ action: PokemonListAction) {

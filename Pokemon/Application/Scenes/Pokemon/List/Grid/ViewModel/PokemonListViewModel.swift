@@ -14,6 +14,7 @@ import PokemonDomain
 @MainActor
 protocol PokemonListViewModelType: AnyObject, Observable {
     var pokemon: [Pokemon] { get }
+    var user: User? { get set }
     var favoritePokemon: [Pokemon] { get }
     var otherPokemon: [Pokemon] { get }
     var paginationHandler: PaginationHandlerType { get }
@@ -26,8 +27,10 @@ protocol PokemonListViewModelType: AnyObject, Observable {
 @Observable
 class PokemonListViewModel: PokemonListViewModelType {    
     var state: ResultState = .loading
+    var user: User?
     var pokemon: [Pokemon] = []
     let service: PokemonServiceProvider
+    let userService: PokemonUserServiceType
     var paginationHandler: PaginationHandlerType
     var pokemonListActionSubject = PassthroughSubject<PokemonListAction, Never>()
     
@@ -43,11 +46,13 @@ class PokemonListViewModel: PokemonListViewModelType {
     
     init(
         service: PokemonServiceProvider,
+        userService: PokemonUserServiceType,
         paginationHandler: PaginationHandlerType
     ) {
         self.service = service
+        self.userService = userService
         self.paginationHandler = paginationHandler
-        Task { try await fetchPagination() }
+        Task { try await fetchPokemonPagination() }
         Task { try await fetchLocalPokemon() }
         listeningFavoritesChanges()
     }
@@ -55,16 +60,28 @@ class PokemonListViewModel: PokemonListViewModelType {
     func send(_ action: PokemonListAction) {
         switch action {
         case .refresh:
+            Task { try await currentUser() }
             Task { try await fetchRemotePokemon() }
         case .loadMore:
             guard paginationHandler.hasMoreData else { return }
             Task { try await fetchRemotePokemon() }
-        case .selectPokemon( let pokemonID):
+        case .selectPokemon(let pokemonID):
             pokemonListActionSubject.send(PokemonListAction.selectPokemon(pokemonID))
         }
     }
     
-    private func fetchPagination() async throws {
+    private func currentUser() async throws {
+        Task {
+            do {
+                let userDomain = try await userService.getCurrentUser()
+                user = User(from: userDomain)
+            } catch {
+                print("unable to find user")
+            }
+        }
+    }
+    
+    private func fetchPokemonPagination() async throws {
         Task {
             do {
                 let paginationDomain = try await service.fetchPokemonPagination(.pokemon)
@@ -108,8 +125,11 @@ class PokemonListViewModel: PokemonListViewModelType {
                         limit: Constants.Pokemon.fetchLimit
                     )
                 )
+                
                 let newPokemon = pokemonDomains.map { Pokemon(from: $0) }
                 updatePokemon(with: newPokemon)
+                
+                try await fetchPokemonPagination()
             } catch {
                 if pokemon.count == 0 {
                     state = .failed(error: error)

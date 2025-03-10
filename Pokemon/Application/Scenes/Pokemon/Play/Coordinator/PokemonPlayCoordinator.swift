@@ -12,9 +12,12 @@ import SwiftData
 import PokemonDomain
 
 enum PokemonPlayActions {
-    case toggleFavorite
     case load
+    case selectAnswer(Pokemon)
+    case refresh
+    case toggleFavorite
 }
+
 
 final class PokemonPlayCoordinator: Coordinator {
     private let viewModelFactory: PokemonPlayViewModelFactoryType
@@ -27,13 +30,15 @@ final class PokemonPlayCoordinator: Coordinator {
         viewModelFactory: PokemonPlayViewModelFactoryType,
         viewFactory: PokemonPlayViewFactoryType,
         pokemonID: Pokemon.ID,
-        service: PokemonSDServiceType
+        service: PokemonSDServiceType,
+        userService: PokemonUserServiceType,
+        answerService: PokemonAnswerServiceType
     ) {
         self.viewModelFactory = viewModelFactory
         self.viewFactory = viewFactory
         self.pokemonID = pokemonID
         self.service = service
-        self.viewModel = viewModelFactory.makePokemonPlayViewModel(pokemonID: pokemonID, service: service)
+        self.viewModel = viewModelFactory.makePokemonPlayViewModel(pokemonID: pokemonID, service: service, userService: userService , answerService: answerService)
     }
     
     func start() -> some View {

@@ -17,7 +17,6 @@ final class RequestBuilder: RequestBuilderType {
         request.httpMethod = "GET"
         request.addValue("application/json",
                          forHTTPHeaderField: "Content-Type")
-        print("****request: \(request)")
         return request
     }
 }

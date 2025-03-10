@@ -20,6 +20,7 @@ final class PokemonListCoordinatorFactory: PokemonListCoordinatorFactoryType {
         let modelFactory = PokemonViewModelFactory()
         let viewFactory = PokemonViewFactory()
         
+        let userSDRepo = UserSDRepository(container: container)
         let paginationSDRepo = PaginationSDRepository(container: container)
         let pokemonSDRepo = PokemonSDRepository(container: container)
         
@@ -27,6 +28,7 @@ final class PokemonListCoordinatorFactory: PokemonListCoordinatorFactoryType {
             tabItem: tabItem,
             viewFactory: viewFactory,
             modelFactory: modelFactory,
+            userSDRepo: userSDRepo,
             paginationSDRepo: paginationSDRepo,
             pokemonSDRepo: pokemonSDRepo
         )

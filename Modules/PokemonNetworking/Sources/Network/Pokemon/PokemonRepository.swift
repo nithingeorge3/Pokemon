@@ -9,13 +9,23 @@ import Combine
 import Foundation
 import PokemonDomain
 
-//we can split protocol. backend and SwiftData fetch
+//we need to split PokemonRepositoryType protocol. backend, SwiftData and gaming fetch
 public protocol PokemonRepositoryType: Sendable {
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain]
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain]
     func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain
+    
+    //gaming
+    func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain]
+    func fetchRandomUnplayedPokemon() async throws -> PokemonDomain
+    func updateScore(_ points: Int) async throws
+    
+    //user
+    func getOrCreateGuest() async throws -> UserDomain
+    func updatePreferences(_ newPref: PreferenceDomain) async throws
+    func getCurrentPreferences() async throws -> PreferenceDomain
 }
 
 final class PokemonRepository: PokemonRepositoryType {
@@ -23,17 +33,20 @@ final class PokemonRepository: PokemonRepositoryType {
     private let requestBuilder: RequestBuilderType
     private let pokemonSDRepo: PokemonSDRepositoryType
     private let paginationSDRepo: PaginationSDRepositoryType
+    private let userSDRepo: UserSDRepositoryType
     
     init(
         parser: ServiceParserType,
         requestBuilder: RequestBuilderType,
         pokemonSDRepo: PokemonSDRepositoryType,
-        paginationSDRepo: PaginationSDRepositoryType
+        paginationSDRepo: PaginationSDRepositoryType,
+        userSDRepo: UserSDRepositoryType
     ) {
         self.parser = parser
         self.requestBuilder = requestBuilder
         self.pokemonSDRepo = pokemonSDRepo
         self.paginationSDRepo = paginationSDRepo
+        self.userSDRepo =  userSDRepo
     }
     
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain] {
@@ -61,7 +74,6 @@ final class PokemonRepository: PokemonRepositoryType {
             }
             
             try await pokemonSDRepo.savePokemon(pokemonDomains)
-//            return pokemonDomains
             
             var pagination = try await paginationSDRepo.fetchPokemonPagination(.pokemon)
             pagination.totalCount = responseDTO.count
@@ -103,57 +115,32 @@ extension PokemonRepository {
     }
 }
 
-/*
-//PokemonListRepository added for combine based operation. We can add combine with PokemonRepositoryType.
-public protocol PokemonListRepositoryType {
-    func fetchPokemon(endPoint: EndPoint) -> Future<[PokemonDomain], Error>
+//Gaming specific. later creata a sperate Repo for gaming
+extension PokemonRepository {
+    func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain] {
+        try await pokemonSDRepo.fetchRandomOptions(excluding: id, count: count)
+    }
+    
+    func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
+        try await pokemonSDRepo.fetchRandomUnplayedPokemon()
+    }
+    
+    func updateScore(_ points: Int) async throws {
+        try await userSDRepo.updateScore(points)
+    }
 }
 
-final class PokemonListRepository: PokemonListRepositoryType {
-    private let parser: ServiceParserType
-    private let requestBuilder: RequestBuilderType
-    private var cancellables: Set<AnyCancellable> = []
-    
-    init(
-        parser: ServiceParserType,
-        requestBuilder: RequestBuilderType
-    ) {
-        self.parser = parser
-        self.requestBuilder = requestBuilder
+//User specific
+extension PokemonRepository {
+    func getOrCreateGuest() async throws -> UserDomain {
+        try await userSDRepo.getOrCreateGuest()
     }
     
-    func fetchPokemon(endPoint: EndPoint) -> Future<[PokemonDomain], Error> {
-        Future<[PokemonDomain], Error> { [weak self] promise in
-            guard let self = self else {
-                return promise(.failure(NetworkError.contextDeallocated))
-            }
-            
-            do {
-                let url = try endPoint.url()
-                URLSession.shared.dataTaskPublisher(for: requestBuilder.buildRequest(url: url))
-                    .mapError { error -> Error in
-                        return NetworkError.responseError
-                    }
-                    .flatMap { [weak self] output -> AnyPublisher<PokemonResponseDTO, Error> in
-                        guard let self = self else {
-                            return Fail(error: NetworkError.contextDeallocated)
-                                .eraseToAnyPublisher()
-                        }
-                        let parseResult = self.parser.parse(data: output.data, response: output.response, type: PokemonResponseDTO.self)
-                        return parseResult
-                    }
-                    .sink(receiveCompletion: { completion in
-                        if case .failure(let error) = completion { promise(.failure(error))
-                        }
-                    }, receiveValue:  { decodedData in
-                        let domains = decodedData.results.map { PokemonDomain(from: $0) }
-                        promise(.success(domains))
-                    })
-                    .store(in: &self.cancellables)
-            } catch  {
-                return promise(.failure(NetworkError.unKnown))
-            }
-        }
+    func updatePreferences(_ newPref: PreferenceDomain) async throws {
+        try await userSDRepo.updatePreferences(newPref)
+    }
+    
+    func getCurrentPreferences() async throws -> PreferenceDomain {
+        try await userSDRepo.getCurrentPreferences()
     }
 }
-*/

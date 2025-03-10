@@ -40,11 +40,10 @@ extension SDPokemon {
             )
     }
     
-    //Not updating isFavorite because we are not fetching isFavorite from backend
     func update(from domain: PokemonDomain) {
         self.id = domain.id
         self.name = domain.name
-        self.url = "pokemon.url"
+        self.url = domain.url.absoluteString
     }
 }
 

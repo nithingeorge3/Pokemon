@@ -30,6 +30,7 @@ struct PokemonApp: App {
     }
 }
 
+//We can use binding through @observable macro
 @MainActor
 class AppCoordinator: ObservableObject {
     enum State {

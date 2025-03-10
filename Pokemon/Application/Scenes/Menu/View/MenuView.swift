@@ -8,6 +8,7 @@
 import SwiftUI
 import PokemonNetworking
 
+//ToDo: Later use DI principle and use Observable and Bindable
 struct MenuView: View {
     @ObservedObject var viewModel: MenuViewModel
     @State private var selectedItem: SidebarItem?
@@ -81,26 +82,17 @@ struct MenuView: View {
     @ViewBuilder
     private func destinationView(for item: SidebarItem) -> some View {
         switch item.title {
-        case "Profile":
-            ProfileView()
-        case "Pokemon List":
-            EmptyView() //pokemonListView()
+        case "Settings":
+            SettingsView()
+        case "Preferences":
+            makePreferencesView()
         default:
             EmptyView()
         }
     }
     
-//    private func pokemonListView() -> some View {
-//        let service = PokemonListServiceFactory.makePokemonListService()
-//        let viewModel = PokemonViewModel(service: service)
-//        return PokemonViewFactory().makePokemonListView(viewModel: viewModel)
-//    }
+    private func makePreferencesView() -> some View {
+        let viewModel = PreferencesViewModel(userService: viewModel.userService)
+        return PreferencesView(viewModel: viewModel)
+    }
 }
-
-// MARK: - Previews
-#if DEBUG
-#Preview {
-    let items = [SidebarItem(title: "Profile", type: .navigation)]
-    MenuView(viewModel: MenuViewModel(items: items))
-}
-#endif

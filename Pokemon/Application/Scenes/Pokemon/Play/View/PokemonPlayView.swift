@@ -12,29 +12,125 @@ import PokemonNetworking
 
 struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
     @Bindable var viewModel: ViewModel
-    @State private var selectedIndex: Int = 0
-   
+    @State private var rotationAngle: Double = 0
+    
     var body: some View {
-        Group {
-            Text(viewModel.pokemon?.name ?? "Loading")
+        VStack(spacing: 20) {
+            if viewModel.isLoading {
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .scaleEffect(1.5)
+            } else {
+                gameHeaderView
+                    .padding(.top, 8)
+                ZStack {
+                    imageSection
+                    celebrationOverlay
+                }
+                
+                answerGrid
+                    .padding(.bottom, 40)
+            }
         }
         .onAppear {
             viewModel.send(.load)
         }
         .withCustomBackButton()
-        .withCustomNavigationTitle(title: "Play Pokemon")
+        .withCustomNavigationTitle(title: "Pokemon")
+    }
+    
+    private var gameHeaderView: some View {
+        HStack(alignment: .top, spacing: 8) {
+            GameScoreView(score: viewModel.currentScore)
+                .padding(.leading, 10)
+            Spacer()
+            RefreshButton {
+                viewModel.send(.refresh)
+            }
+            Spacer().frame(width: 30)
+        }
+    }
+    
+    private var imageSection: some View {
+        VStack {
+            if let pokemon = viewModel.pokemon {
+                PokemonImageView(
+                    pokemonID: pokemon.id,
+                    width: 150,
+                    height: 150
+                )
+                .blur(radius: viewModel.imageBlurRadius)//if zero will show correct image, no shadow. if 10 with shadow
+                .animation(.easeInOut(duration: 0.3), value: viewModel.imageBlurRadius)
+                
+                //ToDo: this is without silhouetteMode toggle
+//              .blur(radius: viewModel.showResult ? 0 : 10)
+//              .animation(.easeInOut, value: viewModel.showResult)
+            }
+        }
+    }
+    
+    private var answerGrid: some View {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2)) {
+            ForEach(viewModel.answerOptions) { pokemon in
+                AnswerButton(
+                    pokemon: pokemon,
+                    isSelected: viewModel.selectedAnswer?.id == pokemon.id,
+                    showResult: viewModel.showResult,
+                    isCorrect: pokemon.id == viewModel.pokemon?.id
+                ) {
+                    viewModel.send(.selectAnswer(pokemon))
+                }
+            }
+        }
+        .padding(.horizontal)
+    }
+    
+    private var celebrationOverlay: some View {
+        Group {
+            if viewModel.showCelebration {
+                CelebrationView(
+                    config: .points(
+                        Constants.Pokemon.gamePoint,
+                        color: .green
+                    )
+                )
+                    .transition(.opacity)
+                    .allowsHitTesting(false)
+            }
+        }
     }
 }
 
-struct SubTitleView: View {
-    let title: String
+struct AnswerButton: View {
+    let pokemon: Pokemon
+    let isSelected: Bool
+    let showResult: Bool
+    let isCorrect: Bool
+    let action: () -> Void
+    
+    var backgroundColor: Color {
+        if showResult {
+            return isCorrect ? .green : (isSelected ? .red : .gray)
+        }
+        return isSelected ? .blue : .gray
+    }
     
     var body: some View {
-        Text(title)
-            .font(.title2)
-            .fontWeight(.semibold)
+        Button(action: action) {
+            Text(pokemon.name.capitalized)
+                .font(.headline)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(backgroundColor)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+                .scaleEffect(isSelected ? 1.05 : 1)
+                .animation(.spring(), value: isSelected)
+        }
+        .disabled(showResult)
     }
 }
+
 //
 //// MARK: - Previews
 //#if DEBUG

@@ -20,7 +20,7 @@ final class AppTabCoordinatorFactory: AppTabCoordinatorFactoryType {
         let menuViewModelFactory = MenuViewModelFactory()
         let menuViewFactory = MenuViewFactory(menuViewModelFactory: menuViewModelFactory)
         let menuCoordinatorFactory = MenuCoordinatorFactory(menuViewFactory: menuViewFactory)
-        let menuCoordinator = menuCoordinatorFactory.makeMenuCoordinator()
+        let menuCoordinator = menuCoordinatorFactory.makeMenuCoordinator(container: container)
         
         let viewFactory = AppTabViewFactory(coordinators: [pokemonCoordinator,
                                                            menuCoordinator])
