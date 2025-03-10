@@ -21,3 +21,9 @@ public protocol PokemonSDRepositoryType: Sendable {
     func savePokemon(_ pokemon: [PokemonDomain]) async throws
     func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool
 }
+
+public protocol UserSDRepositoryType: Sendable {
+    func getOrCreateGuest() async throws -> UserDomain
+    func updateScore(_ points: Int) async throws
+    func getCurrentUser() async throws -> UserDomain
+}

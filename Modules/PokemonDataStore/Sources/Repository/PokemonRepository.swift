@@ -9,13 +9,6 @@ import Foundation
 import PokemonDomain
 import SwiftData
 
-@frozen
-public enum SDError: Error, Equatable {
-    case modelNotFound
-    case modelObjNotFound
-    case invalidRequest(reason: String)
-}
-
 public final class PokemonSDRepository: PokemonSDRepositoryType {
     private let container: ModelContainer
     

@@ -33,7 +33,6 @@ final class PokemonRepositoryTests: XCTestCase {
     private func clearData() async throws {
         let context = ModelContext(container)
         try context.delete(model: SDPokemon.self)
-        try context.delete(model: SDPagination.self)
         try context.save()
     }
 }
