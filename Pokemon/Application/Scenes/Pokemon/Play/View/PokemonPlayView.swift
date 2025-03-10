@@ -72,6 +72,7 @@ extension PokemonPlayView {
                     width: 150,
                     height: 150
                 )
+//                .silhouetteEffect(active: true)
                 .blur(radius: viewModel.imageBlurRadius)//if zero will show correct image, no shadow. if 10 with shadow
                 .animation(.easeInOut(duration: 0.3), value: viewModel.imageBlurRadius)
                 
