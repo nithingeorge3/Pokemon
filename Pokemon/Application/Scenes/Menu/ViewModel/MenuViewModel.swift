@@ -12,9 +12,11 @@ import SwiftData
 
 class MenuViewModel: ObservableObject {
     let items: [SidebarItem]
+    let userService: PokemonUserServiceType
     
-    init(items: [SidebarItem]) {
+    init(items: [SidebarItem], userService: PokemonUserServiceType) {
         self.items = items
+        self.userService = userService
     }
     
      func performLogOut() {

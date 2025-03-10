@@ -20,4 +20,12 @@ final class PokemonUserServiceImp: PokemonUserServiceType {
     func getCurrentUser() async throws -> UserDomain {
         try await pokemonRepository.getOrCreateGuest()
     }
+    
+    func updatePreferences(_ newPref: PreferenceDomain) async throws {
+        try await pokemonRepository.updatePreferences(newPref)
+    }
+    
+    func getCurrentPreferences() async throws -> PreferenceDomain {
+        try await pokemonRepository.getCurrentPreferences()
+    }
 }

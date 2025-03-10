@@ -65,7 +65,7 @@ class PokemonListViewModel: PokemonListViewModelType {
         case .loadMore:
             guard paginationHandler.hasMoreData else { return }
             Task { try await fetchRemotePokemon() }
-        case .selectPokemon( let pokemonID):
+        case .selectPokemon(let pokemonID):
             pokemonListActionSubject.send(PokemonListAction.selectPokemon(pokemonID))
         }
     }

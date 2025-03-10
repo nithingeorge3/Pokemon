@@ -117,4 +117,13 @@ extension MockPokemonRepository {
     func getOrCreateGuest() async throws -> UserDomain {
         UserDomain(isGuest: true, lastActive: Date(timeIntervalSince1970: 0))
     }
+    
+    
+    func updatePreferences(_ newPref: PreferenceDomain) async throws {
+        
+    }
+    
+    func getCurrentPreferences() async throws -> PreferenceDomain {
+        PreferenceDomain()
+    }
 }

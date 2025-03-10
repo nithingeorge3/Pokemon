@@ -44,6 +44,53 @@ public final class UserSDRepository: UserSDRepositoryType {
         }
     }
     
+    public func updatePreferences(_ newPref: PreferenceDomain) async throws {
+        try await dataStore.performBackgroundTask { context in
+            let predicate = #Predicate<SDUser> { $0.isGuest }
+            let descriptor = FetchDescriptor<SDUser>(
+                predicate: predicate,
+                sortBy: [SortDescriptor(\.lastActive, order: .reverse)]
+            )
+            
+            let existing = try context.fetch(descriptor)
+            
+            guard let guest = existing.first, let preference = guest.preference else {
+                throw SDError.modelObjNotFound
+            }
+            
+            preference.showWinAnimation = newPref.showWinAnimation
+            preference.lastUpdated = Date()
+            
+            try context.save()
+        }
+    }
+    
+    public func getCurrentPreferences() async throws -> PreferenceDomain {
+        try await dataStore.performBackgroundTask { context in
+            let predicate = #Predicate<SDUser> { $0.isGuest }
+            let descriptor = FetchDescriptor<SDUser>(
+                predicate: predicate,
+                sortBy: [SortDescriptor(\.lastActive, order: .reverse)]
+            )
+            
+            let existing = try context.fetch(descriptor)
+            
+            if let preference = existing.first?.preference {
+                return PreferenceDomain(from: preference)
+            }
+       
+            let id = UUID()
+            let date = Date()
+            let newUser = SDUser(id: id, score: 0, email: "guest@pokemon.com", isGuest: true, lastActive: date)
+            let sdPreference = SDPreference(id: id, lastUpdated: date)
+            newUser.preference = sdPreference
+            context.insert(newUser)
+            try context.save()
+            return PreferenceDomain(from: sdPreference)
+            
+        }
+    }
+    
     public func updateScore(_ points: Int) async throws {
         try await dataStore.performBackgroundTask { context in
             let predicate = #Predicate<SDUser> { $0.isGuest }

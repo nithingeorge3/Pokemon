@@ -21,8 +21,11 @@ public protocol PokemonAnswerServiceType: Sendable {
     func updateScore(_ points: Int) async throws
 }
 
+//User specific
 public protocol PokemonUserServiceType: Sendable {
     func getCurrentUser() async throws -> UserDomain
+    func updatePreferences(_ newPref: PreferenceDomain) async throws
+    func getCurrentPreferences() async throws -> PreferenceDomain
 }
 
 

@@ -24,6 +24,8 @@ public protocol PokemonRepositoryType: Sendable {
     
     //user
     func getOrCreateGuest() async throws -> UserDomain
+    func updatePreferences(_ newPref: PreferenceDomain) async throws
+    func getCurrentPreferences() async throws -> PreferenceDomain
 }
 
 final class PokemonRepository: PokemonRepositoryType {
@@ -134,6 +136,15 @@ extension PokemonRepository {
     func getOrCreateGuest() async throws -> UserDomain {
         try await userSDRepo.getOrCreateGuest()
     }
+    
+    func updatePreferences(_ newPref: PreferenceDomain) async throws {
+        try await userSDRepo.updatePreferences(newPref)
+    }
+    
+    func getCurrentPreferences() async throws -> PreferenceDomain {
+        try await userSDRepo.getCurrentPreferences()
+    }
+    
 }
 
 /*

@@ -6,13 +6,11 @@
 //
 
 import Foundation
-
-import Foundation
 import PokemonDomain
 
 struct Preference: Identifiable, Hashable {
     let id: UUID
-    let showWinAnimation: Bool
+    var showWinAnimation: Bool
     let lastUpdated: Date
     
     public func hash(into hasher: inout Hasher) {
@@ -39,5 +37,15 @@ extension Preference {
         self.id = preferenceDomain.id
         self.showWinAnimation = preferenceDomain.showWinAnimation
         self.lastUpdated = preferenceDomain.lastUpdated
+    }
+}
+
+extension Preference {
+    var asDomain: PreferenceDomain {
+        PreferenceDomain(
+            id: self.id,
+            showWinAnimation: self.showWinAnimation,
+            lastUpdated: self.lastUpdated
+        )
     }
 }
