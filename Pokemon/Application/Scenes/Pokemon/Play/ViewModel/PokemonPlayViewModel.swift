@@ -17,6 +17,8 @@ protocol PokemonPlayViewModelType: AnyObject, Observable {
     var showResult: Bool { get set }
     var isLoading: Bool { get set }
     
+    var imageBlurRadius: CGFloat { get }
+    
     var currentScore: Int { get }
     var showCelebration: Bool { get }
     var silhouetteMode: Bool { get }
@@ -39,8 +41,14 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         user?.score ?? 0
     }
     var showCelebration = false
-    var silhouetteMode: Bool {
-        user?.preference.enableSilhouetteMode ?? true
+    var silhouetteMode: Bool  = true
+    
+    var imageBlurRadius: CGFloat {
+        if silhouetteMode {
+            return showResult ? 0 : 10
+        } else {
+            return 0
+        }
     }
     
     private var pokemonID: Pokemon.ID
@@ -78,6 +86,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
             do {
                 let userDomain = try await userService.getCurrentUser()
                 user = User(from: userDomain)
+                silhouetteMode = user?.preference.enableSilhouetteMode ?? true
             } catch {
                 print("unable to find user")
             }

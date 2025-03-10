@@ -56,11 +56,15 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
             if let pokemon = viewModel.pokemon {
                 PokemonImageView(
                     pokemonID: pokemon.id,
-                    width: 200,
-                    height: 200
+                    width: 150,
+                    height: 150
                 )
-                .blur(radius: viewModel.showResult ? 0 : 10)
-                .animation(.easeInOut, value: viewModel.showResult)
+                .blur(radius: viewModel.imageBlurRadius)//if zero will show correct image, no shadow. if 10 with shadow
+                .animation(.easeInOut(duration: 0.3), value: viewModel.imageBlurRadius)
+                
+                //ToDo: this is without silhouetteMode toggle
+//              .blur(radius: viewModel.showResult ? 0 : 10)
+//              .animation(.easeInOut, value: viewModel.showResult)
             }
         }
     }
