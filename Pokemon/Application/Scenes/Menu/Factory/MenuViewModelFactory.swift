@@ -17,7 +17,6 @@ final class MenuViewModelFactory: MenuViewModelFactoryType {
         let items = [
             SidebarItem(title: "Settings", type: .navigation),
             SidebarItem(title: "Preferences", type: .navigation),
-            SidebarItem(title: "Pokemon List", type: .navigation),
             SidebarItem(title: "Logout", type: .action)
         ]
         return MenuViewModel(items: items, userService: userService)

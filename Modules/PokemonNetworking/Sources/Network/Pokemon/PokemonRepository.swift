@@ -74,7 +74,6 @@ final class PokemonRepository: PokemonRepositoryType {
             }
             
             try await pokemonSDRepo.savePokemon(pokemonDomains)
-//            return pokemonDomains
             
             var pagination = try await paginationSDRepo.fetchPokemonPagination(.pokemon)
             pagination.totalCount = responseDTO.count
@@ -144,60 +143,4 @@ extension PokemonRepository {
     func getCurrentPreferences() async throws -> PreferenceDomain {
         try await userSDRepo.getCurrentPreferences()
     }
-    
 }
-
-/*
-//PokemonListRepository added for combine based operation. We can add combine with PokemonRepositoryType.
-public protocol PokemonListRepositoryType {
-    func fetchPokemon(endPoint: EndPoint) -> Future<[PokemonDomain], Error>
-}
-
-final class PokemonListRepository: PokemonListRepositoryType {
-    private let parser: ServiceParserType
-    private let requestBuilder: RequestBuilderType
-    private var cancellables: Set<AnyCancellable> = []
-    
-    init(
-        parser: ServiceParserType,
-        requestBuilder: RequestBuilderType
-    ) {
-        self.parser = parser
-        self.requestBuilder = requestBuilder
-    }
-    
-    func fetchPokemon(endPoint: EndPoint) -> Future<[PokemonDomain], Error> {
-        Future<[PokemonDomain], Error> { [weak self] promise in
-            guard let self = self else {
-                return promise(.failure(NetworkError.contextDeallocated))
-            }
-            
-            do {
-                let url = try endPoint.url()
-                URLSession.shared.dataTaskPublisher(for: requestBuilder.buildRequest(url: url))
-                    .mapError { error -> Error in
-                        return NetworkError.responseError
-                    }
-                    .flatMap { [weak self] output -> AnyPublisher<PokemonResponseDTO, Error> in
-                        guard let self = self else {
-                            return Fail(error: NetworkError.contextDeallocated)
-                                .eraseToAnyPublisher()
-                        }
-                        let parseResult = self.parser.parse(data: output.data, response: output.response, type: PokemonResponseDTO.self)
-                        return parseResult
-                    }
-                    .sink(receiveCompletion: { completion in
-                        if case .failure(let error) = completion { promise(.failure(error))
-                        }
-                    }, receiveValue:  { decodedData in
-                        let domains = decodedData.results.map { PokemonDomain(from: $0) }
-                        promise(.success(domains))
-                    })
-                    .store(in: &self.cancellables)
-            } catch  {
-                return promise(.failure(NetworkError.unKnown))
-            }
-        }
-    }
-}
-*/

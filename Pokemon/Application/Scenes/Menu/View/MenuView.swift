@@ -82,22 +82,14 @@ struct MenuView: View {
     @ViewBuilder
     private func destinationView(for item: SidebarItem) -> some View {
         switch item.title {
-        case "Profile":
+        case "Settings":
             SettingsView()
         case "Preferences":
             makePreferencesView()
-        case "Pokemon List":
-            EmptyView() //pokemonListView()
         default:
             EmptyView()
         }
     }
-    
-//    private func pokemonListView() -> some View {
-//        let service = PokemonListServiceFactory.makePokemonListService()
-//        let viewModel = PokemonViewModel(service: service)
-//        return PokemonViewFactory().makePokemonListView(viewModel: viewModel)
-//    }
     
     private func makePreferencesView() -> some View {
         let viewModel = PreferencesViewModel(userService: viewModel.userService)

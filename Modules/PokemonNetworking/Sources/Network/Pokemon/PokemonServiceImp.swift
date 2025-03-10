@@ -62,34 +62,3 @@ extension PokemonServiceImp {
         return try await pokemonRepository.fetchPokemonPagination(entityType)
     }
 }
-
-/*
-//just added for showing combine
-final class PokemonListServiceImp: PokemonListServiceType {
-    private let pokemonRepository: PokemonListRepositoryType
-    private var cancellables: Set<AnyCancellable> = []
-
-            
-    init(pokemonRepository: PokemonListRepositoryType) {
-        self.pokemonRepository = pokemonRepository
-    }
-    
-    func fetchPokemon(endPoint: EndPoint) -> Future<[PokemonDomain], Error> {
-        return Future<[PokemonDomain], Error> { [weak self] promise in
-            guard let self = self else {
-                return promise(.failure(NetworkError.contextDeallocated))
-            }
-            pokemonRepository.fetchPokemon(endPoint: endPoint)
-                .receive(on: RunLoop.main)
-                .sink { completion in
-                    if case .failure(let error) = completion {
-                        promise(.failure(error))
-                    }
-                } receiveValue: { pokemon in
-                    promise(.success(pokemon))
-                }
-                .store(in: &cancellables)
-        }
-    }
-}
-*/
