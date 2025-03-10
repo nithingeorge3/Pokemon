@@ -25,6 +25,17 @@
                ReferencedContainer = "container:Pokemon.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "286ACD222D7F9A1500D97CE9"
+               BuildableName = "PokemonUITests.xctest"
+               BlueprintName = "PokemonUITests"
+               ReferencedContainer = "container:Pokemon.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

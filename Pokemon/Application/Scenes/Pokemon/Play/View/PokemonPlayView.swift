@@ -11,7 +11,6 @@ import PokemonDomain
 import PokemonNetworking
 
 // MARK: - PokemonPlayView
-
 struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
     // MARK: - Properties
     @Bindable var viewModel: ViewModel
@@ -21,26 +20,36 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
     var body: some View {
         VStack(spacing: 20) {
             if viewModel.isLoading {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .scaleEffect(1.5)
+                loadingView
             } else {
-                gameHeaderView
-                    .padding(.top, 8)
-                ZStack {
-                    imageSection
-                    celebrationOverlay
-                }
-                
-                answerGrid
-                    .padding(.bottom, 40)
+                gameContentView
             }
         }
-        .onAppear {
-            viewModel.send(.load)
-        }
+        .onAppear(perform: handleOnAppear)
         .withCustomBackButton()
         .withCustomNavigationTitle(title: "Pokemon")
+    }
+}
+
+// MARK: - View Components
+extension PokemonPlayView {
+    private var gameContentView: some View {
+        Group {
+            gameHeaderView
+                .padding(.top, 8)
+            ZStack {
+                imageSection
+                celebrationOverlay
+            }
+            answerGrid
+                .padding(.bottom, 40)
+        }
+    }
+    
+    private var loadingView: some View {
+        ProgressView()
+            .progressViewStyle(.circular)
+            .scaleEffect(1.5)
     }
     
     private var gameHeaderView: some View {
@@ -102,6 +111,13 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
                     .allowsHitTesting(false)
             }
         }
+    }
+}
+
+// MARK: - Lifecycle & Actions
+extension PokemonPlayView {
+    private func handleOnAppear() {
+        viewModel.send(.load)
     }
 }
 

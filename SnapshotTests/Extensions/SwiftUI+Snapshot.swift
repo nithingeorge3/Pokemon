@@ -5,7 +5,6 @@
 //  Created by Nitin George on 08/03/2025.
 //
 
-// SwiftUI+Snapshot.swift
 import SwiftUI
 import UIKit
 
