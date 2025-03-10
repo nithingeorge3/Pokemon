@@ -72,21 +72,6 @@ extension MockPokemonServiceImp: PokemonServiceProvider {
     }
 }
 
-
-extension MockPokemonServiceImp: PokemonUserServiceType {
-    func getCurrentUser() async throws -> UserDomain {
-        UserDomain(isGuest: true, lastActive: Date())
-    }
-    
-    func updatePreferences(_ newPref: PreferenceDomain) async throws {
-        
-    }
-    
-    func getCurrentPreferences() async throws -> PreferenceDomain {
-        PreferenceDomain()
-    }
-}
-
 struct MockPokemonResponseDTO: Codable {
     let count: Int
     let next, previous: String?

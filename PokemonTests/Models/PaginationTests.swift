@@ -1,6 +1,6 @@
 //
 //  PaginationTests.swift
-//  Pokemon
+//  PokemonTests
 //
 //  Created by Nitin George on 10/03/2025.
 //
