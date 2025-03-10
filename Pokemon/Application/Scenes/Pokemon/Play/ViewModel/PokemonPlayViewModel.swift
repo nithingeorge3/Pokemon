@@ -12,6 +12,7 @@ import Observation
 @MainActor
 protocol PokemonPlayViewModelType: AnyObject, Observable {
     var pokemon: Pokemon? { get set }
+    var user: User? { get set }
     var answerOptions: [Pokemon] { get set }
     var selectedAnswer: Pokemon? { get set }
     var showResult: Bool { get set }
@@ -25,6 +26,7 @@ protocol PokemonPlayViewModelType: AnyObject, Observable {
 @Observable
 final class PokemonPlayViewModel: PokemonPlayViewModelType {
     var pokemon: Pokemon?
+    var user: User?
     var answerOptions: [Pokemon] = []
     var selectedAnswer: Pokemon?
     var showResult: Bool = false
@@ -33,13 +35,16 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     
     private var pokemonID: Pokemon.ID
     private let service: PokemonSDServiceType
+//    private let userService: PokemonUserServiceType
     private let answerService: PokemonAnswerServiceType
     
     init(pokemonID: Pokemon.ID,
          service: PokemonSDServiceType,
+//         userService: PokemonUserServiceType,
          answerService: PokemonAnswerServiceType) {
         self.pokemonID = pokemonID
         self.service = service
+//        self.userService = userService
         self.answerService = answerService
     }
     
@@ -48,7 +53,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         case .load:
             loadPokemon()
         case .selectAnswer(let pokemon):
-            handleSelection(pokemon)
+            Task { try await handleSelection(pokemon) }
         case .refresh:
             refreshGame()
         case .toggleFavorite:
@@ -113,12 +118,17 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         }
     }
     
-    private func handleSelection(_ pokemon: Pokemon) {
+    private func handleSelection(_ pokemon: Pokemon) async throws {
         guard !showResult else { return }
         selectedAnswer = pokemon
         showResult = true
         
         if pokemon.id == self.pokemon?.id {
+            do {
+                try await answerService.updateScore(Constants.Pokemon.gamePoint)
+            } catch {
+                print("failed to update user score: \(error)")
+            }
             showCelebration = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.showCelebration = false

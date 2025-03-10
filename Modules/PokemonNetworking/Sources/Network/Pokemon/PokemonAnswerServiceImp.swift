@@ -30,4 +30,8 @@ final class PokemonAnswerServiceImp: PokemonAnswerServiceType {
             throw NetworkError.failedToDecode // add sepearte error later
         }
     }
+    
+    func updateScore(_ points: Int) async throws {
+        try await pokemonRepository.updateScore(points)
+    }
 }

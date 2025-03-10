@@ -87,7 +87,7 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
             if viewModel.showCelebration {
                 CelebrationView(
                     config: .points(
-                        2,
+                        Constants.Pokemon.gamePoint,
                         color: .green
                     )
                 )

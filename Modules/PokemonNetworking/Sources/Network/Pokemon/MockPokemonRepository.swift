@@ -106,6 +106,10 @@ extension MockPokemonRepository {
     func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain] {
         return [PokemonDomain(id: 1, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)]
     }
+    
+    func updateScore(_ points: Int) async throws {
+        
+    }
 }
 
 //User
