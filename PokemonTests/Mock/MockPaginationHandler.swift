@@ -1,12 +1,12 @@
 //
 //  MockPaginationHandler.swift
-//  Recipes
+//  Pokemon
 //
-//  Created by Nitin George on 06/03/2025.
+//  Created by Nitin George on 10/03/2025.
 //
 
 import XCTest
-@testable import Recipes
+@testable import Pokemon
 
 final class MockPaginationHandler: PaginationHandlerType {
     var currentPage: Int = 0
