@@ -14,15 +14,11 @@ import PokemonDomain
 @testable import Pokemon
 
 final class MockPokemonServiceImp: @unchecked Sendable {
-    
     var resultsJSON: String
-    
     var stubbedPokemon: [PokemonDomain] = []
-    
     var shouldThrowError: Bool = false
     
     private var isFavorite: Bool = false
-    
     private let (stream, continuation) = AsyncStream.makeStream(of: Int.self)
     
     init(mockJSON: String = JSONData.pokemonValidJSON) {
@@ -31,7 +27,6 @@ final class MockPokemonServiceImp: @unchecked Sendable {
 }
 
 extension MockPokemonServiceImp: PokemonServiceProvider {
-    
     var favoritesDidChange: AsyncStream<Int> { stream }
     
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain {
@@ -54,7 +49,7 @@ extension MockPokemonServiceImp: PokemonServiceProvider {
         PaginationDomain()
     }
     
-    func fetchPokemon(endPoint: PokemonNetworking.EndPoint) async throws -> [PokemonDomain] {
+    func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain] {
         do {
             if let data = resultsJSON.data(using: .utf8) {
                 let decoder = JSONDecoder()

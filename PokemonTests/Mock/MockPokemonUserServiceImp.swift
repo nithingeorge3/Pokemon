@@ -25,6 +25,4 @@ final class MockPokemonUserServiceImp: PokemonUserServiceType, @unchecked Sendab
     func getCurrentPreferences() async throws -> PreferenceDomain {
         PreferenceDomain()
     }
-    
-    
 }
