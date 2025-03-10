@@ -36,8 +36,11 @@ final class PreferencesViewModel: PreferencesViewModelType {
     func send(_ action: PreferenceActions) {
         switch action {
         case .winPreferenceUpdated(let isUpdated):
-            Task { try await updatePreference(isUpdated) }
-        case .silhouetteModeUpdated(let isUpdated): break
+            preference?.showWinAnimation = isUpdated
+            Task { try await updatePreference() }
+        case .silhouetteModeUpdated(let isUpdated):
+            preference?.enableSilhouetteMode = isUpdated
+            Task { try await updatePreference() }
         }
     }
 
@@ -51,9 +54,8 @@ final class PreferencesViewModel: PreferencesViewModelType {
         }
     }
 
-    private func updatePreference(_ isUpdated: Bool) async throws {
+    private func updatePreference() async throws {
         do {
-            preference?.showWinAnimation = isUpdated
             if let preference =  preference {
                 try await userService.updatePreferences(preference.asDomain)
             }

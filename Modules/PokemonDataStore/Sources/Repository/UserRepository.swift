@@ -59,6 +59,8 @@ public final class UserSDRepository: UserSDRepositoryType {
             }
             
             preference.showWinAnimation = newPref.showWinAnimation
+            preference.enableSilhouetteMode = newPref.enableSilhouetteMode
+            
             preference.lastUpdated = Date()
             
             try context.save()

@@ -91,7 +91,7 @@ private class PreviewPokemonListViewModel: PokemonListViewModelType {
         let date = Date()
         
         self.state = state
-        self.user = User(id: id, name: "test", score: 10, email: "test@test.com", isGuest: true, lastActive: date, preference: Preference(id: id, showWinAnimation: false, lastUpdated: date))
+        self.user = User(id: id, name: "test", score: 10, email: "test@test.com", isGuest: true, lastActive: date, preference: Preference(id: id, showWinAnimation: false, enableSilhouetteMode: true, lastUpdated: date))
     }
     
     func send(_ action: PokemonListAction) {

@@ -11,6 +11,7 @@ import PokemonDomain
 struct Preference: Identifiable, Hashable {
     let id: UUID
     var showWinAnimation: Bool
+    var enableSilhouetteMode: Bool
     let lastUpdated: Date
     
     public func hash(into hasher: inout Hasher) {
@@ -24,10 +25,12 @@ struct Preference: Identifiable, Hashable {
     init(
         id: UUID,
         showWinAnimation: Bool,
+        enableSilhouetteMode: Bool,
         lastUpdated: Date
     ) {
         self.id = id
         self.showWinAnimation = showWinAnimation
+        self.enableSilhouetteMode = enableSilhouetteMode
         self.lastUpdated = lastUpdated
     }
 }
@@ -36,6 +39,7 @@ extension Preference {
     init(from preferenceDomain: PreferenceDomain) {
         self.id = preferenceDomain.id
         self.showWinAnimation = preferenceDomain.showWinAnimation
+        self.enableSilhouetteMode = preferenceDomain.enableSilhouetteMode
         self.lastUpdated = preferenceDomain.lastUpdated
     }
 }
@@ -45,6 +49,7 @@ extension Preference {
         PreferenceDomain(
             id: self.id,
             showWinAnimation: self.showWinAnimation,
+            enableSilhouetteMode: self.enableSilhouetteMode,
             lastUpdated: self.lastUpdated
         )
     }
