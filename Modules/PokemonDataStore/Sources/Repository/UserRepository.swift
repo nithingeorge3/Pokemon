@@ -34,7 +34,10 @@ public final class UserSDRepository: UserSDRepositoryType {
                 return UserDomain(from: guest)
             }
 
-            let newUser = SDUser(id: UUID(), score: 0, email: "guest@pokemon.com", isGuest: true, lastActive: Date())
+            let id = UUID()
+            let date = Date()
+            let newUser = SDUser(id: id, score: 0, email: "guest@pokemon.com", isGuest: true, lastActive: date)
+            newUser.preference = SDPreference(id: id, lastUpdated: date)
             context.insert(newUser)
             try context.save()
             return UserDomain(from: newUser)

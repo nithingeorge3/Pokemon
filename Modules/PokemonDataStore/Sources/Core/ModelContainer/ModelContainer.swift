@@ -13,6 +13,7 @@ extension ModelContainer {
         do {
             let schema = Schema([
                 SDUser.self,
+                SDPreference.self,
                 SDPokemon.self,
                 SDPagination.self
             ])
@@ -31,6 +32,7 @@ extension ModelContainer {
     static func makeTestContainer() -> ModelContainer {
         let schema = Schema([
             SDUser.self,
+            SDPreference.self,
             SDPokemon.self,
             SDPagination.self
         ])

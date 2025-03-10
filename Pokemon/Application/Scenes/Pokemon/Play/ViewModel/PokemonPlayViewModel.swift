@@ -33,6 +33,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     var isLoading: Bool = false
     var showCelebration: Bool = false
     
+    var showWinAnimation: Bool = false
     private var pokemonID: Pokemon.ID
     private let service: PokemonSDServiceType
     private let userService: PokemonUserServiceType
@@ -52,7 +53,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     func send(_ action: PokemonPlayActions) {
         switch action {
         case .load:
-            Task { await fetchCurrentScore() }
+            Task { await fetchUserInfo() }
             Task { await loadPokemon() }
         case .selectAnswer(let pokemon):
             Task { try await handleSelection(pokemon) }
@@ -63,12 +64,13 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         }
     }
     
-    private func fetchCurrentScore() async {
+    private func fetchUserInfo() async {
         Task {
             do {
                 let userDomain = try await userService.getCurrentUser()
                 let user = User(from: userDomain)
                 currentScore = user.score
+                showCelebration = user.preference.showWinAnimation
             } catch {
                 print("unable to find user")
             }
@@ -135,8 +137,9 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         
         if pokemon.id == self.pokemon?.id {
             do {
+                showCelebration = showWinAnimation
                 try await answerService.updateScore(Constants.Pokemon.gamePoint)
-                Task { await fetchCurrentScore() }
+                Task { await fetchUserInfo() }
             } catch {
                 print("failed to update user score: \(error)")
             }

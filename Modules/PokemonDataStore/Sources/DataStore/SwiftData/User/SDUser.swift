@@ -19,13 +19,17 @@ public final class SDUser {
     public var isGuest: Bool
     public var lastActive: Date
     
+    @Relationship(deleteRule: .cascade)
+    public var preference: SDPreference?
+    
     init(
         id: UUID,
         name: String = "Guest",
         score: Int,
         email: String?,
         isGuest: Bool,
-        lastActive: Date
+        lastActive: Date,
+        preference: SDPreference? = nil
     ) {
         self.id = id
         self.name = name
@@ -33,18 +37,22 @@ public final class SDUser {
         self.email = email
         self.isGuest = isGuest
         self.lastActive = lastActive
+        self.preference = preference
     }
 }
 
 extension SDUser {
     convenience init(from user: UserDomain) {
+        let preference = SDPreference(from: user.preference)
+        
         self.init(
             id: user.id,
             name: user.name,
             score: user.score,
             email: user.email,
             isGuest: user.isGuest,
-            lastActive: user.lastActive
+            lastActive: user.lastActive,
+            preference: preference
             )
     }
     
@@ -60,13 +68,16 @@ extension SDUser {
 
 extension UserDomain {
     init(from sdUser: SDUser) {
+        let preferance = PreferenceDomain(from: sdUser.preference ?? SDPreference(lastUpdated: Date()))
+       
         self.init(
             id: sdUser.id,
             name: sdUser.name,
             score: sdUser.score,
             email: sdUser.email,
             isGuest: sdUser.isGuest,
-            lastActive: sdUser.lastActive
+            lastActive: sdUser.lastActive,
+            preference: preferance
         )
     }
 }

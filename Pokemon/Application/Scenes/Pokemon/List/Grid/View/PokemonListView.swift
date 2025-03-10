@@ -87,8 +87,11 @@ private class PreviewPokemonListViewModel: PokemonListViewModelType {
     var state: ResultState
     
     init(state: ResultState) {
+        let id = UUID(uuidString: "11111111-1111-1111-1111-111111111111")!
+        let date = Date()
+        
         self.state = state
-        self.user = User(id: UUID(uuidString: "11111111-1111-1111-1111-111111111111")!, name: "test", score: 10, email: "test@test.com", isGuest: true, lastActive: Date())
+        self.user = User(id: id, name: "test", score: 10, email: "test@test.com", isGuest: true, lastActive: date, preference: Preference(id: id, showWinAnimation: false, lastUpdated: date))
     }
     
     func send(_ action: PokemonListAction) {
