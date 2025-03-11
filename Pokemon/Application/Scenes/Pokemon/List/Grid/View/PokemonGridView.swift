@@ -14,7 +14,7 @@ struct PokemonGridView: View {
     var onPokemonTap: (Pokemon) -> Void
     var onReachBottom: () -> Void
     
-    @State private var isFavoritesCollapsed: Bool = false
+    @State private var isPlayedCollapsed: Bool = false
     @State private var isOtherCollapsed: Bool = false
     @State private var showProgress: Bool = false
     
@@ -31,7 +31,7 @@ struct PokemonGridView: View {
             ScrollView {
                 LazyVGrid(columns: columns) {
                     if !playedPokemon.isEmpty {
-                        CollapsibleSection(title: "Played Pokemon", isCollapsed: $isFavoritesCollapsed) {
+                        CollapsibleSection(title: "Played Pokemon", isCollapsed: $isPlayedCollapsed) {
                             pokemonGrid(for: playedPokemon, size: gridSize)
                         }
                     }

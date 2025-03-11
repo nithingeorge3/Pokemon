@@ -63,23 +63,6 @@ extension PokemonRepositoryTests {
         XCTAssertEqual(page1.count, 2)
         XCTAssertEqual(page1.map(\.id), [3, 4])
     }
-     
-//    func testUpdateFavoritePokemon() async throws {
-//        let isFavoriteAfterFirstUpdate = try await repository.updateFavouritePokemon(1)
-//        XCTAssertTrue(isFavoriteAfterFirstUpdate)
-//        
-//        let isFavoriteAfterSecondUpdate = try await repository.updateFavouritePokemon(1)
-//        XCTAssertFalse(isFavoriteAfterSecondUpdate)
-//    }
-    
-//    func testUpdateFavoritePokemonNotFound() async {
-//        do {
-//            _ = try await repository.updateFavouritePokemon(100)
-//            XCTFail("Expected an error because the pokemon does not exist, but no error found")
-//        } catch {
-//            XCTAssertEqual(error as? SDError, SDError.modelObjNotFound)
-//        }
-//    }
     
     func test_fetchRandomOptions_returnsCorrectCount() async throws {
         try await insertTestPokemon()

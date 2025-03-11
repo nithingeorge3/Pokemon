@@ -23,8 +23,6 @@ final class MockPokemonServiceImp: @unchecked Sendable {
 }
 
 extension MockPokemonServiceImp: PokemonServiceProvider {
-    var favoritesDidChange: AsyncStream<Int> { stream }
-    
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain {
         if stubbedPokemon.count > 0 {
             return stubbedPokemon[0]
@@ -44,10 +42,6 @@ extension MockPokemonServiceImp: PokemonServiceProvider {
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain] {
         stubbedPokemon
     }
-    
-//    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
-//        false
-//    }
     
     func fetchPokemonPagination(_ type: EntityType) async throws -> PaginationDomain {
         PaginationDomain()

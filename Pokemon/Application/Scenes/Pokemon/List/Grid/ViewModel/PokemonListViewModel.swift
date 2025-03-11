@@ -54,7 +54,6 @@ class PokemonListViewModel: PokemonListViewModelType {
         self.paginationHandler = paginationHandler
         Task { try await fetchPokemonPagination() }
         Task { try await fetchLocalPokemon() }
-        listeningFavoritesChanges()
     }
     
     func send(_ action: PokemonListAction) {
@@ -152,15 +151,6 @@ class PokemonListViewModel: PokemonListViewModelType {
     
     private func updatePagination(_ pagination: Pagination) {
         paginationHandler.updateFromDomain(pagination)
-    }
-    
-    private func listeningFavoritesChanges() {
-        updateTask = Task { [weak self] in
-            guard let self = self else { return }
-            for await pokemonID in self.service.favoritesDidChange {
-                self.updatePokemonPlayLaterStatus(pokemonID: pokemonID)
-            }
-        }
     }
     
     private func updatePokemonPlayLaterStatus(pokemonID: Int) {

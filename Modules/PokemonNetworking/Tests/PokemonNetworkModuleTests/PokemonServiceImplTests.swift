@@ -76,26 +76,6 @@ class PokemonServiceImplTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
     }
     
-//    func testUpdateFavouritePokemon() async throws {
-//        pokemonRepository = MockPokemonRepository(fileName: "pokemon_success", parser: ServiceParser())
-//        pokemonServiceImpl = PokemonServiceImp(pokemonRepository: pokemonRepository)
-//        
-//        let expectation = XCTestExpectation(description: "Pokemon's isFavorite status should update successfully")
-//        
-//        do {
-//            let dtos = try await pokemonRepository.fetchPokemon(endPoint: .pokemon(offset: 0, limit: 40))
-//            let firstToggle = try await pokemonRepository.updateFavouritePokemon(dtos.first?.id ?? 0)
-//            XCTAssertTrue(firstToggle, "updated should be true")
-//            let secondToggle = try await pokemonRepository.updateFavouritePokemon(dtos.first?.id ?? 0)
-//            XCTAssertFalse(secondToggle, "updated should be false")
-//            expectation.fulfill()
-//        } catch {
-//            XCTFail("Unexpected error happened: \(error)")
-//        }
-//        
-//        await fulfillment(of: [expectation], timeout: 1.0)
-//    }
-    
     func testFetchPokemon() async throws {
         pokemonRepository = MockPokemonRepository(fileName: "pokemon_success", parser: ServiceParser())
         pokemonServiceImpl = PokemonServiceImp(pokemonRepository: pokemonRepository)
