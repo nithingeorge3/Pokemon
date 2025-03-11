@@ -36,13 +36,12 @@ public struct UserPokemonDomain: Identifiable, @unchecked Sendable  {
     public var isMarkedForPlayLater: Bool
     
     public var gameplayHistory: [GameSession]
-    
     public var selectedOptions: GameOptions?
 
     public var user: UserDomain
     public var pokemon: PokemonDomain
     
-    public init(id: UUID, lastPlayedDate: Date, lastOutcome: GameOutcome, isMarkedForPlayLater: Bool, gameplayHistory: [GameSession], selectedOptions: GameOptions? = nil, user: UserDomain, pokemon: PokemonDomain) {
+    public init(id: UUID, lastPlayedDate: Date, lastOutcome: GameOutcome, isMarkedForPlayLater: Bool, gameplayHistory: [GameSession] = [], selectedOptions: GameOptions? = nil, user: UserDomain, pokemon: PokemonDomain) {
         self.id = id
         self.lastPlayedDate = lastPlayedDate
         self.lastOutcome = lastOutcome

@@ -29,7 +29,7 @@ struct UserPokemon: Identifiable, Hashable {
         lhs.id == rhs.id
     }
     
-    init(id: UUID, lastPlayedDate: Date, lastOutcome: GameOutcome, isMarkedForPlayLater: Bool, gameplayHistory: [GameSession], selectedOptions: GameOptions?, user: User, pokemon: Pokemon) {
+    init(id: UUID, lastPlayedDate: Date, lastOutcome: GameOutcome, isMarkedForPlayLater: Bool, gameplayHistory: [GameSession] = [], selectedOptions: GameOptions? = nil, user: User, pokemon: Pokemon) {
         self.id = id
         self.lastPlayedDate = lastPlayedDate
         self.lastOutcome = lastOutcome

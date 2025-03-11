@@ -15,9 +15,6 @@ public final class SDUserPokemon {
     public var lastPlayedDate: Date
     public var lastOutcome: GameOutcome
     public var isMarkedForPlayLater: Bool
-    
-    public var gameplayHistory: [GameSession]
-    public var selectedOptions: GameOptions?
 
     public var user: SDUser
     public var pokemon: SDPokemon
@@ -28,9 +25,7 @@ public final class SDUserPokemon {
         pokemon: SDPokemon,
         lastPlayedDate: Date = .now,
         lastOutcome: GameOutcome = .unplayed,
-        isMarkedForPlayLater: Bool = false,
-        gameplayHistory: [GameSession] = [],
-        selectedOptions: GameOptions? = nil
+        isMarkedForPlayLater: Bool = false
     ) {
         self.id = id
         self.user = user
@@ -38,8 +33,6 @@ public final class SDUserPokemon {
         self.lastPlayedDate = lastPlayedDate
         self.lastOutcome = lastOutcome
         self.isMarkedForPlayLater = isMarkedForPlayLater
-        self.gameplayHistory = gameplayHistory
-        self.selectedOptions = selectedOptions
     }
 }
 
@@ -54,9 +47,7 @@ extension SDUserPokemon {
             pokemon: poke,
             lastPlayedDate: userPokeDomain.lastPlayedDate,
             lastOutcome: userPokeDomain.lastOutcome,
-            isMarkedForPlayLater: userPokeDomain.isMarkedForPlayLater,
-            gameplayHistory: userPokeDomain.gameplayHistory,
-            selectedOptions: userPokeDomain.selectedOptions
+            isMarkedForPlayLater: userPokeDomain.isMarkedForPlayLater
         )
     }
 }
@@ -72,8 +63,6 @@ extension UserPokemonDomain {
             lastPlayedDate: sdUserPokemon.lastPlayedDate,
             lastOutcome: sdUserPokemon.lastOutcome,
             isMarkedForPlayLater: sdUserPokemon.isMarkedForPlayLater,
-            gameplayHistory: sdUserPokemon.gameplayHistory,
-            selectedOptions: sdUserPokemon.selectedOptions,
             user: pokeUser,
             pokemon: poke
         )
