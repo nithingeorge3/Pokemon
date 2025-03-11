@@ -5,8 +5,7 @@
 //  Created by Nitin George on 10/03/2025.
 //
 
-import XCTest
-@testable import Pokemon
+import Foundation
 
 final class MockPaginationHandler: PaginationHandlerType {
     var currentPage: Int = 0

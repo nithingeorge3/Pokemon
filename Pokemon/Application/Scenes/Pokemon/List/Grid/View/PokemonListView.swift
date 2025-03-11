@@ -58,7 +58,10 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
             }
         }
         .withCustomNavigationTitle(title: "Pokemon")
-        .withCustomNavigationScore(GameScoreView(score: viewModel.user?.score ?? 0, size: 12))
+        .withCustomNavigationScore(
+            GameScoreView(score: viewModel.user?.score ?? 0, size: 12)
+                .accessibilityIdentifier("ScoreLabel")
+        )
     }
     
     private func checkFirstLaunch() {

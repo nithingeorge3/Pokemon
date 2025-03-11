@@ -41,6 +41,31 @@
 		286ACD232D7F9A1500D97CE9 /* PokemonUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PokemonUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		286BD66C2D809D7A00095E1B /* Exceptions for "Mock" folder in "Pokemon" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				JSONData.swift,
+				MockPaginationHandler.swift,
+				MockPokemonAnswerServiceImp.swift,
+				MockPokemonServiceImp.swift,
+				MockPokemonUserServiceImp.swift,
+			);
+			target = 282279AA2D73DE5500583E2C /* Pokemon */;
+		};
+		286BD6762D809E5B00095E1B /* Exceptions for "Mock" folder in "PokemonTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				JSONData.swift,
+				MockPaginationHandler.swift,
+				MockPokemonAnswerServiceImp.swift,
+				MockPokemonServiceImp.swift,
+				MockPokemonUserServiceImp.swift,
+			);
+			target = 286ACCF82D7F88F800D97CE9 /* PokemonTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		281E0A132D7C47D900217DE5 /* SnapshotTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -60,6 +85,15 @@
 		286ACD242D7F9A1500D97CE9 /* PokemonUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = PokemonUITests;
+			sourceTree = "<group>";
+		};
+		286BD6642D809CCC00095E1B /* Mock */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				286BD66C2D809D7A00095E1B /* Exceptions for "Mock" folder in "Pokemon" target */,
+				286BD6762D809E5B00095E1B /* Exceptions for "Mock" folder in "PokemonTests" target */,
+			);
+			path = Mock;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -100,6 +134,7 @@
 			children = (
 				2827D8542D7CB55B00736B24 /* Modules */,
 				282279AD2D73DE5500583E2C /* Pokemon */,
+				286BD6642D809CCC00095E1B /* Mock */,
 				281E0A132D7C47D900217DE5 /* SnapshotTests */,
 				286ACCFA2D7F88F800D97CE9 /* PokemonUnitTests */,
 				286ACD242D7F9A1500D97CE9 /* PokemonUITests */,
@@ -179,6 +214,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				286ACCFA2D7F88F800D97CE9 /* PokemonUnitTests */,
+				286BD6642D809CCC00095E1B /* Mock */,
 			);
 			name = PokemonTests;
 			packageProductDependencies = (

@@ -5,13 +5,10 @@
 //  Created by Nitin George on 10/03/2025.
 //
 
-import XCTest
 import Foundation
 import PokemonNetworking
 import PokemonDataStore
 import PokemonDomain
-
-@testable import Pokemon
 
 final class MockPokemonServiceImp: @unchecked Sendable {
     var resultsJSON: String
@@ -29,11 +26,19 @@ extension MockPokemonServiceImp: PokemonServiceProvider {
     var favoritesDidChange: AsyncStream<Int> { stream }
     
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain {
-        stubbedPokemon[0]
+        if stubbedPokemon.count > 0 {
+            return stubbedPokemon[0]
+        } else {
+            return PokemonDomain(id: 1, name: "ivysaur1", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)
+        }
     }
     
     func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
-        stubbedPokemon[2]
+        if stubbedPokemon.count > 0 {
+            return stubbedPokemon[1]
+        } else {
+            return PokemonDomain(id: 2, name: "ivysaur2", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!)
+        }
     }
     
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain] {

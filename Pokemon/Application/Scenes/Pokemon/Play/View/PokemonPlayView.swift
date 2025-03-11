@@ -50,16 +50,19 @@ extension PokemonPlayView {
         ProgressView()
             .progressViewStyle(.circular)
             .scaleEffect(1.5)
+            .accessibilityIdentifier("LoadingIndicator")
     }
     
     private var gameHeaderView: some View {
         HStack(alignment: .top, spacing: 8) {
             GameScoreView(score: viewModel.currentScore)
                 .padding(.leading, 10)
+                .accessibilityIdentifier("ScoreLabel")
             Spacer()
             RefreshButton {
                 viewModel.send(.refresh)
             }
+            .accessibilityIdentifier("refreshButton")
             Spacer().frame(width: 30)
         }
     }
@@ -75,7 +78,7 @@ extension PokemonPlayView {
 //                .silhouetteEffect(active: true)
                 .blur(radius: viewModel.imageBlurRadius)//if zero will show correct image, no shadow. if 10 with shadow
                 .animation(.easeInOut(duration: 0.3), value: viewModel.imageBlurRadius)
-                
+                .accessibilityIdentifier("PokemonImage")
                 //ToDo: this is without silhouetteMode toggle
 //              .blur(radius: viewModel.showResult ? 0 : 10)
 //              .animation(.easeInOut, value: viewModel.showResult)
@@ -94,6 +97,7 @@ extension PokemonPlayView {
                 ) {
                     viewModel.send(.selectAnswer(pokemon))
                 }
+                .accessibilityIdentifier("AnswerButton-\(pokemon.name)")
             }
         }
         .padding(.horizontal)
@@ -108,8 +112,9 @@ extension PokemonPlayView {
                         color: .green
                     )
                 )
-                    .transition(.opacity)
-                    .allowsHitTesting(false)
+                .transition(.opacity)
+                .allowsHitTesting(false)
+                .accessibilityIdentifier("CelebrationView")
             }
         }
     }
@@ -148,6 +153,7 @@ struct AnswerButton: View {
                 .scaleEffect(isSelected ? 1.05 : 1)
                 .animation(.spring(), value: isSelected)
         }
+        .accessibilityIdentifier("AnswerButton-\(pokemon.name)")
         .disabled(showResult)
     }
 }
@@ -231,7 +237,6 @@ private class PreviewPlayViewModel: PokemonPlayViewModelType {
         return vm
     }()
     
-    // Protocol stubs
     func send(_ action: PokemonPlayActions) {}
 }
 
