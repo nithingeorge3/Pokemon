@@ -10,15 +10,49 @@ import PokemonNetworking
 import PokemonDataStore
 import SwiftData
 
-class MenuViewModel: ObservableObject {
-    let items: [SidebarItem]
+@MainActor
+protocol MenuViewModelType: AnyObject, Observable {
+    var isLoggedIn: Bool { get }
+    var items: [SidebarItem] { set get }
+    var filteredItems: [SidebarItem]? { set get }
+}
+
+@Observable
+class MenuViewModel: MenuViewModelType {
+    var isLoggedIn = false
+    var items: [SidebarItem]
+    var filteredItems: [SidebarItem]?
+    
     let userService: PokemonUserServiceType
     
     init(items: [SidebarItem], userService: PokemonUserServiceType) {
         self.items = items
         self.userService = userService
+        
+        filteredItems(includeLogin: true)
     }
     
-     func performLogOut() {
+    private func filteredItems(includeLogin: Bool) {
+        filteredItems = items.filter { item in
+                        switch item.authAction {
+                        case .login:
+                            return includeLogin
+                        case .logout:
+                            return !includeLogin
+                        case .none:
+                            return true
+                        }
+        }
+    }
+    
+    func handleLogin() {
+        isLoggedIn = true
+        filteredItems(includeLogin: !isLoggedIn)
+    }
+    
+    
+    func handleLogout() {
+        isLoggedIn = false
+        filteredItems(includeLogin: !isLoggedIn)
     }
 }

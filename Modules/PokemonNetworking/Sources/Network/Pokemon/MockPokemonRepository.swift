@@ -83,15 +83,6 @@ final class MockPokemonRepository: PokemonRepositoryType, @unchecked Sendable {
         return []
     }
     
-    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
-        guard var pokemon = pokemon, pokemon.id == pokemonID else {
-            return false
-        }
-        pokemon.isFavorite.toggle()
-        self.pokemon = pokemon
-        return pokemon.isFavorite
-    }
-    
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain {
         pagination
     }
@@ -108,6 +99,10 @@ extension MockPokemonRepository {
     }
     
     func updateScore(_ points: Int) async throws {
+        
+    }
+    
+    func updatePlayedStatus(pokemonId: Int, outcome: GameOutcome) async throws {
         
     }
 }

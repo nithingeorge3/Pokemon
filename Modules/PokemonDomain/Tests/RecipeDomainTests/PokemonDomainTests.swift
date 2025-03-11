@@ -7,24 +7,12 @@ final class PokemonDomainTests: XCTestCase {
         let pokemon = PokemonDomain(
             id: 1,
             name: "Bulbasaur",
-            url: url,
-            isFavorite: true
+            url: url
         )
         
         XCTAssertEqual(pokemon.id, 1)
         XCTAssertEqual(pokemon.name, "Bulbasaur")
         XCTAssertEqual(pokemon.url, url)
-        XCTAssertTrue(pokemon.isFavorite)
-    }
-    
-    func testWithDefaultFavorite() {
-        let pokemon = PokemonDomain(
-            id: 2,
-            name: "Bulbasaur",
-            url: URL(string: "https://pokeapi.co/pokemon/2")!
-        )
-        
-        XCTAssertFalse(pokemon.isFavorite)
     }
     
     func test_valueSemantics() {
@@ -36,9 +24,6 @@ final class PokemonDomainTests: XCTestCase {
         )
         var pokemon2 = pokemon1
         
-        pokemon2.isFavorite = true
-        
         XCTAssertEqual(pokemon1.id, pokemon2.id)
-        XCTAssertNotEqual(pokemon1.isFavorite, pokemon2.isFavorite)
     }
 }

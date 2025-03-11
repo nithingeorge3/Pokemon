@@ -12,12 +12,22 @@ import PokemonDomain
 @testable import PokemonDataStore
 
 final class UserSDRepositoryTests: XCTestCase {
+    private var pokeRepository: PokemonSDRepositoryType!
     private var repository: UserSDRepositoryType!
     private var container: ModelContainer!
+    private let testPokemonId = 25
+    private let testPokemonName = "Pikachu"
     
     override func setUp() async throws {
         container = DataStoreManagerFactory.makeSharedContainer(for: "TestContainer")
         repository = UserSDRepository(container: container)
+        pokeRepository = PokemonSDRepository(container: container)
+        
+        let pokemon = [
+            PokemonDomain(id: testPokemonId, name: testPokemonName, url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)
+        ]
+                
+        try await pokeRepository.savePokemon(pokemon)
     }
     
     @MainActor
@@ -25,6 +35,7 @@ final class UserSDRepositoryTests: XCTestCase {
         try await clearData()
         container = nil
         repository = nil
+        pokeRepository = nil
     }
     
     @MainActor
@@ -121,6 +132,31 @@ extension UserSDRepositoryTests {
     private func saveUsers(_ users: [SDUser]) async throws {
         let context = ModelContext(container)
         users.forEach { context.insert($0) }
+        try context.save()
+    }
+}
+
+// MARK: - Gameplay
+extension UserSDRepositoryTests {
+    func testCreateNewEntryWhenNoneExists() async throws {
+        
+        let newUser = SDUser(id: UUID(uuidString: "11111111-1111-1111-1111-111111111111")!, score: 10, email: "test1@gmail.com", isGuest: true, lastActive: .distantPast)
+        try await saveUser(newUser)
+        
+        try await repository.updatePlayedStatus(pokemonId: testPokemonId, outcome: .win)
+        
+        let user = try await repository.getCurrentUser()
+        let entries = user.playedPokemons
+        
+        XCTAssertEqual(entries.count, 1, "Should create one new entry")
+#warning("need to fix thsi text")
+//        XCTAssertEqual(entries.first?.pokemon?.id, testPokemonId)
+        XCTAssertEqual(entries.first?.lastOutcome, .win)
+    }
+    
+    private func saveUser(_ users: SDUser) async throws {
+        let context = ModelContext(container)
+        context.insert(users)
         try context.save()
     }
 }

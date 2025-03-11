@@ -15,7 +15,7 @@ import PokemonDomain
 protocol PokemonListViewModelType: AnyObject, Observable {
     var pokemon: [Pokemon] { get }
     var user: User? { get set }
-    var favoritePokemon: [Pokemon] { get }
+    var playedPokemon: [Pokemon] { get }
     var otherPokemon: [Pokemon] { get }
     var paginationHandler: PaginationHandlerType { get }
     var pokemonListActionSubject: PassthroughSubject<PokemonListAction, Never> { get  set }
@@ -36,12 +36,12 @@ class PokemonListViewModel: PokemonListViewModelType {
     
     private var updateTask: Task<Void, Never>?
     
-    var favoritePokemon: [Pokemon] {
-        pokemon.filter { $0.isFavorite }
+    var playedPokemon: [Pokemon] {
+        []
     }
     
     var otherPokemon: [Pokemon] {
-        pokemon.filter { !$0.isFavorite }
+        pokemon
     }
     
     init(
@@ -54,7 +54,6 @@ class PokemonListViewModel: PokemonListViewModelType {
         self.paginationHandler = paginationHandler
         Task { try await fetchPokemonPagination() }
         Task { try await fetchLocalPokemon() }
-        listeningFavoritesChanges()
     }
     
     func send(_ action: PokemonListAction) {
@@ -75,6 +74,10 @@ class PokemonListViewModel: PokemonListViewModelType {
             do {
                 let userDomain = try await userService.getCurrentUser()
                 user = User(from: userDomain)
+                _ = user?.playedPokemons.map { poke in
+                    print("***** user played Pokemon: \(poke))")
+                }
+                
             } catch {
                 print("unable to find user")
             }
@@ -150,19 +153,7 @@ class PokemonListViewModel: PokemonListViewModelType {
         paginationHandler.updateFromDomain(pagination)
     }
     
-    private func listeningFavoritesChanges() {
-        updateTask = Task { [weak self] in
-            guard let self = self else { return }
-            for await pokemonID in self.service.favoritesDidChange {
-                self.updatePokemonFavoritesStatus(pokemonID: pokemonID)
-            }
-        }
-    }
-    
-    private func updatePokemonFavoritesStatus(pokemonID: Int) {
-        guard let index = pokemon.firstIndex(where: { $0.id == pokemonID }) else { return }
-        if pokemon.count > index - 1 {
-            pokemon[index].isFavorite.toggle()
-        }
+    private func updatePokemonPlayLaterStatus(pokemonID: Int) {
+        //add logic later
     }
 }

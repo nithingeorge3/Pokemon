@@ -76,8 +76,8 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
             Task { try await handleSelection(pokemon) }
         case .refresh:
             Task { await refreshGame() }
-        case .toggleFavorite:
-            toggleFavorite()
+        case .playlater:
+            playlater()
         }
     }
     
@@ -116,6 +116,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         }
     }
     
+#warning("while fetch remove played from DB. please add filtering in SD fetch")
     private func refreshGame() async {
         isLoading = true
         resetGame()
@@ -156,6 +157,8 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
                 showCelebration = user?.preference.showWinAnimation ?? false
                 
                 try await answerService.updateScore(Constants.Pokemon.gamePoint)
+                try await answerService.updatePlayedStatus(pokemonId: pokemon.id, outcome: .win)
+                
                 Task { await fetchUserInfo() }
             } catch {
                 print("failed to update user score: \(error)")
@@ -172,15 +175,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         selectedAnswer = nil
     }
     
-    private func toggleFavorite() {
-        guard var pokemon = pokemon else { return }
-        pokemon.isFavorite.toggle()
-        Task {
-            do {
-                self.pokemon?.isFavorite = try await service.updateFavouritePokemon(pokemon.id)
-            } catch {
-                print("Favorite update failed: \(error)")
-            }
-        }
+    private func playlater() {
+        //add logic later
     }
 }

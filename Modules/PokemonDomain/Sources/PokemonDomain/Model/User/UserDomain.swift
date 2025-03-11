@@ -15,6 +15,7 @@ public struct UserDomain: Identifiable, @unchecked Sendable  {
     public var isGuest: Bool
     public var lastActive: Date
     public var preference: PreferenceDomain
+    public var playedPokemons: [UserPokemonDomain]
     
     public init(
         id: UUID = UUID(),
@@ -23,7 +24,8 @@ public struct UserDomain: Identifiable, @unchecked Sendable  {
         email: String? = "guest@pokemon.com",
         isGuest: Bool,
         lastActive: Date,
-        preference: PreferenceDomain = PreferenceDomain()
+        preference: PreferenceDomain = PreferenceDomain(),
+        playedPokemons: [UserPokemonDomain] = []
     ) {
         self.id = id
         self.name = name
@@ -32,5 +34,6 @@ public struct UserDomain: Identifiable, @unchecked Sendable  {
         self.isGuest = isGuest
         self.lastActive = lastActive
         self.preference = preference
+        self.playedPokemons = playedPokemons
     }
 }

@@ -9,8 +9,15 @@ import SwiftUI
 import Combine
 
 struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @State private var activeSheet: AppSheet?
+    
+    enum AppSheet: Identifiable {
+        case onboarding
+        var id: Int { hashValue }
+    }
+    
     @Bindable var viewModel: ViewModel
-    @State private var score: Int = 10
     
     private var isEmpty: Bool {
         viewModel.pokemon.isEmpty
@@ -32,18 +39,40 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
                     EmptyStateView(message: "No pokemon found. Please try again later.")
                 } else {
                     EmptyView()
-                    PokemonGridView(favorites: viewModel.favoritePokemon, others: viewModel.otherPokemon, hasMoreData: viewModel.paginationHandler.hasMoreData) { pokemon in
+                    PokemonGridView(playedPokemon: viewModel.playedPokemon, otherPokemon: viewModel.otherPokemon, hasMoreData: viewModel.paginationHandler.hasMoreData) { pokemon in
                         viewModel.send(.selectPokemon(pokemon.id))
                     } onReachBottom: {
                         viewModel.send(.loadMore)
                     }
                 }
             }
-        }.onAppear {
+        }
+        .onAppear {
+            checkFirstLaunch()
             viewModel.send(.refresh)
         }
+        .sheet(item: $activeSheet) { item in
+            switch item {
+            case .onboarding:
+                OnboardingView(dismissAction: completeOnboarding)
+            }
+        }
         .withCustomNavigationTitle(title: "Pokemon")
-        .withCustomNavigationScore(GameScoreView(score: viewModel.user?.score ?? 0, size: 12))
+        .withCustomNavigationScore(
+            GameScoreView(score: viewModel.user?.score ?? 0, size: 12)
+                .accessibilityIdentifier("ScoreLabel")
+        )
+    }
+    
+    private func checkFirstLaunch() {
+        if !hasCompletedOnboarding {
+            activeSheet = .onboarding
+        }
+    }
+    
+    private func completeOnboarding() {
+        hasCompletedOnboarding = true
+        activeSheet = nil
     }
 }
 
@@ -74,14 +103,14 @@ private class PreviewPokemonListViewModel: PokemonListViewModelType {
     var user: User?
     
     var pokemon: [Pokemon] = [
-        Pokemon(id: 1, name: "ivysaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!, isFavorite: false),
-        Pokemon(id: 2, name: "venusaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!, isFavorite: true),
-        Pokemon(id: 3, name: "charmander", url: URL(string: "https://pokeapi.co/api/v2/pokemon/3/")!, isFavorite: false)
+        Pokemon(id: 1, name: "ivysaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!),
+        Pokemon(id: 2, name: "venusaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!),
+        Pokemon(id: 3, name: "charmander", url: URL(string: "https://pokeapi.co/api/v2/pokemon/3/")!)
     ]
     
     var pagination: Pagination? = Pagination(entityType: .pokemon)
-    var favoritePokemon: [Pokemon] { pokemon.filter { $0.isFavorite } }
-    var otherPokemon: [Pokemon] { pokemon.filter { !$0.isFavorite } }
+    var playedPokemon: [Pokemon] { [] }
+    var otherPokemon: [Pokemon] { pokemon }
     var paginationHandler: PaginationHandlerType = PreviewPaginationHandler()
     var pokemonListActionSubject = PassthroughSubject<PokemonListAction, Never>()
     var state: ResultState

@@ -5,20 +5,16 @@
 //  Created by Nitin George on 10/03/2025.
 //
 
-import XCTest
 import Foundation
 import PokemonNetworking
 import PokemonDataStore
 import PokemonDomain
-
-@testable import Pokemon
 
 final class MockPokemonServiceImp: @unchecked Sendable {
     var resultsJSON: String
     var stubbedPokemon: [PokemonDomain] = []
     var shouldThrowError: Bool = false
     
-    private var isFavorite: Bool = false
     private let (stream, continuation) = AsyncStream.makeStream(of: Int.self)
     
     init(mockJSON: String = JSONData.pokemonValidJSON) {
@@ -27,22 +23,24 @@ final class MockPokemonServiceImp: @unchecked Sendable {
 }
 
 extension MockPokemonServiceImp: PokemonServiceProvider {
-    var favoritesDidChange: AsyncStream<Int> { stream }
-    
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain {
-        stubbedPokemon[0]
+        if stubbedPokemon.count > 0 {
+            return stubbedPokemon[0]
+        } else {
+            return PokemonDomain(id: 1, name: "ivysaur1", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)
+        }
     }
     
     func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
-        stubbedPokemon[2]
+        if stubbedPokemon.count > 0 {
+            return stubbedPokemon[1]
+        } else {
+            return PokemonDomain(id: 2, name: "ivysaur2", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!)
+        }
     }
     
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain] {
         stubbedPokemon
-    }
-    
-    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
-        false
     }
     
     func fetchPokemonPagination(_ type: EntityType) async throws -> PaginationDomain {
@@ -85,8 +83,7 @@ extension PokemonDomain {
         self.init(
             id: pokemonID,
             name: dto.name,
-            url: URL(string: dto.url)!,
-            isFavorite: false
+            url: URL(string: dto.url)!
         )
     }
     

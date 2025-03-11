@@ -11,7 +11,6 @@ import PokemonDomain
 
 final class PokemonServiceImp: PokemonServiceProvider {
     private let pokemonRepository: PokemonRepositoryType
-    private let (favoritesDidChangeStream, favoritesDidChangeContinuation) = AsyncStream.makeStream(of: Int.self)
             
     init(pokemonRepository: PokemonRepositoryType) {
         self.pokemonRepository = pokemonRepository
@@ -32,9 +31,7 @@ final class PokemonServiceImp: PokemonServiceProvider {
 }
 
 //SwiftData
-extension PokemonServiceImp {        
-    var favoritesDidChange: AsyncStream<Int> { favoritesDidChangeStream }
-
+extension PokemonServiceImp {
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain {
         try await pokemonRepository.fetchPokemon(for: pokemonID)
     }
@@ -50,12 +47,6 @@ extension PokemonServiceImp {
 //        return allPokemon
 //            .shuffled()
 //            .map { $0 }
-    }
-    
-    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
-        let isUpdated = try await pokemonRepository.updateFavouritePokemon(pokemonID)
-        favoritesDidChangeContinuation.yield(pokemonID)
-        return isUpdated
     }
     
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain {

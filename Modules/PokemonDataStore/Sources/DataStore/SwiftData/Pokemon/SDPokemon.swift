@@ -15,18 +15,15 @@ public final class SDPokemon {
     public var id: Int
     public var name: String
     public var url: String
-    public var isFavorite: Bool
     
     init(
         id: Int,
         name: String,
-        url: String,
-        isFavorite: Bool
+        url: String
     ) {
         self.id = id
         self.name = name
         self.url = url
-        self.isFavorite = isFavorite
     }
 }
 
@@ -35,8 +32,7 @@ extension SDPokemon {
         self.init(
             id: pokemon.id,
             name: pokemon.name,
-            url: pokemon.url.absoluteString,
-            isFavorite: pokemon.isFavorite
+            url: pokemon.url.absoluteString
             )
     }
     
@@ -56,8 +52,7 @@ extension PokemonDomain {
         self.init(
             id: sdPokemon.id,
             name: sdPokemon.name,
-            url: url,
-            isFavorite: sdPokemon.isFavorite
+            url: url
         )
     }
 }

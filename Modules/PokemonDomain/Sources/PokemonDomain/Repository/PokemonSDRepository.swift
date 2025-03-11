@@ -19,7 +19,7 @@ public protocol PokemonSDRepositoryType: Sendable {
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain]
     func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain]
     func savePokemon(_ pokemon: [PokemonDomain]) async throws
-    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool
+//    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool
 }
 
 public protocol UserSDRepositoryType: Sendable {
@@ -33,4 +33,7 @@ public protocol UserSDRepositoryType: Sendable {
     //ToDo: later use WritableKeyPath and inject userID
     func updatePreferences(_ newPref: PreferenceDomain) async throws
     func getCurrentPreferences() async throws -> PreferenceDomain
+    
+    //Game
+    func updatePlayedStatus(pokemonId: Int, outcome: GameOutcome) async throws
 }

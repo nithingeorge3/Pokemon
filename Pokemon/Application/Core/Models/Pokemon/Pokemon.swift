@@ -12,13 +12,11 @@ struct Pokemon: Identifiable, Hashable {
     let id: Int
     let name: String
     let url: URL
-    var isFavorite: Bool
     
-    init(id: Int, name: String, url: URL, isFavorite: Bool) {
+    init(id: Int, name: String, url: URL) {
         self.id = id
         self.name = name
         self.url = url
-        self.isFavorite = isFavorite
     }
     
     public func hash(into hasher: inout Hasher) {
@@ -35,6 +33,5 @@ extension Pokemon {
         self.id = pokemonDomain.id
         self.name = pokemonDomain.name
         self.url = pokemonDomain.url
-        self.isFavorite = pokemonDomain.isFavorite
     }
 }

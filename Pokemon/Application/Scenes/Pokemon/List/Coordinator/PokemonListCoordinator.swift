@@ -60,13 +60,29 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
         
         let paginationHandler: PaginationHandlerType = PaginationHandler()
         
-        let vm = await modelFactory.makePokemonListViewModel(
-            service: service,
-            userService: userService,
-            paginationHandler: paginationHandler
-        )
+        if ProcessInfo.processInfo.arguments.contains("-ui-testing") {
+            let service: PokemonServiceProvider = MockPokemonServiceImp()
+            let userService: PokemonUserServiceType = MockPokemonUserServiceImp()
+            let paginationHandler: PaginationHandlerType = MockPaginationHandler()
+            
+            let vm = await modelFactory.makePokemonListViewModel(
+                service: service,
+                userService: userService,
+                paginationHandler: paginationHandler
+            )
 
-        self.viewModel = vm
+            self.viewModel = vm
+            
+        } else {
+            let vm = await modelFactory.makePokemonListViewModel(
+                service: service,
+                userService: userService,
+                paginationHandler: paginationHandler
+            )
+
+            self.viewModel = vm
+        }
+        
         addSubscriptions()
     }
     
@@ -91,9 +107,20 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
 
 extension PokemonListCoordinator {
     func navigateToPokemonPlay(for pokemonID: Pokemon.ID) -> some View {
-        let answerService: PokemonAnswerServiceType = PokemonAnswerServiceFactory.makePokemonAnswerService(userSDRepo: userSDRepo, pokemonSDRepo: pokemonSDRepo, paginationSDRepo: paginationSDRepo)
         
-        let playCoordinator = PokemonPlayCoordinatorFactory().makePokemonPlayCoordinator(pokemonID: pokemonID, service: service, userService: userService, answerService: answerService)
-        return playCoordinator.start()
+        if ProcessInfo.processInfo.arguments.contains("-ui-testing") {
+            let service: PokemonServiceProvider = MockPokemonServiceImp()
+            let userService: PokemonUserServiceType = MockPokemonUserServiceImp()
+            let answerService: PokemonAnswerServiceType = MockPokemonAnswerServiceImp()
+            
+            let playCoordinator = PokemonPlayCoordinatorFactory().makePokemonPlayCoordinator(pokemonID: pokemonID, service: service, userService: userService, answerService: answerService)
+            return playCoordinator.start()
+            
+        } else {
+            let answerService: PokemonAnswerServiceType = PokemonAnswerServiceFactory.makePokemonAnswerService(userSDRepo: userSDRepo, pokemonSDRepo: pokemonSDRepo, paginationSDRepo: paginationSDRepo)
+            
+            let playCoordinator = PokemonPlayCoordinatorFactory().makePokemonPlayCoordinator(pokemonID: pokemonID, service: service, userService: userService, answerService: answerService)
+            return playCoordinator.start()
+        }
     }
 }

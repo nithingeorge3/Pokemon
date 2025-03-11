@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import PokemonDomain
 
+//ToDo: update to GameService
 final class PokemonAnswerServiceImp: PokemonAnswerServiceType {
     private let pokemonRepository: PokemonRepositoryType
             
@@ -32,5 +33,9 @@ final class PokemonAnswerServiceImp: PokemonAnswerServiceType {
     
     func updateScore(_ points: Int) async throws {
         try await pokemonRepository.updateScore(points)
+    }
+    
+    func updatePlayedStatus(pokemonId: Int, outcome: GameOutcome) async throws {
+        try await pokemonRepository.updatePlayedStatus(pokemonId: pokemonId, outcome: outcome)
     }
 }

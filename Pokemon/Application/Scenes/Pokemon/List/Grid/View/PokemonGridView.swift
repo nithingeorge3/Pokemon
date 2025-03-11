@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct PokemonGridView: View {
-    var favorites: [Pokemon]
-    var others: [Pokemon]
+    var playedPokemon: [Pokemon]
+    var otherPokemon: [Pokemon]
     var hasMoreData: Bool
     var onPokemonTap: (Pokemon) -> Void
     var onReachBottom: () -> Void
     
-    @State private var isFavoritesCollapsed: Bool = false
+    @State private var isPlayedCollapsed: Bool = false
     @State private var isOtherCollapsed: Bool = false
     @State private var showProgress: Bool = false
     
@@ -30,21 +30,21 @@ struct PokemonGridView: View {
 
             ScrollView {
                 LazyVGrid(columns: columns) {
-                    if !favorites.isEmpty {
-                        CollapsibleSection(title: "Favourites", isCollapsed: $isFavoritesCollapsed) {
-                            pokemonGrid(for: favorites, size: gridSize)
+                    if !playedPokemon.isEmpty {
+                        CollapsibleSection(title: "Played Pokemon", isCollapsed: $isPlayedCollapsed) {
+                            pokemonGrid(for: playedPokemon, size: gridSize)
                         }
                     }
 
-                    if !favorites.isEmpty {
+                    if !playedPokemon.isEmpty {
                         CollapsibleSection(title: "Other Pokemon", isCollapsed: $isOtherCollapsed) {
-                            pokemonGrid(for: others, size: gridSize)
+                            pokemonGrid(for: otherPokemon, size: gridSize)
                         }
                     } else {
-                        pokemonGrid(for: others, size: gridSize)
+                        pokemonGrid(for: otherPokemon, size: gridSize)
                     }
 
-                    if !others.isEmpty && hasMoreData {
+                    if !otherPokemon.isEmpty && hasMoreData {
                         ProgressView()
                             .opacity(showProgress ? 1 : 0)
                             .frame(height: 50, alignment: .center)
