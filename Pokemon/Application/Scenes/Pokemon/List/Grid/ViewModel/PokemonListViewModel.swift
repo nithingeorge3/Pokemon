@@ -15,7 +15,7 @@ import PokemonDomain
 protocol PokemonListViewModelType: AnyObject, Observable {
     var pokemon: [Pokemon] { get }
     var user: User? { get set }
-    var favoritePokemon: [Pokemon] { get }
+    var playedPokemon: [Pokemon] { get }
     var otherPokemon: [Pokemon] { get }
     var paginationHandler: PaginationHandlerType { get }
     var pokemonListActionSubject: PassthroughSubject<PokemonListAction, Never> { get  set }
@@ -36,7 +36,7 @@ class PokemonListViewModel: PokemonListViewModelType {
     
     private var updateTask: Task<Void, Never>?
     
-    var favoritePokemon: [Pokemon] {
+    var playedPokemon: [Pokemon] {
         []
     }
     

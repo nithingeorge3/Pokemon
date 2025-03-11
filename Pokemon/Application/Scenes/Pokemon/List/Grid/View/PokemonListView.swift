@@ -39,7 +39,7 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
                     EmptyStateView(message: "No pokemon found. Please try again later.")
                 } else {
                     EmptyView()
-                    PokemonGridView(favorites: viewModel.favoritePokemon, others: viewModel.otherPokemon, hasMoreData: viewModel.paginationHandler.hasMoreData) { pokemon in
+                    PokemonGridView(playedPokemon: viewModel.playedPokemon, otherPokemon: viewModel.otherPokemon, hasMoreData: viewModel.paginationHandler.hasMoreData) { pokemon in
                         viewModel.send(.selectPokemon(pokemon.id))
                     } onReachBottom: {
                         viewModel.send(.loadMore)
@@ -109,7 +109,7 @@ private class PreviewPokemonListViewModel: PokemonListViewModelType {
     ]
     
     var pagination: Pagination? = Pagination(entityType: .pokemon)
-    var favoritePokemon: [Pokemon] { [] }
+    var playedPokemon: [Pokemon] { [] }
     var otherPokemon: [Pokemon] { pokemon }
     var paginationHandler: PaginationHandlerType = PreviewPaginationHandler()
     var pokemonListActionSubject = PassthroughSubject<PokemonListAction, Never>()

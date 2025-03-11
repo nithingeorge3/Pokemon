@@ -116,6 +116,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         }
     }
     
+#warning("while fetch remove played from DB. please add filtering in SD fetch")
     private func refreshGame() async {
         isLoading = true
         resetGame()
