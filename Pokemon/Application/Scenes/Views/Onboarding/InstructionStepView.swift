@@ -7,20 +7,15 @@
 
 import SwiftUI
 
-// MARK: - InstructionStep View
 struct InstructionStep: View {
-    let icon: String
+    let bulletView: AnyView
     let title: String
     let description: String
     
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
-            Image(systemName: icon)
-                .symbolVariant(.fill)
-                .foregroundStyle(.white)
-                .frame(width: 44, height: 44)
-                .background(Circle().fill(Color.blue))
-            
+            bulletView
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.headline)
