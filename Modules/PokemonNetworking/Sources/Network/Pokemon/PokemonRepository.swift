@@ -14,7 +14,6 @@ public protocol PokemonRepositoryType: Sendable {
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain]
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain]
-//    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain
     
     //gaming
@@ -64,7 +63,7 @@ final class PokemonRepository: PokemonRepositoryType {
                 do {
                     return try PokemonDomain(from: dto)
                 } catch let error as PokemonError {
-                    throw error // handle error
+                    throw error
                 } catch {
                     throw NetworkError.failedToDecode
                 }
@@ -78,7 +77,7 @@ final class PokemonRepository: PokemonRepositoryType {
             
             var pagination = try await paginationSDRepo.fetchPokemonPagination(.pokemon)
             pagination.totalCount = responseDTO.count
-            pagination.currentPage += 1
+            pagination.currentPage += 40
             pagination.lastUpdated = Date()
             
             //updating Pagination

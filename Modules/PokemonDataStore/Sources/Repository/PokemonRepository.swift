@@ -35,7 +35,6 @@ public final class PokemonSDRepository: PokemonSDRepositoryType {
     
     public func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain] {
         try await dataStore.performBackgroundTask { context in
-            let offset = offset * pageSize
             
             var descriptor = FetchDescriptor<SDPokemon>(
                 predicate: nil,
