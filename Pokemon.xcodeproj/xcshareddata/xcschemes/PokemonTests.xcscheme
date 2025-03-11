@@ -19,9 +19,20 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "282279BA2D73DE5700583E2C"
+               BlueprintIdentifier = "286ACCF82D7F88F800D97CE9"
                BuildableName = "PokemonTests.xctest"
                BlueprintName = "PokemonTests"
+               ReferencedContainer = "container:Pokemon.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "286ACD222D7F9A1500D97CE9"
+               BuildableName = "PokemonUITests.xctest"
+               BlueprintName = "PokemonUITests"
                ReferencedContainer = "container:Pokemon.xcodeproj">
             </BuildableReference>
          </TestableReference>

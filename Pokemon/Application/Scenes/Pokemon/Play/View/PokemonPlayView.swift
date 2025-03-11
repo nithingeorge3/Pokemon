@@ -10,33 +10,46 @@ import Kingfisher
 import PokemonDomain
 import PokemonNetworking
 
+// MARK: - PokemonPlayView
 struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
+    // MARK: - Properties
     @Bindable var viewModel: ViewModel
     @State private var rotationAngle: Double = 0
     
+    // MARK: - Body
     var body: some View {
         VStack(spacing: 20) {
             if viewModel.isLoading {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .scaleEffect(1.5)
+                loadingView
             } else {
-                gameHeaderView
-                    .padding(.top, 8)
-                ZStack {
-                    imageSection
-                    celebrationOverlay
-                }
-                
-                answerGrid
-                    .padding(.bottom, 40)
+                gameContentView
             }
         }
-        .onAppear {
-            viewModel.send(.load)
-        }
+        .onAppear(perform: handleOnAppear)
         .withCustomBackButton()
         .withCustomNavigationTitle(title: "Pokemon")
+    }
+}
+
+// MARK: - View Components
+extension PokemonPlayView {
+    private var gameContentView: some View {
+        Group {
+            gameHeaderView
+                .padding(.top, 8)
+            ZStack {
+                imageSection
+                celebrationOverlay
+            }
+            answerGrid
+                .padding(.bottom, 40)
+        }
+    }
+    
+    private var loadingView: some View {
+        ProgressView()
+            .progressViewStyle(.circular)
+            .scaleEffect(1.5)
     }
     
     private var gameHeaderView: some View {
@@ -59,6 +72,7 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
                     width: 150,
                     height: 150
                 )
+//                .silhouetteEffect(active: true)
                 .blur(radius: viewModel.imageBlurRadius)//if zero will show correct image, no shadow. if 10 with shadow
                 .animation(.easeInOut(duration: 0.3), value: viewModel.imageBlurRadius)
                 
@@ -101,6 +115,13 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
     }
 }
 
+// MARK: - Lifecycle & Actions
+extension PokemonPlayView {
+    private func handleOnAppear() {
+        viewModel.send(.load)
+    }
+}
+
 struct AnswerButton: View {
     let pokemon: Pokemon
     let isSelected: Bool
@@ -131,129 +152,117 @@ struct AnswerButton: View {
     }
 }
 
-//
-//// MARK: - Previews
-//#if DEBUG
-//#Preview("Default Detail") {
-//    PokemonPlayView(viewModel: PreviewPlayViewModel.fullRecipe)
-//}
-//
-//#Preview("No Image") {
-//    PokemonPlayView(viewModel: PreviewPlayViewModel.noImageRecipe)
-//}
-//
-//#Preview("No Description") {
-//    PokemonPlayView(viewModel: PreviewPlayViewModel.noDescriptionRecipe)
-//}
-//
-//#Preview("Favorite State") {
-//    let vm = PreviewPlayViewModel.fullRecipe
-//    vm.recipe?.isFavorite.toggle()
-//    return PokemonPlayView(viewModel: vm)
-//}
-//
-//// MARK: - Preview ViewModel
-//public class PreviewPlayViewModel: PokemonPlayViewModelType {
-//    var recipe: Recipe?
-//    private let recipeID: Recipe.ID
-//    private let service: PokemonSDServiceType
-//    
-//    var mediaItems: [PresentedMedia] {
-//        var result: [PresentedMedia] = []
-//        if let imageURL = recipe?.thumbnailURL.validatedURL {
-//            result.append(.image(imageURL))
-//        }
-//        if let videoURL = recipe?.originalVideoURL.validatedURL {
-//            result.append(.video(videoURL))
-//        }
-//        
-//        return result
-//    }
-//    
-//    @MainActor
-//    init(recipe: Recipe) {
-//        self.recipe = recipe
-//        self.recipeID = recipe.id
-//        self.service = MockPreviewService()
-//    }
-//    
-//    @MainActor
-//    init(recipeID: Recipe.ID, service: PokemonSDServiceType = MockPreviewService()) {
-//        self.recipeID = recipeID
-//        self.service = service
-//    }
-//    
-//    func send(_ action: RecipeDetailActions) {
-//        switch action {
-//        case .toggleFavorite:
-//            recipe?.isFavorite.toggle()
-//            Task { try? await service.updateFavouritePokemon(recipeID) }
-//        case .load:
-//            break
-//        }
-//    }
-//}
-//
-//extension PreviewPlayViewModel {
-//    static var fullRecipe: PreviewPlayViewModel {
-//        PreviewPlayViewModel(
-//            recipe: Recipe(
-//                id: 1,
-//                name: "Indian Chicken Curry",
-//                description: "Indian Chicken Curry is a rich, flavorful dish made with tender chicken simmered in a spiced tomato and onion gravy. It’s infused with aromatic Indian spices, garlic, ginger, and creamy textures, making it perfect to pair with rice or naan bread.",
-//                country: .ind,
-//                thumbnailURL: "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/45b4efeb5d2c4d29970344ae165615ab/FixedFBFinal.jpg",
-//                originalVideoURL: "https://s3.amazonaws.com/video-api-prod/assets/a0e1b07dc71c4ac6b378f24493ae2d85/FixedFBFinal.mp4",
-//                isFavorite: false
-//            )
-//        )
-//    }
-//    
-//    static var noImageRecipe: PreviewPlayViewModel {
-//        PreviewPlayViewModel(recipe: Recipe(
-//            id: 2,
-//            name: "Kerala Chicken Biriyani (CB)",
-//            description: "A flavorful one-pot dish made with fragrant basmati rice, marinated chicken, and aromatic Kerala spices, layered and cooked to perfection. Side dish: Fresh yummy salad",
-//            country: .ind,
-//            thumbnailURL: nil
-//        ))
-//    }
-//    
-//    static var noDescriptionRecipe: PreviewPlayViewModel {
-//        PreviewPlayViewModel(recipe: Recipe(
-//            id: 3,
-//            name: "Kerala Chicken Curry",
-//            description: "",
-//            country: .ind,
-//            thumbnailURL: "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/45b4efeb5d2c4d29970344ae165615ab/FixedFBFinal.jpg"
-//        ))
-//    }
-//}
-//
-//// MARK: - Mock Service
-//private class MockPreviewService: PokemonSDServiceType, @unchecked Sendable {
-//    var favoritesDidChange: AsyncStream<Int> {
-//        AsyncStream { _ in }
-//    }
-//    
-//    func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain {
-//        PokemonDomain(id: 1, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!)
-//    }
-//    
-//    func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain] {
-//        []
-//    }
-//    
-//    func fetchPokemonPagination(_ type: EntityType) async throws -> PaginationDomain {
-//        PaginationDomain(entityType: .pokemon, totalCount: 10, currentPage: 10)
-//    }
-//    
-//    func fetchRecipe(id: Recipe.ID) async throws -> Recipe {
-//        Recipe(id: 999, name: "Mock Recipe")
-//    }
-//    
-//    func updateFavouritePokemon(_ id: Int) async throws -> Bool {
-//        true
-//    }
-//}
-//#endif
+// MARK: - Previews
+#if DEBUG
+#Preview("Initial Loading State") {
+    PokemonPlayView(viewModel: PreviewPlayViewModel.loading)
+}
+
+#Preview("Game Ready State") {
+    PokemonPlayView(viewModel: PreviewPlayViewModel.loaded)
+}
+
+#Preview("Silhouette Mode") {
+    PokemonPlayView(viewModel: PreviewPlayViewModel.silhouette)
+}
+
+#Preview("Celebration Animation") {
+    PokemonPlayView(viewModel: PreviewPlayViewModel.celebration)
+}
+
+#Preview("Correct Answer Selected") {
+    PokemonPlayView(viewModel: PreviewPlayViewModel.correctAnswer)
+}
+
+#Preview("Wrong Answer Selected") {
+    PokemonPlayView(viewModel: PreviewPlayViewModel.wrongAnswer)
+}
+
+// MARK: - Preview ViewModel
+private class PreviewPlayViewModel: PokemonPlayViewModelType {
+    var pokemon: Pokemon?
+    var answerOptions: [Pokemon] = []
+    var selectedAnswer: Pokemon?
+    var showResult: Bool = false
+    var isLoading: Bool = false
+    var currentScore: Int = 0
+    var showCelebration: Bool = false
+    var silhouetteMode: Bool = false
+    var imageBlurRadius: CGFloat = 0
+    
+    static let loading: PreviewPlayViewModel = {
+        let vm = PreviewPlayViewModel()
+        vm.isLoading = true
+        return vm
+    }()
+    
+    static let loaded: PreviewPlayViewModel = {
+        let vm = PreviewPlayViewModel()
+        vm.pokemon = .charmander
+        vm.answerOptions = [.charmander, .squirtle, .bulbasaur, .pikachu]
+        vm.currentScore = 1250
+        return vm
+    }()
+    
+    static let silhouette: PreviewPlayViewModel = {
+        let vm = loaded
+        vm.silhouetteMode = true
+        vm.imageBlurRadius = 10
+        return vm
+    }()
+    
+    static let celebration: PreviewPlayViewModel = {
+        let vm = loaded
+        vm.showCelebration = true
+        return vm
+    }()
+    
+    static let correctAnswer: PreviewPlayViewModel = {
+        let vm = loaded
+        vm.selectedAnswer = .charmander
+        vm.showResult = true
+        return vm
+    }()
+    
+    static let wrongAnswer: PreviewPlayViewModel = {
+        let vm = loaded
+        vm.selectedAnswer = .squirtle
+        vm.showResult = true
+        return vm
+    }()
+    
+    // Protocol stubs
+    func send(_ action: PokemonPlayActions) {}
+}
+
+// MARK: - Preview Data
+extension Pokemon {
+    static let charmander = Pokemon(
+        id: 4,
+        name: "charmander",
+        url: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png")!,
+        isFavorite: false
+    )
+    
+    static let squirtle = Pokemon(
+        id: 7,
+        name: "squirtle",
+        url: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png")!,
+        isFavorite: false
+    )
+    
+    static let bulbasaur = Pokemon(
+        id: 1,
+        name: "bulbasaur",
+        url: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png")!,
+        isFavorite: false
+    )
+    
+    static let pikachu = Pokemon(
+        id: 25,
+        name: "pikachu",
+        url: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png")!,
+        isFavorite: false
+    )
+}
+#endif

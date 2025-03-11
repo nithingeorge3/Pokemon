@@ -1,64 +1,52 @@
 //
 //  JSONData.swift
-//  Recipes
+//  Pokemon
 //
-//  Created by Nitin George on 06/03/2025.
+//  Created by Nitin George on 10/03/2025.
 //
 
 struct JSONData {
-    static let recipeValidJSON = """
+    static let pokemonValidJSON = """
 {
-    "count": 4,
+    "count": 1302,
+    "next": "https://pokeapi.co/api/v2/pokemon?offset=3&limit=3",
+    "previous": null,
     "results": [
         {
-            "id": 1,
-            "name": "Pasta",
-            "country": "US",
-            "thumbnail_url": "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/video-api/assets/281005.jpg",
-            "created_at": 1672531200
+            "name": "bulbasaur",
+            "url": "https://pokeapi.co/api/v2/pokemon/1/"
         },
         {
-            "id": 2,
-            "name": "Curry",
-            "thumbnail_url": "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/45b4efeb5d2c4d29970344ae165615ab/FixedFBFinal.jpg",
-                "created_at": 1672531200
+            "name": "ivysaur",
+            "url": "https://pokeapi.co/api/v2/pokemon/2/"
         },
         {
-            "id": 3,
-            "name": "Chicken",
-            "country": "US",
-            "thumbnail_url": "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/video-api/assets/281005.jpg",
-            "created_at": 1672531200
-        },
-        {
-            "id": 4,
-            "name": "Beef",
-            "country": "US",
-            "thumbnail_url": "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/video-api/assets/281005.jpg",
-            "created_at": 1672531200
+            "name": "venusaur",
+            "url": "https://pokeapi.co/api/v2/pokemon/3/"
         }
     ]
 }
 """
     
-    static let recipeEmptyJSON = """
+    static let pokemonEmptyJSON = """
 {
-    "count": 4,
+    "count": 1302,
+    "next": "https://pokeapi.co/api/v2/pokemon?offset=3&limit=3",
+    "previous": null,
     "results": [
     ]
 }
 """
     
-    static let recipeInvalidJSON = """
+    static let pokemonInvalidJSON = """
 {
-    "count": 4,
-    "results": [
+    "count": 1302,
+    "next": "https://pokeapi.co/api/v2/pokemon?offset=3&limit=3",
+    "previous": null,
+    "result": [
         {
-            "id": 1,
-            "name": Pasta,
-            "country": "US",
-            "thumbnail_url": "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/video-api/assets/281005.jpg",
-            "created_at": 1672531200
+            "name": "bulbasaur",
+            "url": "https://pokeapi.co/api/v2/pokemon/1/"
         }
     ]
 }

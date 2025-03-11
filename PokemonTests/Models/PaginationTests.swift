@@ -1,32 +1,32 @@
 //
 //  PaginationTests.swift
-//  Recipes
+//  PokemonTests
 //
-//  Created by Nitin George on 05/03/2025.
+//  Created by Nitin George on 10/03/2025.
 //
 
 import Testing
 import XCTest
-import RecipeDomain
+import PokemonDomain
 
-@testable import Recipes
+@testable import Pokemon
 
 class PaginationTests: XCTestCase {
 
     func test_recipe_shouldFetch_returnsFalseWhenOnLastPage() {
-        let pagination = Pagination(entityType: .recipe, totalCount: 10, currentPage: 9)
+        let pagination = Pagination(entityType: .pokemon, totalCount: 10, currentPage: 9)
         XCTAssertFalse(pagination.shouldFetch)
     }
 
     func test_recipe_shouldFetch_returnsTrueWhenNotOnLastPage() {
-        let pagination = Pagination(entityType: .recipe, totalCount: 10, currentPage: 5)
+        let pagination = Pagination(entityType: .pokemon, totalCount: 10, currentPage: 5)
         XCTAssertTrue(pagination.shouldFetch)
     }
     
     func test_recipe_initFromDomain_mapsPropertiesCorrectly() {
         let domain = PaginationDomain(
             id: UUID(uuidString: "11111111-1111-1111-1111-111111111111")!,
-            entityType: .recipe,
+            entityType: .pokemon,
             totalCount: 20,
             currentPage: 5,
             lastUpdated: Date(timeIntervalSince1970: 0)
@@ -35,26 +35,26 @@ class PaginationTests: XCTestCase {
         let pagination = Pagination(from: domain)
         
         XCTAssertEqual(pagination.id, domain.id)
-        XCTAssertEqual(pagination.entityType, .recipe)
+        XCTAssertEqual(pagination.entityType, .pokemon)
         XCTAssertEqual(pagination.totalCount, 20)
         XCTAssertEqual(pagination.currentPage, 5)
         XCTAssertEqual(pagination.lastUpdated, Date(timeIntervalSince1970: 0))
     }
 
     func test_recipe_equality_usesID() {
-        let pagination1 = Pagination(id: UUID(), entityType: .recipe, totalCount: 10, currentPage: 1)
-        let pagination2 = Pagination(id: pagination1.id, entityType: .recipe, totalCount: 990, currentPage: 90)
+        let pagination1 = Pagination(id: UUID(), entityType: .pokemon, totalCount: 10, currentPage: 1)
+        let pagination2 = Pagination(id: pagination1.id, entityType: .pokemon, totalCount: 990, currentPage: 90)
         
         XCTAssertEqual(pagination1, pagination2)
     }
     
     func test_hash_usesID_equal() {
         let id = UUID(uuidString: "11111111-1111-1111-1111-111111111111")!
-        let pagination1 = Pagination(id: id, entityType: .recipe)
+        let pagination1 = Pagination(id: id, entityType: .pokemon)
         var hasher1 = Hasher()
         pagination1.hash(into: &hasher1)
         
-        let pagination2 = Pagination(id: id, entityType: .recipe)
+        let pagination2 = Pagination(id: id, entityType: .pokemon)
         var hasher2 = Hasher()
         pagination2.hash(into: &hasher2)
         
@@ -64,11 +64,11 @@ class PaginationTests: XCTestCase {
     func test_hash_usesID_notEqual() {
         let id1 = UUID(uuidString: "11111111-1111-1111-1111-111111111111")!
         let id2 = UUID(uuidString: "11111111-1111-1111-1111-111111111110")!
-        let pagination1 = Pagination(id: id1, entityType: .recipe)
+        let pagination1 = Pagination(id: id1, entityType: .pokemon)
         var hasher1 = Hasher()
         pagination1.hash(into: &hasher1)
         
-        let pagination2 = Pagination(id: id2, entityType: .recipe)
+        let pagination2 = Pagination(id: id2, entityType: .pokemon)
         var hasher2 = Hasher()
         pagination2.hash(into: &hasher2)
     

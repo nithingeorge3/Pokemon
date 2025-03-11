@@ -1,13 +1,13 @@
 //
-//  RecipesUITestsLaunchTests.swift
-//  RecipesUITests
+//  PokemonUITestsLaunchTests.swift
+//  PokemonUITests
 //
-//  Created by Nitin George on 02/03/2025.
+//  Created by Nitin George on 10/03/2025.
 //
 
 import XCTest
 
-final class RecipesUITestsLaunchTests: XCTestCase {
+final class PokemonUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

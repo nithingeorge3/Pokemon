@@ -11,7 +11,6 @@ import PokemonDomain
 
 final class PokemonUserServiceImp: PokemonUserServiceType {
     private let pokemonRepository: PokemonRepositoryType
-    private let (favoritesDidChangeStream, favoritesDidChangeContinuation) = AsyncStream.makeStream(of: Int.self)
             
     init(pokemonRepository: PokemonRepositoryType) {
         self.pokemonRepository = pokemonRepository
