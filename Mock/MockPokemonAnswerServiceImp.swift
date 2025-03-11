@@ -18,4 +18,8 @@ public final class MockPokemonAnswerServiceImp: PokemonAnswerServiceType, @unche
     public func updateScore(_ points: Int) async throws {
         
     }
+    
+    public func updatePlayedStatus(pokemonId: Int, outcome: GameOutcome) async throws {
+        
+    }
 }

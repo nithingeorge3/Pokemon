@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum GameOutcome: String, Codable {
+public enum GameOutcome: String, Codable, Sendable {
     case unplayed, win, fail
 }
 
@@ -38,10 +38,10 @@ public struct UserPokemonDomain: Identifiable, @unchecked Sendable  {
     public var gameplayHistory: [GameSession]
     public var selectedOptions: GameOptions?
 
-    public var user: UserDomain
-    public var pokemon: PokemonDomain
+    public var user: UserDomain?
+    public var pokemon: PokemonDomain?
     
-    public init(id: UUID, lastPlayedDate: Date, lastOutcome: GameOutcome, isMarkedForPlayLater: Bool, gameplayHistory: [GameSession] = [], selectedOptions: GameOptions? = nil, user: UserDomain, pokemon: PokemonDomain) {
+    public init(id: UUID, lastPlayedDate: Date, lastOutcome: GameOutcome, isMarkedForPlayLater: Bool, gameplayHistory: [GameSession] = [], selectedOptions: GameOptions? = nil, user: UserDomain? = nil, pokemon: PokemonDomain? = nil) {
         self.id = id
         self.lastPlayedDate = lastPlayedDate
         self.lastOutcome = lastOutcome

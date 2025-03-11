@@ -18,8 +18,8 @@ struct UserPokemon: Identifiable, Hashable {
     
     let selectedOptions: GameOptions?
 
-    let user: User
-    let pokemon: Pokemon
+    let user: User?
+    let pokemon: Pokemon?
     
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
@@ -43,8 +43,14 @@ struct UserPokemon: Identifiable, Hashable {
 
 extension UserPokemon {
     init(from userPokeDomain: UserPokemonDomain) {
-        let pokeUser = User(from: userPokeDomain.user)
-        let poke = Pokemon(from: userPokeDomain.pokemon)
+        var pokeUser: User?
+        var poke: Pokemon?
+        if let pokeUserDomain = userPokeDomain.user {
+            pokeUser = User(from: pokeUserDomain)
+        }
+        if let pokeDomain = userPokeDomain.pokemon {
+            poke = Pokemon(from: pokeDomain)
+        }
         
         self.id = userPokeDomain.id
         self.lastPlayedDate = userPokeDomain.lastPlayedDate

@@ -156,6 +156,8 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
                 showCelebration = user?.preference.showWinAnimation ?? false
                 
                 try await answerService.updateScore(Constants.Pokemon.gamePoint)
+                try await answerService.updatePlayedStatus(pokemonId: pokemon.id, outcome: .win)
+                
                 Task { await fetchUserInfo() }
             } catch {
                 print("failed to update user score: \(error)")

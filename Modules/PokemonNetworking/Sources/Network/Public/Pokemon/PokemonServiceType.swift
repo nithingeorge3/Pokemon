@@ -19,6 +19,8 @@ public protocol PokemonServiceType: Sendable {
 public protocol PokemonAnswerServiceType: Sendable {
     func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain]
     func updateScore(_ points: Int) async throws
+    
+    func updatePlayedStatus(pokemonId: Int, outcome: GameOutcome) async throws
 }
 
 //User specific

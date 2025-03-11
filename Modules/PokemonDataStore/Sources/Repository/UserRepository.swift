@@ -116,3 +116,43 @@ public final class UserSDRepository: UserSDRepositoryType {
         return try await getOrCreateGuest()
     }
 }
+
+// MARK: - Game update
+extension UserSDRepository {
+    public func updatePlayedStatus(pokemonId: Int, outcome: GameOutcome) async throws {
+        try await dataStore.performBackgroundTask { context in
+            //Get current guest user
+            let userPredicate = #Predicate<SDUser> { $0.isGuest }
+            let userDescriptor = FetchDescriptor<SDUser>(predicate: userPredicate)
+            guard let user = try context.fetch(userDescriptor).first else {
+                throw SDError.userNotFound
+            }
+            
+            //Find Pokemon
+            let pokemonPredicate = #Predicate<SDPokemon> { $0.id == pokemonId }
+            let pokemonDescriptor = FetchDescriptor<SDPokemon>(predicate: pokemonPredicate)
+            guard let pokemon = try context.fetch(pokemonDescriptor).first else {
+                throw SDError.pokemonNotFound
+            }
+            
+            //Find existing entry or create new
+            let existingEntry = user.playedPokemons.first { $0.pokemon?.id == pokemonId }
+            
+            if let entry = existingEntry {
+                entry.lastOutcomeRaw = outcome.rawValue
+                entry.lastPlayedDate = Date()
+            } else {
+                let newEntry = SDUserPokemon(
+                    user: user,
+                    pokemon: pokemon,
+                    lastOutcome: outcome
+                )
+                user.playedPokemons.append(newEntry)
+            }
+            
+            user.lastActive = Date()
+            
+            try context.save()
+        }
+    }
+}

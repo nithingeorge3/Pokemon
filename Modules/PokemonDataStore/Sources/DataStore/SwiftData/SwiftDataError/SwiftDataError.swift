@@ -7,6 +7,8 @@
 
 @frozen
 public enum SDError: Error, Equatable {
+    case userNotFound
+    case pokemonNotFound
     case modelNotFound
     case modelObjNotFound
     case invalidRequest(reason: String)

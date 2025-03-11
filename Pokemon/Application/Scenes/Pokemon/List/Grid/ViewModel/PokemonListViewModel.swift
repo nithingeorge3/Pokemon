@@ -75,6 +75,10 @@ class PokemonListViewModel: PokemonListViewModelType {
             do {
                 let userDomain = try await userService.getCurrentUser()
                 user = User(from: userDomain)
+                _ = user?.playedPokemons.map { poke in
+                    print("***** user played Pokemon: \(poke))")
+                }
+                
             } catch {
                 print("unable to find user")
             }

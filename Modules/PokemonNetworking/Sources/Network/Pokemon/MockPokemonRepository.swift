@@ -110,6 +110,10 @@ extension MockPokemonRepository {
     func updateScore(_ points: Int) async throws {
         
     }
+    
+    func updatePlayedStatus(pokemonId: Int, outcome: GameOutcome) async throws {
+        
+    }
 }
 
 //User

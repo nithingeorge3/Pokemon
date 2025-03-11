@@ -21,6 +21,7 @@ public protocol PokemonRepositoryType: Sendable {
     func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain]
     func fetchRandomUnplayedPokemon() async throws -> PokemonDomain
     func updateScore(_ points: Int) async throws
+    func updatePlayedStatus(pokemonId: Int, outcome: GameOutcome) async throws
     
     //user
     func getOrCreateGuest() async throws -> UserDomain
@@ -127,6 +128,10 @@ extension PokemonRepository {
     
     func updateScore(_ points: Int) async throws {
         try await userSDRepo.updateScore(points)
+    }
+    
+    func updatePlayedStatus(pokemonId: Int, outcome: GameOutcome) async throws {
+        try await userSDRepo.updatePlayedStatus(pokemonId: pokemonId, outcome: outcome)
     }
 }
 

@@ -33,4 +33,7 @@ public protocol UserSDRepositoryType: Sendable {
     //ToDo: later use WritableKeyPath and inject userID
     func updatePreferences(_ newPref: PreferenceDomain) async throws
     func getCurrentPreferences() async throws -> PreferenceDomain
+    
+    //Game
+    func updatePlayedStatus(pokemonId: Int, outcome: GameOutcome) async throws
 }
