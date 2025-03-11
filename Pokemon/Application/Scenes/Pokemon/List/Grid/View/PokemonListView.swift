@@ -9,8 +9,15 @@ import SwiftUI
 import Combine
 
 struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @State private var activeSheet: AppSheet?
+    
+    enum AppSheet: Identifiable {
+        case onboarding
+        var id: Int { hashValue }
+    }
+    
     @Bindable var viewModel: ViewModel
-    @State private var score: Int = 10
     
     private var isEmpty: Bool {
         viewModel.pokemon.isEmpty
@@ -39,11 +46,30 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
                     }
                 }
             }
-        }.onAppear {
+        }
+        .onAppear {
+            checkFirstLaunch()
             viewModel.send(.refresh)
+        }
+        .sheet(item: $activeSheet) { item in
+            switch item {
+            case .onboarding:
+                OnboardingView(dismissAction: completeOnboarding)
+            }
         }
         .withCustomNavigationTitle(title: "Pokemon")
         .withCustomNavigationScore(GameScoreView(score: viewModel.user?.score ?? 0, size: 12))
+    }
+    
+    private func checkFirstLaunch() {
+        if !hasCompletedOnboarding {
+            activeSheet = .onboarding
+        }
+    }
+    
+    private func completeOnboarding() {
+        hasCompletedOnboarding = true
+        activeSheet = nil
     }
 }
 
