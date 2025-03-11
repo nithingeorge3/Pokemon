@@ -10,9 +10,10 @@ import PokemonNetworking
 
 //ToDo: Later use DI principle and use Observable and Bindable
 struct MenuView: View {
-    @ObservedObject var viewModel: MenuViewModel
+    @Bindable var viewModel: MenuViewModel
     @State private var selectedItem: SidebarItem?
-    @State private var showLogoutConfirmation = false
+    @State private var showAuthConfirmation = false
+    @State private var authActionType: AuthActionType?
     
     init(viewModel: MenuViewModel) {
         self.viewModel = viewModel
@@ -20,14 +21,19 @@ struct MenuView: View {
     
     var body: some View {
         NavigationSplitView {
-            List(viewModel.items, selection: $selectedItem) { item in
+            List(viewModel.filteredItems(includeLogin: !viewModel.isLoggedIn),
+                selection: $selectedItem
+            ) { item in
                 switch item.type {
                 case .navigation:
                     NavigationLink(item.title, value: item)
                         .font(.headline)
                         .padding(.vertical, 8)
                 case .action:
-                    SideBarActionButton(title: item.title) {
+                    SideBarActionButton(
+                        title: item.title,
+                        isDestructive: item.isDestructive
+                    ) {
                         handleAction(for: item)
                     }
                 }
@@ -36,47 +42,103 @@ struct MenuView: View {
             .listStyle(.sidebar)
             .navigationSplitViewColumnWidth(200)
         } detail: {
+            detailContent
+        }
+        .onAppear() {
+            viewModel.filteredItems(includeLogin: true)
+        }
+        .sheet(item: $authActionType) { actionType in
+            AuthConfirmationView(
+                actionType: actionType,
+                onConfirm: handleAuthConfirmation
+            )
+        }
+    }
+    
+    private var detailContent: some View {
+        Group {
             if let selectedItem {
                 destinationView(for: selectedItem)
             } else {
-                Text("Select an item")
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .sheet(isPresented: $showLogoutConfirmation) {
-            LogoutConfirmationView {
-                viewModel.performLogOut()
+                EmptyStateView(
+                    icon: "arrow.left.circle",
+                    message: "Select a menu item to begin"
+                )
             }
         }
     }
     
     private struct SideBarActionButton: View {
         let title: String
+        let isDestructive: Bool
         let action: () -> Void
         
         var body: some View {
-            Button {
-                action()
-            } label: {
-                Text(title)
-                    .font(.headline)
-                    .padding(.vertical, 8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .contentShape(Rectangle())
+            Button(action: action) {
+                HStack {
+                    Text(title)
+                        .font(.headline)
+                    Spacer()
+                    Image(systemName: authButtonIcon)
+                }
+                .padding(.vertical, 8)
+                .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .frame(maxWidth: .infinity, alignment:  .leading)
-            .foregroundColor(title == "Logout" ? .red : .primary)
+            .foregroundColor(buttonColor)
+        }
+        
+        private var buttonColor: Color {
+            isDestructive ? .red : .primary
+        }
+        
+        private var authButtonIcon: String {
+            switch title {
+            case "Login": return "person.crop.circle.fill.badge.checkmark"
+            case "Logout": return "power"
+            default: return ""
+            }
+        }
+    }
+    
+    private struct EmptyStateView: View {
+        let icon: String
+        let message: String
+        
+        var body: some View {
+            VStack(spacing: 20) {
+                Image(systemName: icon)
+                    .font(.system(size: 40))
+                    .foregroundStyle(.secondary)
+                Text(message)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
     
     private func handleAction(for item: SidebarItem) {
-        switch item.title {
-        case "Logout":
-            showLogoutConfirmation = true
-        default:
+        switch item.authAction {
+        case .login:
+            authActionType = .login
+        case .logout:
+            authActionType = .logout
+        case .none:
             break
         }
+    }
+    
+    private func handleAuthConfirmation() {
+        switch authActionType {
+        case .login:
+            viewModel.handleLogin()
+        case .logout:
+            viewModel.handleLogout()
+        case .none:
+            break
+        }
+        authActionType = nil
     }
     
     @ViewBuilder
@@ -87,7 +149,10 @@ struct MenuView: View {
         case "Preferences":
             makePreferencesView()
         default:
-            EmptyView()
+            EmptyStateView(
+                icon: "exclamationmark.triangle",
+                message: "Feature in development"
+            )
         }
     }
     
