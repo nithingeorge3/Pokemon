@@ -8,11 +8,12 @@
 import PokemonNetworking
 
 protocol MenuViewModelFactoryType {
-    func makeMenuViewModel(userService: PokemonUserServiceType) -> MenuViewModel
+    @MainActor func makeMenuViewModel(userService: PokemonUserServiceType) -> MenuViewModel
 }
 
 final class MenuViewModelFactory: MenuViewModelFactoryType {
     
+    @MainActor
     func makeMenuViewModel(userService: PokemonUserServiceType) -> MenuViewModel {
         let items = [
             SidebarItem(title: "Settings", type: .navigation),

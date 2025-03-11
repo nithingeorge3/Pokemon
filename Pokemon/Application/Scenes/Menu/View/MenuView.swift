@@ -21,7 +21,7 @@ struct MenuView: View {
     
     var body: some View {
         NavigationSplitView {
-            List(viewModel.filteredItems(includeLogin: !viewModel.isLoggedIn),
+            List(viewModel.filteredItems ?? [],
                 selection: $selectedItem
             ) { item in
                 switch item.type {
@@ -43,9 +43,6 @@ struct MenuView: View {
             .navigationSplitViewColumnWidth(200)
         } detail: {
             detailContent
-        }
-        .onAppear() {
-            viewModel.filteredItems(includeLogin: true)
         }
         .sheet(item: $authActionType) { actionType in
             AuthConfirmationView(

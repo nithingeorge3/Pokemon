@@ -43,7 +43,7 @@ struct AuthConfirmationView: View {
     
     private var actionTitle: String {
         switch actionType {
-        case .login: return "Sign in to play and unlock more features"
+        case .login: return "Sign in to play"
         case .logout: return "Are you sure you want to sign out?"
         }
     }
@@ -65,7 +65,7 @@ struct AuthConfirmationView: View {
     private var actionButtonTitle: String {
         switch actionType {
         case .login: return "Login"
-        case .logout: return "Sign Out"
+        case .logout: return "Log Out"
         }
     }
     
