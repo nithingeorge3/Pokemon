@@ -18,7 +18,6 @@ final class MockPokemonServiceImp: @unchecked Sendable {
     var stubbedPokemon: [PokemonDomain] = []
     var shouldThrowError: Bool = false
     
-    private var isFavorite: Bool = false
     private let (stream, continuation) = AsyncStream.makeStream(of: Int.self)
     
     init(mockJSON: String = JSONData.pokemonValidJSON) {
@@ -41,9 +40,9 @@ extension MockPokemonServiceImp: PokemonServiceProvider {
         stubbedPokemon
     }
     
-    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
-        false
-    }
+//    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
+//        false
+//    }
     
     func fetchPokemonPagination(_ type: EntityType) async throws -> PaginationDomain {
         PaginationDomain()
@@ -85,8 +84,7 @@ extension PokemonDomain {
         self.init(
             id: pokemonID,
             name: dto.name,
-            url: URL(string: dto.url)!,
-            isFavorite: false
+            url: URL(string: dto.url)!
         )
     }
     

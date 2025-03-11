@@ -240,29 +240,25 @@ extension Pokemon {
     static let charmander = Pokemon(
         id: 4,
         name: "charmander",
-        url: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png")!,
-        isFavorite: false
+        url: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png")!
     )
     
     static let squirtle = Pokemon(
         id: 7,
         name: "squirtle",
-        url: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png")!,
-        isFavorite: false
+        url: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png")!
     )
     
     static let bulbasaur = Pokemon(
         id: 1,
         name: "bulbasaur",
-        url: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png")!,
-        isFavorite: false
+        url: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png")!
     )
     
     static let pikachu = Pokemon(
         id: 25,
         name: "pikachu",
-        url: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png")!,
-        isFavorite: false
+        url: URL(string: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png")!
     )
 }
 #endif

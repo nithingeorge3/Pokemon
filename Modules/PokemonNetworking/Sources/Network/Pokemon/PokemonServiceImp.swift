@@ -52,11 +52,11 @@ extension PokemonServiceImp {
 //            .map { $0 }
     }
     
-    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
-        let isUpdated = try await pokemonRepository.updateFavouritePokemon(pokemonID)
-        favoritesDidChangeContinuation.yield(pokemonID)
-        return isUpdated
-    }
+//    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
+//        let isUpdated = try await pokemonRepository.updateFavouritePokemon(pokemonID)
+//        favoritesDidChangeContinuation.yield(pokemonID)
+//        return isUpdated
+//    }
     
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain {
         return try await pokemonRepository.fetchPokemonPagination(entityType)

@@ -14,7 +14,7 @@ public protocol PokemonRepositoryType: Sendable {
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain]
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain]
-    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool
+//    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain
     
     //gaming
@@ -106,9 +106,9 @@ extension PokemonRepository {
         try await pokemonSDRepo.fetchPokemon(offset: offset, pageSize: pageSize)
     }
     
-    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
-        try await pokemonSDRepo.updateFavouritePokemon(pokemonID)
-    }
+//    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
+//        try await pokemonSDRepo.updateFavouritePokemon(pokemonID)
+//    }
     
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain {
         try await paginationSDRepo.fetchPokemonPagination(entityType)

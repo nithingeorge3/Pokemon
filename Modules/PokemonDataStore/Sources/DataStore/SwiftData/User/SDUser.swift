@@ -22,6 +22,9 @@ public final class SDUser {
     @Relationship(deleteRule: .cascade)
     public var preference: SDPreference?
     
+    @Relationship(deleteRule: .cascade)
+    public var playedPokemons: [SDUserPokemon] = []
+    
     init(
         id: UUID,
         name: String = "Guest",
@@ -29,7 +32,8 @@ public final class SDUser {
         email: String?,
         isGuest: Bool,
         lastActive: Date,
-        preference: SDPreference? = nil
+        preference: SDPreference? = nil,
+        playedPokemons: [SDUserPokemon] = []
     ) {
         self.id = id
         self.name = name
@@ -38,12 +42,16 @@ public final class SDUser {
         self.isGuest = isGuest
         self.lastActive = lastActive
         self.preference = preference
+        self.playedPokemons = playedPokemons
     }
 }
 
 extension SDUser {
     convenience init(from user: UserDomain) {
         let preference = SDPreference(from: user.preference)
+        let playedPokemons = user.playedPokemons.map {
+            SDUserPokemon(from: $0)
+        }
         
         self.init(
             id: user.id,
@@ -52,7 +60,8 @@ extension SDUser {
             email: user.email,
             isGuest: user.isGuest,
             lastActive: user.lastActive,
-            preference: preference
+            preference: preference,
+            playedPokemons: playedPokemons
             )
     }
     
@@ -69,7 +78,15 @@ extension SDUser {
 extension UserDomain {
     init(from sdUser: SDUser) {
         let preferance = PreferenceDomain(from: sdUser.preference ?? SDPreference(lastUpdated: Date()))
-       
+        var userPoke: [UserPokemonDomain] = []
+        
+        do {
+            userPoke = try sdUser.playedPokemons.map { try UserPokemonDomain(from: $0) }
+        } catch {
+            print("Failed to initialize UserPokemonDomain: \(error)")
+            //handle later
+        }
+        
         self.init(
             id: sdUser.id,
             name: sdUser.name,
@@ -77,7 +94,8 @@ extension UserDomain {
             email: sdUser.email,
             isGuest: sdUser.isGuest,
             lastActive: sdUser.lastActive,
-            preference: preferance
+            preference: preferance,
+            playedPokemons: userPoke
         )
     }
 }

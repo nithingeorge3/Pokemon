@@ -52,9 +52,9 @@
 			path = Pokemon;
 			sourceTree = "<group>";
 		};
-		286ACCFA2D7F88F800D97CE9 /* PokemonTests */ = {
+		286ACCFA2D7F88F800D97CE9 /* PokemonUnitTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PokemonTests;
+			path = PokemonUnitTests;
 			sourceTree = "<group>";
 		};
 		286ACD242D7F9A1500D97CE9 /* PokemonUITests */ = {
@@ -101,7 +101,7 @@
 				2827D8542D7CB55B00736B24 /* Modules */,
 				282279AD2D73DE5500583E2C /* Pokemon */,
 				281E0A132D7C47D900217DE5 /* SnapshotTests */,
-				286ACCFA2D7F88F800D97CE9 /* PokemonTests */,
+				286ACCFA2D7F88F800D97CE9 /* PokemonUnitTests */,
 				286ACD242D7F9A1500D97CE9 /* PokemonUITests */,
 				28227A492D73E8E200583E2C /* Frameworks */,
 				282279AC2D73DE5500583E2C /* Products */,
@@ -178,7 +178,7 @@
 				286ACCFE2D7F88F800D97CE9 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				286ACCFA2D7F88F800D97CE9 /* PokemonTests */,
+				286ACCFA2D7F88F800D97CE9 /* PokemonUnitTests */,
 			);
 			name = PokemonTests;
 			packageProductDependencies = (

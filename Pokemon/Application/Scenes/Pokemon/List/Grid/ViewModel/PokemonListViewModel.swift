@@ -37,11 +37,11 @@ class PokemonListViewModel: PokemonListViewModelType {
     private var updateTask: Task<Void, Never>?
     
     var favoritePokemon: [Pokemon] {
-        pokemon.filter { $0.isFavorite }
+        []
     }
     
     var otherPokemon: [Pokemon] {
-        pokemon.filter { !$0.isFavorite }
+        pokemon
     }
     
     init(
@@ -154,15 +154,12 @@ class PokemonListViewModel: PokemonListViewModelType {
         updateTask = Task { [weak self] in
             guard let self = self else { return }
             for await pokemonID in self.service.favoritesDidChange {
-                self.updatePokemonFavoritesStatus(pokemonID: pokemonID)
+                self.updatePokemonPlayLaterStatus(pokemonID: pokemonID)
             }
         }
     }
     
-    private func updatePokemonFavoritesStatus(pokemonID: Int) {
-        guard let index = pokemon.firstIndex(where: { $0.id == pokemonID }) else { return }
-        if pokemon.count > index - 1 {
-            pokemon[index].isFavorite.toggle()
-        }
+    private func updatePokemonPlayLaterStatus(pokemonID: Int) {
+        //add logic later
     }
 }

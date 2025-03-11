@@ -15,7 +15,7 @@ enum PokemonPlayActions {
     case load
     case selectAnswer(Pokemon)
     case refresh
-    case toggleFavorite
+    case playlater
 }
 
 

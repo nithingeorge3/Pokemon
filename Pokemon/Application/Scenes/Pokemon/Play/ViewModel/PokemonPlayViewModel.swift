@@ -76,8 +76,8 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
             Task { try await handleSelection(pokemon) }
         case .refresh:
             Task { await refreshGame() }
-        case .toggleFavorite:
-            toggleFavorite()
+        case .playlater:
+            playlater()
         }
     }
     
@@ -172,15 +172,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         selectedAnswer = nil
     }
     
-    private func toggleFavorite() {
-        guard var pokemon = pokemon else { return }
-        pokemon.isFavorite.toggle()
-        Task {
-            do {
-                self.pokemon?.isFavorite = try await service.updateFavouritePokemon(pokemon.id)
-            } catch {
-                print("Favorite update failed: \(error)")
-            }
-        }
+    private func playlater() {
+        //add logic later
     }
 }

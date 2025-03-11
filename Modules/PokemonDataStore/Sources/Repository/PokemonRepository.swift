@@ -101,22 +101,22 @@ public final class PokemonSDRepository: PokemonSDRepositoryType {
         }
     }
     
-    public func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
-        try await dataStore.performBackgroundTask { context in
-            let predicate = #Predicate<SDPokemon> { $0.id == pokemonID }
-            let descriptor = FetchDescriptor<SDPokemon>(predicate: predicate)
-
-            guard let existingPokemon = try context.fetch(descriptor).first else {
-                throw SDError.modelObjNotFound
-            }
-
-            existingPokemon.isFavorite.toggle()
-
-            try context.save()
-
-            return existingPokemon.isFavorite
-        }
-    }
+//    public func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
+//        try await dataStore.performBackgroundTask { context in
+//            let predicate = #Predicate<SDPokemon> { $0.id == pokemonID }
+//            let descriptor = FetchDescriptor<SDPokemon>(predicate: predicate)
+//
+//            guard let existingPokemon = try context.fetch(descriptor).first else {
+//                throw SDError.modelObjNotFound
+//            }
+//
+//            existingPokemon.isFavorite.toggle()
+//
+//            try context.save()
+//
+//            return existingPokemon.isFavorite
+//        }
+//    }
     
     private func existingPokemon(ids: [Int], context: ModelContext) throws -> [Int: SDPokemon] {
         let predicate = #Predicate<SDPokemon> { ids.contains($0.id) }

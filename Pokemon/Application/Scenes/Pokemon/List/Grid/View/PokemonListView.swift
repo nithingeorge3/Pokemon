@@ -74,14 +74,14 @@ private class PreviewPokemonListViewModel: PokemonListViewModelType {
     var user: User?
     
     var pokemon: [Pokemon] = [
-        Pokemon(id: 1, name: "ivysaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!, isFavorite: false),
-        Pokemon(id: 2, name: "venusaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!, isFavorite: true),
-        Pokemon(id: 3, name: "charmander", url: URL(string: "https://pokeapi.co/api/v2/pokemon/3/")!, isFavorite: false)
+        Pokemon(id: 1, name: "ivysaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!),
+        Pokemon(id: 2, name: "venusaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!),
+        Pokemon(id: 3, name: "charmander", url: URL(string: "https://pokeapi.co/api/v2/pokemon/3/")!)
     ]
     
     var pagination: Pagination? = Pagination(entityType: .pokemon)
-    var favoritePokemon: [Pokemon] { pokemon.filter { $0.isFavorite } }
-    var otherPokemon: [Pokemon] { pokemon.filter { !$0.isFavorite } }
+    var favoritePokemon: [Pokemon] { [] }
+    var otherPokemon: [Pokemon] { pokemon }
     var paginationHandler: PaginationHandlerType = PreviewPaginationHandler()
     var pokemonListActionSubject = PassthroughSubject<PokemonListAction, Never>()
     var state: ResultState
