@@ -17,6 +17,7 @@ protocol PokemonPlayViewModelType: AnyObject, Observable {
     var showResult: Bool { get set }
     var isLoading: Bool { get set }
     
+    //not using
     var imageBlurRadius: CGFloat { get }
     
     var currentScore: Int { get }

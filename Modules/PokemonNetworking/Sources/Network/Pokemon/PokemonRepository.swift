@@ -107,10 +107,6 @@ extension PokemonRepository {
         try await pokemonSDRepo.fetchPokemon(offset: offset, pageSize: pageSize)
     }
     
-//    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
-//        try await pokemonSDRepo.updateFavouritePokemon(pokemonID)
-//    }
-    
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain {
         try await paginationSDRepo.fetchPokemonPagination(entityType)
     }

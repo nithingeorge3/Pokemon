@@ -20,6 +20,7 @@ protocol PokemonListViewModelType: AnyObject, Observable {
     var paginationHandler: PaginationHandlerType { get }
     var pokemonListActionSubject: PassthroughSubject<PokemonListAction, Never> { get  set }
     var state: ResultState { get }
+    var silhouetteMode: Bool { get set }
     
     func send(_ action: PokemonListAction)
 }
@@ -29,19 +30,23 @@ class PokemonListViewModel: PokemonListViewModelType {
     var state: ResultState = .loading
     var user: User?
     var pokemon: [Pokemon] = []
+    var silhouetteMode: Bool = true
+    
     let service: PokemonServiceProvider
     let userService: PokemonUserServiceType
     var paginationHandler: PaginationHandlerType
+    
     var pokemonListActionSubject = PassthroughSubject<PokemonListAction, Never>()
     
-    private var updateTask: Task<Void, Never>?
-    
+    private var playedPokemonIDs: Set<Int> = []
+        
     var playedPokemon: [Pokemon] {
-        []
+        pokemon.filter { playedPokemonIDs.contains($0.id) }//.count(where: 5)
     }
     
     var otherPokemon: [Pokemon] {
-        pokemon
+        pokemon.filter { !playedPokemonIDs.contains($0.id) }
+        //pokemon
     }
     
     init(
@@ -59,7 +64,7 @@ class PokemonListViewModel: PokemonListViewModelType {
     func send(_ action: PokemonListAction) {
         switch action {
         case .refresh:
-            Task { try await currentUser() }
+            Task { try await fetchUserInfo() }
             Task { try await fetchRemotePokemon() }
         case .loadMore:
             guard paginationHandler.hasMoreData else { return }
@@ -69,13 +74,27 @@ class PokemonListViewModel: PokemonListViewModelType {
         }
     }
     
-    private func currentUser() async throws {
+    private func fetchUserInfo() async throws {
         Task {
             do {
                 let userDomain = try await userService.getCurrentUser()
                 user = User(from: userDomain)
+                
+                silhouetteMode = user?.preference.enableSilhouetteMode ?? true
+                
+                let playedIDs = userDomain.playedPokemons
+                                    .compactMap { $0.pokemon?.id }
+                
+                playedPokemonIDs = Set(playedIDs)
+                
+                print(playedPokemonIDs)
                 _ = user?.playedPokemons.map { poke in
-                    print("***** user played Pokemon: \(poke))")
+                    print(userDomain.playedPokemons.count)
+                    print(playedPokemonIDs.count)
+                    print("***** user played Pokemon: \(poke.pokemon?.name))")
+                    print("***** user played Pokemon: \(poke.id))")
+                    print("***** user played Pokemon: \(poke.pokemon))")
+                    print("***** user played Pokemon: \(poke.pokemon?.id))")
                 }
                 
             } catch {

@@ -36,7 +36,7 @@ extension PokemonPlayView {
     private var gameContentView: some View {
         Group {
             gameHeaderView
-                .padding(.top, 8)
+                .padding(.top, 12)
             ZStack {
                 imageSection
                 celebrationOverlay
@@ -70,14 +70,36 @@ extension PokemonPlayView {
     private var imageSection: some View {
         VStack {
             if let pokemon = viewModel.pokemon {
+                let imageView = PokemonImageView(
+                    pokemonID: pokemon.id,
+                    width: 150,
+                    height: 150
+                )
+                    .accessibilityIdentifier("PokemonImage")
+                
+                Group {
+                    if viewModel.silhouetteMode {
+                        imageView
+                            .silhouetteEffect(active: !viewModel.showResult)
+                    } else {
+                        imageView
+                    }
+                }
+            }
+        }
+    }
+    
+#warning("delete it later")
+    private var imageSection_: some View {
+        VStack {
+            if let pokemon = viewModel.pokemon {
                 PokemonImageView(
                     pokemonID: pokemon.id,
                     width: 150,
                     height: 150
                 )
-//                .silhouetteEffect(active: true)
-                .blur(radius: viewModel.imageBlurRadius)//if zero will show correct image, no shadow. if 10 with shadow
-                .animation(.easeInOut(duration: 0.3), value: viewModel.imageBlurRadius)
+//                .blur(radius: viewModel.imageBlurRadius)//if zero will show correct image, no shadow. if 10 with shadow
+//                .animation(.easeInOut(duration: 0.3), value: viewModel.imageBlurRadius)
                 .accessibilityIdentifier("PokemonImage")
                 //ToDo: this is without silhouetteMode toggle
 //              .blur(radius: viewModel.showResult ? 0 : 10)
