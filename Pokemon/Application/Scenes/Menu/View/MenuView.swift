@@ -10,14 +10,11 @@ import PokemonNetworking
 
 //ToDo: Later use DI principle and use Observable and Bindable
 struct MenuView: View {
-    @Bindable var viewModel: MenuViewModel
     @State private var selectedItem: SidebarItem?
     @State private var showAuthConfirmation = false
     @State private var authActionType: AuthActionType?
     
-    init(viewModel: MenuViewModel) {
-        self.viewModel = viewModel
-    }
+    @Bindable var viewModel: MenuViewModel
     
     var body: some View {
         NavigationSplitView {
