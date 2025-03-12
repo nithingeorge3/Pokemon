@@ -13,17 +13,17 @@ import PokemonDomain
 
 class PaginationTests: XCTestCase {
 
-    func test_recipe_shouldFetch_returnsFalseWhenOnLastPage() {
+    func test_pokemon_shouldFetch_returnsFalseWhenOnLastPage() {
         let pagination = Pagination(entityType: .pokemon, totalCount: 10, currentPage: 9)
         XCTAssertFalse(pagination.shouldFetch)
     }
 
-    func test_recipe_shouldFetch_returnsTrueWhenNotOnLastPage() {
+    func test_pokemon_shouldFetch_returnsTrueWhenNotOnLastPage() {
         let pagination = Pagination(entityType: .pokemon, totalCount: 10, currentPage: 5)
         XCTAssertTrue(pagination.shouldFetch)
     }
     
-    func test_recipe_initFromDomain_mapsPropertiesCorrectly() {
+    func test_pokemon_initFromDomain_mapsPropertiesCorrectly() {
         let domain = PaginationDomain(
             id: UUID(uuidString: "11111111-1111-1111-1111-111111111111")!,
             entityType: .pokemon,
@@ -41,7 +41,7 @@ class PaginationTests: XCTestCase {
         XCTAssertEqual(pagination.lastUpdated, Date(timeIntervalSince1970: 0))
     }
 
-    func test_recipe_equality_usesID() {
+    func test_pokemon_equality_usesID() {
         let pagination1 = Pagination(id: UUID(), entityType: .pokemon, totalCount: 10, currentPage: 1)
         let pagination2 = Pagination(id: pagination1.id, entityType: .pokemon, totalCount: 990, currentPage: 90)
         
