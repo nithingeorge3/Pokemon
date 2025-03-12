@@ -110,17 +110,39 @@ public final class PokemonSDRepository: PokemonSDRepositoryType {
 //ToDo ad dtest cases
 extension PokemonSDRepository {
     public func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
-        try await dataStore.performBackgroundTask { context in
-            //add predicate later when we add user SwiftData
-            var descriptor = FetchDescriptor<SDPokemon>()
-            descriptor.fetchLimit = 50
+        try await dataStore.performBackgroundTask { [weak self] context in
+            guard let user = try self?.fetchCurrentUser(context: context) else {
+                throw SDError.userNotFound
+            }
             
-            let pokemonList = try context.fetch(descriptor)
+            let playedIDs = user.playedPokemons.compactMap { $0.pokemon?.id }
             
-            guard let randomPokemon = pokemonList.randomElement() else {
+            let predicate = #Predicate<SDPokemon> {
+                !playedIDs.contains($0.id)
+            }
+            
+            var descriptor = FetchDescriptor<SDPokemon>(
+                predicate: predicate,
+                sortBy: [SortDescriptor(\.id, order: .forward)]
+            )
+            
+            descriptor.fetchLimit = 1000
+            
+            let unplayedPokemon = try context.fetch(descriptor)
+            
+            guard let randomPokemon = unplayedPokemon.randomElement() else {
                 throw SDError.modelObjNotFound
             }
             return try PokemonDomain(from: randomPokemon)
         }
+    }
+    
+    private func fetchCurrentUser(context: ModelContext) throws -> SDUser {
+        let predicate = #Predicate<SDUser> { $0.isGuest }
+        let descriptor = FetchDescriptor<SDUser>(predicate: predicate)
+        guard let user = try context.fetch(descriptor).first else {
+            throw SDError.userNotFound
+        }
+        return user
     }
 }

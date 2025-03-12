@@ -104,46 +104,54 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
                 let (main, others) = await (try current, try options)
                 let allOptions = [main] + others
                 
-                self.pokemon = Pokemon(from: main)
-                self.answerOptions = allOptions.map {
-                    Pokemon(from: $0)
-                }.shuffled()
+                pokemon = Pokemon(from: main)
+                
+//                print("\(pokemonID)")
+//                print("\(pokemon?.id)")
+                
+                answerOptions = allOptions
+                    .map { Pokemon(from: $0) }
+                    .shuffled()
                 
                 self.isLoading = false
                 
             } catch {
-                print("error")
+                print("Error laoding game: \(error)")
+                self.isLoading = false
             }
         }
     }
     
-#warning("while fetch remove played from DB. please add filtering in SD fetch")
     private func refreshGame() async {
         isLoading = true
         resetGame()
         Task {
             do {
-                async let newPokemon = service.fetchRandomUnplayedPokemon()
-                async let options = answerService.fetchRandomOptions(excluding: pokemonID, count: 3)
-                
-                let (main, others) = await (try newPokemon, try options)
-                let allOptions = [main] + others
-                
-                self.pokemon = Pokemon(from: main)
+//#warning("pass previous played game, suppos etehy haven't played and trying to refersh new game + filter with already played")
+                let newPokemon = try await service.fetchRandomUnplayedPokemon()
+                let options = try await answerService.fetchRandomOptions(
+                    excluding: newPokemon.id,
+                    count: 3
+                )
 
-                guard let id = self.pokemon?.id else {
-                    return
-                }
-                pokemonID = id
+                let allOptions = [newPokemon] + options
                 
-                self.answerOptions = allOptions.map {
-                    Pokemon(from: $0)
-                }.shuffled()
+//                print("Previous name: \(pokemon?.name) id : \(pokemonID)")
                 
-                self.isLoading = false
+                pokemon = Pokemon(from: newPokemon)
+                pokemonID = newPokemon.id
+                
+//                print("New name: \(pokemon?.name) id : \(pokemonID)")
+                
+                self.answerOptions = allOptions
+                    .map { Pokemon(from: $0) }
+                    .shuffled()
+                
+                isLoading = false
                 
             } catch {
-                print("error")
+                print("Error refreshing game: \(error)")
+                isLoading = false
             }
         }
     }
