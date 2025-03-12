@@ -116,7 +116,6 @@ The PokemonNetworking follows the Adapter Design Pattern to separate concerns be
 
 #### **Data Flow**
     1.    **API Response → DTO (PokemonDTO)**: Raw JSON data from the API is parsed into a structured DTO.
-    2.    **`DTO → Domain Model (PokemonDomain)**: Business logic and validation are applied while mapping DTO to domain model.
-    3.    **`Domain Model → View Model (Pokemon)**: The domain model is further formatted and transformed into a view-specific model for rendering.
-    
+    2.    **DTO → Domain Model (PokemonDomain)**: Business logic and validation are applied while mapping DTO to domain model.
+    3.    **Domain Model → View Model (Pokemon)**: The domain model is further formatted and transformed into a view-specific model for rendering.
 ---

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct SilhouetteModifier: ViewModifier {
     let isActive: Bool
-    let darkness: Double  // New parameter (0-1)
-    let sharpness: Double  // New parameter (0-1)
+    let darkness: Double
+    let sharpness: Double
     let animation: Animation?
     
     func body(content: Content) -> some View {
@@ -44,8 +44,8 @@ struct SilhouetteModifier: ViewModifier {
 extension View {
     func silhouetteEffect(
         active: Bool = true,
-        darkness: Double = 0.4,  // Default to 70% darkness
-        sharpness: Double = 0.3,  // Default to 30% sharpness boost
+        darkness: Double = 0.4,
+        sharpness: Double = 0.3,
         animation: Animation? = .easeInOut(duration: 0.8)
     ) -> some View {
         self.modifier(SilhouetteModifier(

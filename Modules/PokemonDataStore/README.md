@@ -13,7 +13,43 @@ The **`PokemonDataStore`** module provides a simple, reusable wrapper for data p
 
 ## **Features**
 
-- **Save Pokemon**: Add streamlined methods to save Pokemon fetched from the PokemonNetworking module to the data store.
-- **Fetch Pokemon**: Add straightforward methods to retrieve saved Pokemon for offline or local use.
+- Pagination Storage: Track API pagination progress locally.
+- Game State: Track played/unplayed Pokémon and user scores.
+- Preferences: Save user settings (silhouette mode, themes).
+- Batch Operations: Efficiently save paginated API responses.
 
 ---
+
+Handles Pokémon data interactions.
+```swift
+public protocol PaginationSDRepositoryType: Sendable {
+    func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain
+    func updatePokemonPagination(_ pagination: PaginationDomain) async throws
+}
+```
+
+```swift
+public protocol PokemonSDRepositoryType: Sendable {
+    func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain
+    func fetchRandomUnplayedPokemon(excluding excludedID: Int?) async throws -> PokemonDomain
+    func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain]
+    func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain]
+    func savePokemon(_ pokemon: [PokemonDomain]) async throws
+}
+```
+
+```swift
+public protocol UserSDRepositoryType: Sendable {
+    func getOrCreateGuest() async throws -> UserDomain
+    func updateScore(_ points: Int) async throws
+    func getCurrentUser() async throws -> UserDomain
+    
+    
+    //ToDo: later use WritableKeyPath and inject userID
+    func updatePreferences(_ newPref: PreferenceDomain) async throws
+    func getCurrentPreferences() async throws -> PreferenceDomain
+    
+    //Game
+    func updatePlayedStatus(pokemonId: Int, outcome: GameOutcome) async throws
+}
+```
