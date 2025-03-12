@@ -102,6 +102,12 @@ struct OnboardingView: View {
                         description: "Score and play status will be stored locally for tracking progress."
                     )
                     
+                    InstructionStep(
+                        bulletView: AnyView(BulletPointView(icon: "chart.bar.fill", color: .orange, size: 44, animationState: true)),
+                        title: "Scoring System",
+                        description: "Earn up to 10 points based on your speed! Faster answers give higher scores, while slower answers reduce points. The minimum score per question is 2."
+                    )
+                    
                     HStack {
                         Spacer()
                         Button("Get Started") {

@@ -116,7 +116,7 @@ extension PokemonPlayView {
             if viewModel.showCelebration {
                 CelebrationView(
                     config: .points(
-                        Constants.Pokemon.gamePoint,
+                        viewModel.matchScore,
                         color: .green
                     )
                 )
@@ -196,6 +196,7 @@ private class PreviewPlayViewModel: PokemonPlayViewModelType {
     var showResult: Bool = false
     var isLoading: Bool = false
     var currentScore: Int = 0
+    var matchScore: Int = 2
     var showCelebration: Bool = false
     var silhouetteMode: Bool = false
     var errorMessage: String? = nil

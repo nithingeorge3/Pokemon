@@ -10,6 +10,19 @@ import PokemonNetworking
 import Observation
 import PokemonDataStore
 
+private struct Scoring {
+    static let basePoints: Int = 2
+    static let maxPoints: Int = 10
+    static let maxTime: Double = 30
+    
+    // Returns ratio of time remaining, between 0 and 1
+    static func timeRatio(elapsed: Double) -> Double {
+        guard maxTime > 0 else { return 0 }
+        let normalized = min(max(elapsed / maxTime, 0), 1)
+        return 1 - normalized
+    }
+}
+
 @MainActor
 protocol PokemonPlayViewModelType: AnyObject, Observable {
     var pokemon: Pokemon? { get set }
@@ -20,9 +33,10 @@ protocol PokemonPlayViewModelType: AnyObject, Observable {
     var errorMessage: String? { get set }
     
     var currentScore: Int { get }
+    var matchScore: Int { get }
     var showCelebration: Bool { get }
     var silhouetteMode: Bool { get }
-    
+
     func send(_ action: PokemonPlayActions)
 }
 
@@ -42,6 +56,8 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         user?.score ?? 0
     }
     
+    var matchScore = Scoring.basePoints
+    
     var showCelebration = false
     var silhouetteMode: Bool  = true
     
@@ -49,6 +65,8 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     private let service: PokemonSDServiceType
     private let userService: PokemonUserServiceType
     private let answerService: PokemonAnswerServiceType
+    
+    private var questionStartTime: Date?
     
     init(pokemonID: Pokemon.ID,
          service: PokemonSDServiceType,
@@ -89,6 +107,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     
     private func loadPokemon() async {
         isLoading = true
+        questionStartTime = Date()
         Task {
             do {
                 async let current = service.fetchPokemon(for: pokemonID)
@@ -152,9 +171,11 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         
         if pokemon.id == self.pokemon?.id {
             do {
+                matchScore = calculateScore()
+                
                 showCelebration = user?.preference.showWinAnimation ?? false
                 
-                try await answerService.updateScore(Constants.Pokemon.gamePoint)
+                try await answerService.updateScore(matchScore)
                 try await answerService.updatePlayedStatus(pokemonId: pokemon.id, outcome: .win)
                 
                 Task { await fetchUserInfo() }
@@ -169,6 +190,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     }
     
     private func resetGame() {
+        questionStartTime = Date()
         showResult = false
         selectedAnswer = nil
     }
@@ -185,5 +207,22 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         default:
             errorMessage = "An error occurred. Please try again. \(error)"
         }
+    }
+}
+
+extension PokemonPlayViewModel {
+    private func calculateScore() -> Int {
+        guard let startTime = questionStartTime else { return Scoring.basePoints }
+        
+        let elapsedTime = abs(startTime.timeIntervalSinceNow)
+        //Calculate time ratio (0...1 where 1 = answered instantly)
+        let ratio = Scoring.timeRatio(elapsed: elapsedTime)
+        
+        //Convert to even integer score within base/max bounds
+        let rawScore = Double(Scoring.maxPoints) * ratio
+        let rounded = Int(rawScore.rounded(.toNearestOrEven))
+        
+        let evenScore = rounded.isMultiple(of: 2) ? rounded : rounded - 1
+        return max(Scoring.basePoints, min(Scoring.maxPoints, evenScore))
     }
 }
