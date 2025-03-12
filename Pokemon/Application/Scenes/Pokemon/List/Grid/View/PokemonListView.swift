@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
-    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @AppStorage(UserDefaultsKeys.hasCompletedOnboarding) private var hasCompletedOnboarding = false
     @State private var activeSheet: AppSheet?
     
     enum AppSheet: Identifiable {
@@ -39,7 +39,7 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
                     EmptyStateView(message: "No pokemon found. Please try again later.")
                 } else {
                     EmptyView()
-                    PokemonGridView(playedPokemon: viewModel.playedPokemon, otherPokemon: viewModel.otherPokemon, hasMoreData: viewModel.paginationHandler.hasMoreData) { pokemon in
+                    PokemonGridView(silhouetteMode: $viewModel.silhouetteMode, playedPokemon: viewModel.playedPokemon, otherPokemon: viewModel.otherPokemon, hasMoreData: viewModel.paginationHandler.hasMoreData) { pokemon in
                         viewModel.send(.selectPokemon(pokemon.id))
                     } onReachBottom: {
                         viewModel.send(.loadMore)
@@ -110,6 +110,7 @@ private class PreviewPokemonListViewModel: PokemonListViewModelType {
     
     var pagination: Pagination? = Pagination(entityType: .pokemon)
     var playedPokemon: [Pokemon] { [] }
+    var silhouetteMode = true
     var otherPokemon: [Pokemon] { pokemon }
     var paginationHandler: PaginationHandlerType = PreviewPaginationHandler()
     var pokemonListActionSubject = PassthroughSubject<PokemonListAction, Never>()
@@ -124,6 +125,10 @@ private class PreviewPokemonListViewModel: PokemonListViewModelType {
     }
     
     func send(_ action: PokemonListAction) {
+    }
+    
+    func isPlayed(pokemonID: Int) -> Bool {
+        false
     }
 }
 

@@ -31,7 +31,7 @@ extension MockPokemonServiceImp: PokemonServiceProvider {
         }
     }
     
-    func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
+    func fetchRandomUnplayedPokemon(excluding excludedID: Int? = nil) async throws -> PokemonDomain {
         if stubbedPokemon.count > 0 {
             return stubbedPokemon[1]
         } else {

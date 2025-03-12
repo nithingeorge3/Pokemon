@@ -15,7 +15,7 @@ public struct PreferenceDomain: Identifiable, @unchecked Sendable  {
     
     public init(
         id: UUID = UUID(),
-        showWinAnimation: Bool = false,
+        showWinAnimation: Bool = true,
         enableSilhouetteMode: Bool = true,
         lastUpdated: Date = Date()
     ) {

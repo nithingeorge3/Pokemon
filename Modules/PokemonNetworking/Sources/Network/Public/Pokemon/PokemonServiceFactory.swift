@@ -70,24 +70,3 @@ public final class PokemonUserServiceFactory: PokemonUserServiceFactoryType, @un
         return PokemonUserServiceImp(pokemonRepository: pokemonRepository)
     }
 }
-
-/*
-//just added for showing combine. In production I will only use Async/await or combine based on the decision
-public protocol PokemonServiceListFactoryType {
-    static func makePokemonListService() -> PokemonListServiceType
-}
-
-public final class PokemonListServiceFactory: PokemonServiceListFactoryType {
-    //Need to inject same as above function PokemonServiceFactory.makePokemonService
-    private static let serviceParser: ServiceParserType = ServiceParser()
-    private static let requestBuilder: RequestBuilderType = RequestBuilder()
-    
-    public static func makePokemonListService() -> PokemonListServiceType {
-        let pokemonRepository: PokemonListRepositoryType = PokemonListRepository(
-            parser: serviceParser,
-            requestBuilder: requestBuilder
-        )
-        return PokemonListServiceImp(pokemonRepository: pokemonRepository)
-    }
-}
-*/

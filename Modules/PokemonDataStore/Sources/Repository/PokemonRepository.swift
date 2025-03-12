@@ -35,7 +35,6 @@ public final class PokemonSDRepository: PokemonSDRepositoryType {
     
     public func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain] {
         try await dataStore.performBackgroundTask { context in
-            let offset = offset * pageSize
             
             var descriptor = FetchDescriptor<SDPokemon>(
                 predicate: nil,
@@ -79,7 +78,7 @@ public final class PokemonSDRepository: PokemonSDRepositoryType {
                 } catch let error as PokemonError {
                     throw error // handle error
                 } catch {
-                    throw SDError.modelNotFound
+                    throw SDError.modelObjNotFound
                 }
             }
             
@@ -108,20 +107,41 @@ public final class PokemonSDRepository: PokemonSDRepositoryType {
     }
 }
 
-//ToDo ad dtest cases
 extension PokemonSDRepository {
-    public func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
-        try await dataStore.performBackgroundTask { context in
-            //add predicate later when we add user SwiftData
-            var descriptor = FetchDescriptor<SDPokemon>()
-            descriptor.fetchLimit = 50
+    public func fetchRandomUnplayedPokemon(excluding excludedID: Int? = nil) async throws -> PokemonDomain {
+        try await dataStore.performBackgroundTask { [weak self] context in
+            guard let user = try self?.fetchCurrentUser(context: context) else {
+                throw SDError.userNotFound
+            }
             
-            let pokemonList = try context.fetch(descriptor)
+            let playedIDs = user.playedPokemons.compactMap { $0.pokemon?.id }
             
-            guard let randomPokemon = pokemonList.randomElement() else {
-                throw SDError.modelObjNotFound
+            let excludedIDs = playedIDs + [excludedID].compactMap { $0 }
+            
+            let predicate = #Predicate<SDPokemon> {
+                !excludedIDs.contains($0.id)
+            }
+            
+            let descriptor = FetchDescriptor<SDPokemon>(
+                predicate: predicate,
+                sortBy: [SortDescriptor(\.id, order: .forward)]
+            )
+                        
+            let unplayedPokemon = try context.fetch(descriptor)
+            
+            guard let randomPokemon = unplayedPokemon.randomElement() else {
+                throw SDError.noUnplayedPokemon
             }
             return try PokemonDomain(from: randomPokemon)
         }
+    }
+    
+    private func fetchCurrentUser(context: ModelContext) throws -> SDUser {
+        let predicate = #Predicate<SDUser> { $0.isGuest }
+        let descriptor = FetchDescriptor<SDUser>(predicate: predicate)
+        guard let user = try context.fetch(descriptor).first else {
+            throw SDError.userNotFound
+        }
+        return user
     }
 }

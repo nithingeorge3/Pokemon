@@ -20,8 +20,10 @@ protocol PokemonListViewModelType: AnyObject, Observable {
     var paginationHandler: PaginationHandlerType { get }
     var pokemonListActionSubject: PassthroughSubject<PokemonListAction, Never> { get  set }
     var state: ResultState { get }
+    var silhouetteMode: Bool { get set }
     
     func send(_ action: PokemonListAction)
+    func isPlayed(pokemonID: Int) -> Bool
 }
 
 @Observable
@@ -29,19 +31,26 @@ class PokemonListViewModel: PokemonListViewModelType {
     var state: ResultState = .loading
     var user: User?
     var pokemon: [Pokemon] = []
+    var silhouetteMode: Bool = true
+    
     let service: PokemonServiceProvider
     let userService: PokemonUserServiceType
     var paginationHandler: PaginationHandlerType
+    
     var pokemonListActionSubject = PassthroughSubject<PokemonListAction, Never>()
     
-    private var updateTask: Task<Void, Never>?
+    private var playedPokemonIDs: Set<Int> = []
     
     var playedPokemon: [Pokemon] {
-        []
+        pokemon
+            .lazy
+            .filter { [playedPokemonIDs] in playedPokemonIDs.contains($0.id) }
+            .prefix(20)
+            .map { $0 }
     }
     
     var otherPokemon: [Pokemon] {
-        pokemon
+        pokemon.filter { !playedPokemonIDs.contains($0.id) }
     }
     
     init(
@@ -59,24 +68,29 @@ class PokemonListViewModel: PokemonListViewModelType {
     func send(_ action: PokemonListAction) {
         switch action {
         case .refresh:
-            Task { try await currentUser() }
+            Task { try await fetchUserInfo() }
             Task { try await fetchRemotePokemon() }
         case .loadMore:
             guard paginationHandler.hasMoreData else { return }
             Task { try await fetchRemotePokemon() }
         case .selectPokemon(let pokemonID):
+            if isPlayed(pokemonID: pokemonID) { return }//handle later
             pokemonListActionSubject.send(PokemonListAction.selectPokemon(pokemonID))
         }
     }
     
-    private func currentUser() async throws {
+    private func fetchUserInfo() async throws {
         Task {
             do {
                 let userDomain = try await userService.getCurrentUser()
                 user = User(from: userDomain)
-                _ = user?.playedPokemons.map { poke in
-                    print("***** user played Pokemon: \(poke))")
-                }
+                
+                silhouetteMode = user?.preference.enableSilhouetteMode ?? true
+                
+                let playedIDs = userDomain.playedPokemons
+                                    .compactMap { $0.pokemon?.id }
+                
+                playedPokemonIDs = Set(playedIDs)
                 
             } catch {
                 print("unable to find user")
@@ -153,7 +167,7 @@ class PokemonListViewModel: PokemonListViewModelType {
         paginationHandler.updateFromDomain(pagination)
     }
     
-    private func updatePokemonPlayLaterStatus(pokemonID: Int) {
-        //add logic later
+    func isPlayed(pokemonID: Int) -> Bool {
+        playedPokemonIDs.contains(pokemonID)
     }
 }

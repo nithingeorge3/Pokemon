@@ -8,6 +8,20 @@
 import Foundation
 import PokemonNetworking
 import Observation
+import PokemonDataStore
+
+private struct Scoring {
+    static let basePoints: Int = 2
+    static let maxPoints: Int = 10
+    static let maxTime: Double = 30
+    
+    // Returns ratio of time remaining, between 0 and 1
+    static func timeRatio(elapsed: Double) -> Double {
+        guard maxTime > 0 else { return 0 }
+        let normalized = min(max(elapsed / maxTime, 0), 1)
+        return 1 - normalized
+    }
+}
 
 @MainActor
 protocol PokemonPlayViewModelType: AnyObject, Observable {
@@ -16,13 +30,13 @@ protocol PokemonPlayViewModelType: AnyObject, Observable {
     var selectedAnswer: Pokemon? { get set }
     var showResult: Bool { get set }
     var isLoading: Bool { get set }
-    
-    var imageBlurRadius: CGFloat { get }
+    var errorMessage: String? { get set }
     
     var currentScore: Int { get }
+    var matchScore: Int { get }
     var showCelebration: Bool { get }
     var silhouetteMode: Bool { get }
-    
+
     func send(_ action: PokemonPlayActions)
 }
 
@@ -34,27 +48,25 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     var selectedAnswer: Pokemon?
     var showResult: Bool = false
     var isLoading: Bool = false
-
+    var errorMessage: String? = nil
+    
     private var user: User?
 
     var currentScore: Int {
         user?.score ?? 0
     }
+    
+    var matchScore = Scoring.basePoints
+    
     var showCelebration = false
     var silhouetteMode: Bool  = true
-    
-    var imageBlurRadius: CGFloat {
-        if silhouetteMode {
-            return showResult ? 0 : 10
-        } else {
-            return 0
-        }
-    }
     
     private var pokemonID: Pokemon.ID
     private let service: PokemonSDServiceType
     private let userService: PokemonUserServiceType
     private let answerService: PokemonAnswerServiceType
+    
+    private var questionStartTime: Date?
     
     init(pokemonID: Pokemon.ID,
          service: PokemonSDServiceType,
@@ -95,6 +107,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     
     private func loadPokemon() async {
         isLoading = true
+        questionStartTime = Date()
         Task {
             do {
                 async let current = service.fetchPokemon(for: pokemonID)
@@ -103,46 +116,50 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
                 let (main, others) = await (try current, try options)
                 let allOptions = [main] + others
                 
-                self.pokemon = Pokemon(from: main)
-                self.answerOptions = allOptions.map {
-                    Pokemon(from: $0)
-                }.shuffled()
+                pokemon = Pokemon(from: main)
+                                
+                answerOptions = allOptions
+                    .map { Pokemon(from: $0) }
+                    .shuffled()
                 
                 self.isLoading = false
                 
             } catch {
-                print("error")
+                print("Error laoding game: \(error)")
+                self.isLoading = false
             }
         }
     }
     
-#warning("while fetch remove played from DB. please add filtering in SD fetch")
     private func refreshGame() async {
         isLoading = true
+        let previousPokemonID = pokemonID
         resetGame()
+        
         Task {
             do {
-                async let newPokemon = service.fetchRandomUnplayedPokemon()
-                async let options = answerService.fetchRandomOptions(excluding: pokemonID, count: 3)
-                
-                let (main, others) = await (try newPokemon, try options)
-                let allOptions = [main] + others
-                
-                self.pokemon = Pokemon(from: main)
+                let newPokemon = try await service.fetchRandomUnplayedPokemon(excluding: previousPokemonID)
+                let options = try await answerService.fetchRandomOptions(
+                    excluding: newPokemon.id,
+                    count: 3
+                )
 
-                guard let id = self.pokemon?.id else {
-                    return
-                }
-                pokemonID = id
+                let allOptions = [newPokemon] + options
+                                
+                pokemon = Pokemon(from: newPokemon)
+                pokemonID = newPokemon.id
+                                
+                self.answerOptions = allOptions
+                    .map { Pokemon(from: $0) }
+                    .shuffled()
                 
-                self.answerOptions = allOptions.map {
-                    Pokemon(from: $0)
-                }.shuffled()
+                isLoading = false
                 
-                self.isLoading = false
-                
+            } catch let error as SDError {
+                handle(error)
             } catch {
-                print("error")
+                print("Error refreshing game: \(error)")
+                isLoading = false
             }
         }
     }
@@ -154,9 +171,11 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
         
         if pokemon.id == self.pokemon?.id {
             do {
+                matchScore = calculateScore()
+                
                 showCelebration = user?.preference.showWinAnimation ?? false
                 
-                try await answerService.updateScore(Constants.Pokemon.gamePoint)
+                try await answerService.updateScore(matchScore)
                 try await answerService.updatePlayedStatus(pokemonId: pokemon.id, outcome: .win)
                 
                 Task { await fetchUserInfo() }
@@ -171,11 +190,39 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     }
     
     private func resetGame() {
+        questionStartTime = Date()
         showResult = false
         selectedAnswer = nil
     }
     
     private func playlater() {
         //add logic later
+    }
+    
+    private func handle(_ error: SDError) {
+        isLoading = false
+        switch error {
+        case .noUnplayedPokemon:
+            errorMessage = "No unplayed Pokemon found. Try again later."
+        default:
+            errorMessage = "An error occurred. Please try again. \(error)"
+        }
+    }
+}
+
+extension PokemonPlayViewModel {
+    private func calculateScore() -> Int {
+        guard let startTime = questionStartTime else { return Scoring.basePoints }
+        
+        let elapsedTime = abs(startTime.timeIntervalSinceNow)
+        //Calculate time ratio (0...1 where 1 = answered instantly)
+        let ratio = Scoring.timeRatio(elapsed: elapsedTime)
+        
+        //Convert to even integer score within base/max bounds
+        let rawScore = Double(Scoring.maxPoints) * ratio
+        let rounded = Int(rawScore.rounded(.toNearestOrEven))
+        
+        let evenScore = rounded.isMultiple(of: 2) ? rounded : rounded - 1
+        return max(Scoring.basePoints, min(Scoring.maxPoints, evenScore))
     }
 }

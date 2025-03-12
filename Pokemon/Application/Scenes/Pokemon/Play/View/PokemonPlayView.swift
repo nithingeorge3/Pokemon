@@ -25,6 +25,11 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
                 gameContentView
             }
         }
+        .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
+            Button("Ok") { viewModel.errorMessage = nil }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
+        }
         .onAppear(perform: handleOnAppear)
         .withCustomBackButton()
         .withCustomNavigationTitle(title: "Pokemon")
@@ -36,7 +41,7 @@ extension PokemonPlayView {
     private var gameContentView: some View {
         Group {
             gameHeaderView
-                .padding(.top, 8)
+                .padding(.top, 12)
             ZStack {
                 imageSection
                 celebrationOverlay
@@ -70,18 +75,21 @@ extension PokemonPlayView {
     private var imageSection: some View {
         VStack {
             if let pokemon = viewModel.pokemon {
-                PokemonImageView(
+                let imageView = PokemonImageView(
                     pokemonID: pokemon.id,
                     width: 150,
                     height: 150
                 )
-//                .silhouetteEffect(active: true)
-                .blur(radius: viewModel.imageBlurRadius)//if zero will show correct image, no shadow. if 10 with shadow
-                .animation(.easeInOut(duration: 0.3), value: viewModel.imageBlurRadius)
-                .accessibilityIdentifier("PokemonImage")
-                //ToDo: this is without silhouetteMode toggle
-//              .blur(radius: viewModel.showResult ? 0 : 10)
-//              .animation(.easeInOut, value: viewModel.showResult)
+                    .accessibilityIdentifier("PokemonImage")
+                
+                Group {
+                    if viewModel.silhouetteMode {
+                        imageView
+                            .silhouetteEffect(active: !viewModel.showResult)
+                    } else {
+                        imageView
+                    }
+                }
             }
         }
     }
@@ -108,7 +116,7 @@ extension PokemonPlayView {
             if viewModel.showCelebration {
                 CelebrationView(
                     config: .points(
-                        Constants.Pokemon.gamePoint,
+                        viewModel.matchScore,
                         color: .green
                     )
                 )
@@ -164,10 +172,6 @@ struct AnswerButton: View {
     PokemonPlayView(viewModel: PreviewPlayViewModel.loading)
 }
 
-#Preview("Game Ready State") {
-    PokemonPlayView(viewModel: PreviewPlayViewModel.loaded)
-}
-
 #Preview("Silhouette Mode") {
     PokemonPlayView(viewModel: PreviewPlayViewModel.silhouette)
 }
@@ -192,9 +196,10 @@ private class PreviewPlayViewModel: PokemonPlayViewModelType {
     var showResult: Bool = false
     var isLoading: Bool = false
     var currentScore: Int = 0
+    var matchScore: Int = 2
     var showCelebration: Bool = false
     var silhouetteMode: Bool = false
-    var imageBlurRadius: CGFloat = 0
+    var errorMessage: String? = nil
     
     static let loading: PreviewPlayViewModel = {
         let vm = PreviewPlayViewModel()
@@ -213,7 +218,6 @@ private class PreviewPlayViewModel: PokemonPlayViewModelType {
     static let silhouette: PreviewPlayViewModel = {
         let vm = loaded
         vm.silhouetteMode = true
-        vm.imageBlurRadius = 10
         return vm
     }()
     

@@ -60,26 +60,6 @@ let pokemonDomains = try! await service.fetchPokemon(
 )
 ```
 
-Using service with combine
-
-```swift
-var cancellables: Set<AnyCancellable> = []
-    
-service.fetchPokemon(endPoint: .pokemon(page: , limit: ))
-    .sink { [weak self] completion in
-        guard let self = self else { return }
-        switch completion {
-        case .finished:
-        case .failure(let error):
-        }
-    }
-receiveValue: { [weak self] response in
-}
-.store(in: &cancellables)
-```
-
----
-
 ---
 
 ### **Fetching Pokemon**

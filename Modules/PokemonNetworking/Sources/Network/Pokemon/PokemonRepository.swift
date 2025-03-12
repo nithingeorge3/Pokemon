@@ -14,12 +14,11 @@ public protocol PokemonRepositoryType: Sendable {
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain]
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain]
-//    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain
     
     //gaming
     func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain]
-    func fetchRandomUnplayedPokemon() async throws -> PokemonDomain
+    func fetchRandomUnplayedPokemon(excluding excludedID: Int?) async throws -> PokemonDomain
     func updateScore(_ points: Int) async throws
     func updatePlayedStatus(pokemonId: Int, outcome: GameOutcome) async throws
     
@@ -64,7 +63,7 @@ final class PokemonRepository: PokemonRepositoryType {
                 do {
                     return try PokemonDomain(from: dto)
                 } catch let error as PokemonError {
-                    throw error // handle error
+                    throw error
                 } catch {
                     throw NetworkError.failedToDecode
                 }
@@ -78,7 +77,7 @@ final class PokemonRepository: PokemonRepositoryType {
             
             var pagination = try await paginationSDRepo.fetchPokemonPagination(.pokemon)
             pagination.totalCount = responseDTO.count
-            pagination.currentPage += 1
+            pagination.currentPage += 40
             pagination.lastUpdated = Date()
             
             //updating Pagination
@@ -107,10 +106,6 @@ extension PokemonRepository {
         try await pokemonSDRepo.fetchPokemon(offset: offset, pageSize: pageSize)
     }
     
-//    func updateFavouritePokemon(_ pokemonID: Int) async throws -> Bool {
-//        try await pokemonSDRepo.updateFavouritePokemon(pokemonID)
-//    }
-    
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain {
         try await paginationSDRepo.fetchPokemonPagination(entityType)
     }
@@ -122,8 +117,8 @@ extension PokemonRepository {
         try await pokemonSDRepo.fetchRandomOptions(excluding: id, count: count)
     }
     
-    func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
-        try await pokemonSDRepo.fetchRandomUnplayedPokemon()
+    func fetchRandomUnplayedPokemon(excluding excludedID: Int? = nil) async throws -> PokemonDomain {
+        try await pokemonSDRepo.fetchRandomUnplayedPokemon(excluding: excludedID)
     }
     
     func updateScore(_ points: Int) async throws {

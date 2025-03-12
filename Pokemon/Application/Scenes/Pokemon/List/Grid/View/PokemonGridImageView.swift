@@ -8,19 +8,32 @@
 import SwiftUI
 
 struct PokemonGridImageView: View {
+    @Binding var silhouetteMode: Bool
     let pokemon: Pokemon
     let width: CGFloat
     let height: CGFloat
 
     var body: some View {
         VStack {
-            PokemonImageView(pokemonID: pokemon.id, width: width, height: height)
+            let imageView = PokemonImageView(pokemonID: pokemon.id, width: width, height: height)
                     .cornerRadius(10)
 
+            Group {
+                if silhouetteMode {
+                    imageView
+                        .silhouetteEffect(active: silhouetteMode)
+                        .cornerRadius(10)
+                } else {
+                    imageView
+                }
+            }
+            
+            /*
             Text(pokemon.name)
                 .font(.system(size: 14, weight: .semibold))
                 .multilineTextAlignment(.center)
                 .lineLimit(1)
+            */
         }
     }
 }

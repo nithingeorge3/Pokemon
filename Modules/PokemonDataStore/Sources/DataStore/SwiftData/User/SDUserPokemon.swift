@@ -61,15 +61,19 @@ extension SDUserPokemon {
 extension UserPokemonDomain {
     init(from sdUserPokemon: SDUserPokemon) throws {
 //        let pokeUser = UserDomain(from: sdUserPokemon.user)
-//        let poke = try PokemonDomain(from: sdUserPokemon.pokemon)
+        var pokeDomain: PokemonDomain?
+        
+        if let sdPokemon = sdUserPokemon.pokemon {
+            pokeDomain = try PokemonDomain(from: sdPokemon)
+        }
                 
         self.init(
             id: sdUserPokemon.id,
             lastPlayedDate: sdUserPokemon.lastPlayedDate,
             lastOutcome: sdUserPokemon.lastOutcomeType,
-            isMarkedForPlayLater: sdUserPokemon.isMarkedForPlayLater
+            isMarkedForPlayLater: sdUserPokemon.isMarkedForPlayLater,
 //            user: pokeUser,
-//            pokemon: poke
+            pokemon: pokeDomain
         )
     }
 }

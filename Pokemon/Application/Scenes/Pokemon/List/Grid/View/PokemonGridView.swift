@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct PokemonGridView: View {
+    @Binding var silhouetteMode: Bool
     var playedPokemon: [Pokemon]
     var otherPokemon: [Pokemon]
     var hasMoreData: Bool
     var onPokemonTap: (Pokemon) -> Void
     var onReachBottom: () -> Void
     
-    @State private var isPlayedCollapsed: Bool = false
+    @State private var isPlayedCollapsed: Bool = true
     @State private var isOtherCollapsed: Bool = false
     @State private var showProgress: Bool = false
     
@@ -65,7 +66,7 @@ struct PokemonGridView: View {
     @ViewBuilder
     private func pokemonGrid(for pokemon: [Pokemon], size: CGFloat) -> some View {
         ForEach(pokemon) { pokemon in
-            PokemonGridImageView(pokemon: pokemon, width: size, height: size)
+            PokemonGridImageView(silhouetteMode: $silhouetteMode, pokemon: pokemon, width: size, height: size)
                 .onTapGesture {
                     onPokemonTap(pokemon)
                 }

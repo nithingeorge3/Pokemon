@@ -52,6 +52,7 @@ class MenuViewModel: MenuViewModelType {
     
     
     func handleLogout() {
+        UserSessionManager.clearUserDataOnLogout()
         isLoggedIn = false
         filteredItems(includeLogin: !isLoggedIn)
     }

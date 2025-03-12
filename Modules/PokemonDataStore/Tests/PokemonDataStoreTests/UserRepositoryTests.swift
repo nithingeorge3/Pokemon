@@ -149,8 +149,7 @@ extension UserSDRepositoryTests {
         let entries = user.playedPokemons
         
         XCTAssertEqual(entries.count, 1, "Should create one new entry")
-#warning("need to fix thsi text")
-//        XCTAssertEqual(entries.first?.pokemon?.id, testPokemonId)
+        XCTAssertEqual(entries.first?.pokemon?.id, testPokemonId)
         XCTAssertEqual(entries.first?.lastOutcome, .win)
     }
     

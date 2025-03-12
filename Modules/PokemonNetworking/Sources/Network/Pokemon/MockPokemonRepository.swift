@@ -73,7 +73,7 @@ final class MockPokemonRepository: PokemonRepositoryType, @unchecked Sendable {
         return pokemon
     }
     
-    func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
+    func fetchRandomUnplayedPokemon(excluding excludedID: Int? = nil) async throws -> PokemonDomain {
         let id = randomNumber()
         
         return PokemonDomain(id: id, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/\(id)/")!)

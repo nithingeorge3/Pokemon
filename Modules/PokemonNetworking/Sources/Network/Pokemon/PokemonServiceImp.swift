@@ -36,8 +36,8 @@ extension PokemonServiceImp {
         try await pokemonRepository.fetchPokemon(for: pokemonID)
     }
     
-    func fetchRandomUnplayedPokemon() async throws -> PokemonDomain {
-        try await pokemonRepository.fetchRandomUnplayedPokemon()
+    func fetchRandomUnplayedPokemon(excluding excludedID: Int? = nil) async throws -> PokemonDomain {
+        try await pokemonRepository.fetchRandomUnplayedPokemon(excluding: excludedID)
     }
     
     func fetchPokemon(offset: Int = 0, pageSize: Int = 40) async throws -> [PokemonDomain] {

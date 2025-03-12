@@ -33,7 +33,7 @@ public protocol PokemonUserServiceType: Sendable {
 
 public protocol PokemonSDServiceType: Sendable {
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain
-    func fetchRandomUnplayedPokemon() async throws -> PokemonDomain
+    func fetchRandomUnplayedPokemon(excluding excludedID: Int?) async throws -> PokemonDomain
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain]
     func fetchPokemonPagination(_ type: EntityType) async throws -> PaginationDomain
 }

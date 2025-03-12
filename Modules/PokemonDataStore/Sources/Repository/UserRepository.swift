@@ -37,7 +37,7 @@ public final class UserSDRepository: UserSDRepositoryType {
             let id = UUID()
             let date = Date()
             let newUser = SDUser(id: id, score: 0, email: "guest@pokemon.com", isGuest: true, lastActive: date)
-            newUser.preference = SDPreference(id: id, lastUpdated: date)
+            newUser.preference = SDPreference(id: id, showWinAnimation: true, enableSilhouetteMode: true, lastUpdated: date)
             context.insert(newUser)
             try context.save()
             return UserDomain(from: newUser)
@@ -112,8 +112,7 @@ public final class UserSDRepository: UserSDRepositoryType {
     }
     
     public func getCurrentUser() async throws -> UserDomain {
-        // For future multi-user: Check auth state
-        return try await getOrCreateGuest()
+        try await getOrCreateGuest()
     }
 }
 

@@ -61,7 +61,7 @@ extension PokemonRepositoryTests {
         XCTAssertEqual(page0.map(\.id), [1, 2])
         
         XCTAssertEqual(page1.count, 2)
-        XCTAssertEqual(page1.map(\.id), [3, 4])
+        XCTAssertEqual(page1.map(\.id), [2, 3])
     }
     
     func test_fetchRandomOptions_returnsCorrectCount() async throws {
@@ -102,15 +102,46 @@ extension PokemonRepositoryTests {
 }
 
 extension PokemonRepositoryTests {
-    private func insertTestPokemon() async throws {
-        let pokemon = [
+    func test_fetchRandomUnplayedPokemon_returnsUnplayedPokemon() async throws {
+        let newUser = SDUser(id: UUID(uuidString: "11111111-1111-1111-1111-111111111111")!, score: 10, email: "test1@gmail.com", isGuest: true, lastActive: .distantPast)
+        try await saveUser(newUser)
+        
+        try await insertTestPokemon()
+        
+        let pokemon = try await repository.fetchRandomUnplayedPokemon(excluding: nil)
+        
+        XCTAssertTrue([1, 2, 3, 4, 5].contains(pokemon.id))
+    }
+    
+    func test_fetchRandomUnplayedPokemon_excludesSpecifiedID() async throws {
+        let newUser = SDUser(id: UUID(uuidString: "11111111-1111-1111-1111-111111111111")!, score: 10, email: "test1@gmail.com", isGuest: true, lastActive: .distantPast)
+        try await saveUser(newUser)
+        
+        try await insertTestPokemon()
+        
+        let pokemon = try await repository.fetchRandomUnplayedPokemon(excluding: 2)
+        
+        XCTAssertNotEqual(pokemon.id, 2)
+    }
+}
+
+
+extension PokemonRepositoryTests {
+    private func insertTestPokemon(
+        _ pokemon: [PokemonDomain] = [
             PokemonDomain(id: 1, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!),
             PokemonDomain(id: 2, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!),
             PokemonDomain(id: 3, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/3/")!),
             PokemonDomain(id: 4, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/4/")!),
             PokemonDomain(id: 5, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/5/")!)
         ]
-                
+    ) async throws {
         try await repository.savePokemon(pokemon)
+    }
+    
+    private func saveUser(_ users: SDUser) async throws {
+        let context = ModelContext(container)
+        context.insert(users)
+        try context.save()
     }
 }

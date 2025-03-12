@@ -22,7 +22,7 @@ final class PokemonDomainTests: XCTestCase {
             name: "Bulbasaur",
             url: url
         )
-        var pokemon2 = pokemon1
+        let pokemon2 = pokemon1
         
         XCTAssertEqual(pokemon1.id, pokemon2.id)
     }
