@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
-    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @AppStorage(UserDefaultsKeys.hasCompletedOnboarding) private var hasCompletedOnboarding = false
     @State private var activeSheet: AppSheet?
     
     enum AppSheet: Identifiable {

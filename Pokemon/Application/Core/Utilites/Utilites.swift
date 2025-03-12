@@ -16,3 +16,7 @@ enum Constants {
         static let placeholderImage = "pokemonPlaceholder"
     }
 }
+
+enum UserDefaultsKeys {
+    static let hasCompletedOnboarding = "hasCompletedOnboarding"
+}

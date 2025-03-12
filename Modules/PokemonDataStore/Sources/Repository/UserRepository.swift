@@ -112,8 +112,7 @@ public final class UserSDRepository: UserSDRepositoryType {
     }
     
     public func getCurrentUser() async throws -> UserDomain {
-        // For future multi-user: Check auth state
-        return try await getOrCreateGuest()
+        try await getOrCreateGuest()
     }
 }
 
