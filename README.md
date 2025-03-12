@@ -1,21 +1,40 @@
 # Pokemon
 ## Requirements
+- Xcode 15+ (for SwiftData support)
 - iOS 16.0+
 - Swift 5.9
 
+## Getting Started
+
+1. Clone the repository:
+2. git clone https://github.com/nithingeorge3/Pokemon.git
+3. Open the project:
+4. Open Pokemon.xcodeproj in Xcode 15+.
+5. Build & Run:
+6. Select a simulator or device (iOS 16+) and press Cmd+R.
+
 ## Overview
-SwiftUI-based application designed using the MVVM-C (Model-View-ViewModel-Coordinator) architecture for scalability, modularity, and testability.
+- SwiftUI-based application designed using the MVVM-C (Model-View-ViewModel-Coordinator) architecture for scalability, modularity, and testability. 
+- Implements Repository Pattern for abstracting data sources (API + SwiftData) and Factory Pattern for dependency injection.
+- Uses SwiftData for local persistence and async/await for concurrency.
+
+## Key Dependencies
+- SwiftData: Local persistence for user preferences and collected Pokémon.
+- Native Networking: Uses URLSession and async/await for API calls.
 
 ## Approches
 1. MVVM-C Architecture: Implemented MVVM-C using async/await.
-2. Modular Design: Created separate modules for Network (API interactions) and DataStore (local persistence using SwiftData).
+2. Modular Design:
+- PokemonNetworking: API interactions with pagination support.
+- PokemonDataStore: SwiftData-powered local persistence.
+- PokemonDomain: Business logic layer to prevent circular dependencies.
 3. Pokemon List Pagination: Data is fetched from the API with pagination, which is integrated into the scrolling list for seamless user experience.
 4. Model Layers: 
-- DTO (Data Transfer Objects): Used only in the repository layer.
-- SD Model(SwiftData model): Designed for local persistence.
-- Domain Model: Used in the service layer for business logic.
-- View-Specific Model: Used in the view layer for rendering UI.
-5. Coordinator for Navigation: Coordinator pattern is used for managing navigation flow.
+- DTO: API response models (decodable).
+- SD Model: SwiftData entities for storage.
+- Domain Model: Business logic objects.
+- View Model: UI-specific data formatting.
+5. Coordinator Pattern: Decoupled navigation logic.
 
 
 ## Screenshots 
@@ -31,7 +50,7 @@ SwiftUI-based application designed using the MVVM-C (Model-View-ViewModel-Coordi
 ```swift
 // Time ratio calculation
 let elapsed = 40.0
-let normalized = min(max(40 / 30, 0), 1) // → 1.0 (clamped)
+let normalized = min(max(40 / 30, 0), 1) // → 1.0
 let ratio = 1 - normalized // → 0.0
 
 // Score calculation

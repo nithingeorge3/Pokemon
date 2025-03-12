@@ -43,14 +43,9 @@ public final class SDUserPokemon {
 }
 
 extension SDUserPokemon {
-    convenience init(from userPokeDomain: UserPokemonDomain) {
-//        let pokeUser = SDUser(from: userPokeDomain.user)
-//        let poke = SDPokemon(from: userPokeDomain.pokemon)
-        
+    convenience init(from userPokeDomain: UserPokemonDomain) {        
         self.init(
             id: userPokeDomain.id,
-//            user: pokeUser,
-//            pokemon: poke,
             lastPlayedDate: userPokeDomain.lastPlayedDate,
             lastOutcome: userPokeDomain.lastOutcome,
             isMarkedForPlayLater: userPokeDomain.isMarkedForPlayLater
@@ -60,7 +55,6 @@ extension SDUserPokemon {
 
 extension UserPokemonDomain {
     init(from sdUserPokemon: SDUserPokemon) throws {
-//        let pokeUser = UserDomain(from: sdUserPokemon.user)
         var pokeDomain: PokemonDomain?
         
         if let sdPokemon = sdUserPokemon.pokemon {
@@ -72,7 +66,6 @@ extension UserPokemonDomain {
             lastPlayedDate: sdUserPokemon.lastPlayedDate,
             lastOutcome: sdUserPokemon.lastOutcomeType,
             isMarkedForPlayLater: sdUserPokemon.isMarkedForPlayLater,
-//            user: pokeUser,
             pokemon: pokeDomain
         )
     }
