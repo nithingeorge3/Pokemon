@@ -77,6 +77,10 @@ extension PokemonPlayView {
                 )
                     .accessibilityIdentifier("PokemonImage")
                 
+//                imageView
+//                .blur(radius: viewModel.imageBlurRadius)//zero will show correct image, 10 with shadow
+//                .animation(.easeInOut(duration: 0.3), value: viewModel.imageBlurRadius)
+                
                 Group {
                     if viewModel.silhouetteMode {
                         imageView
@@ -85,25 +89,6 @@ extension PokemonPlayView {
                         imageView
                     }
                 }
-            }
-        }
-    }
-    
-#warning("delete it later")
-    private var imageSection_: some View {
-        VStack {
-            if let pokemon = viewModel.pokemon {
-                PokemonImageView(
-                    pokemonID: pokemon.id,
-                    width: 150,
-                    height: 150
-                )
-//                .blur(radius: viewModel.imageBlurRadius)//if zero will show correct image, no shadow. if 10 with shadow
-//                .animation(.easeInOut(duration: 0.3), value: viewModel.imageBlurRadius)
-                .accessibilityIdentifier("PokemonImage")
-                //ToDo: this is without silhouetteMode toggle
-//              .blur(radius: viewModel.showResult ? 0 : 10)
-//              .animation(.easeInOut, value: viewModel.showResult)
             }
         }
     }

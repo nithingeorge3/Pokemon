@@ -126,6 +126,10 @@ private class PreviewPokemonListViewModel: PokemonListViewModelType {
     
     func send(_ action: PokemonListAction) {
     }
+    
+    func isPlayed(pokemonID: Int) -> Bool {
+        false
+    }
 }
 
 private class PreviewPaginationHandler: PaginationHandlerType {

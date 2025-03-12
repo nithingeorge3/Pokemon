@@ -15,7 +15,7 @@ struct PokemonGridView: View {
     var onPokemonTap: (Pokemon) -> Void
     var onReachBottom: () -> Void
     
-    @State private var isPlayedCollapsed: Bool = false
+    @State private var isPlayedCollapsed: Bool = true
     @State private var isOtherCollapsed: Bool = false
     @State private var showProgress: Bool = false
     

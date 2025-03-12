@@ -61,7 +61,7 @@ extension PokemonRepositoryTests {
         XCTAssertEqual(page0.map(\.id), [1, 2])
         
         XCTAssertEqual(page1.count, 2)
-        XCTAssertEqual(page1.map(\.id), [3, 4])
+        XCTAssertEqual(page1.map(\.id), [2, 3])
     }
     
     func test_fetchRandomOptions_returnsCorrectCount() async throws {

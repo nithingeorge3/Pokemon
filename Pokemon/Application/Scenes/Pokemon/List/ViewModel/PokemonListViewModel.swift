@@ -23,6 +23,7 @@ protocol PokemonListViewModelType: AnyObject, Observable {
     var silhouetteMode: Bool { get set }
     
     func send(_ action: PokemonListAction)
+    func isPlayed(pokemonID: Int) -> Bool
 }
 
 @Observable
@@ -39,14 +40,17 @@ class PokemonListViewModel: PokemonListViewModelType {
     var pokemonListActionSubject = PassthroughSubject<PokemonListAction, Never>()
     
     private var playedPokemonIDs: Set<Int> = []
-        
+    
     var playedPokemon: [Pokemon] {
-        pokemon.filter { playedPokemonIDs.contains($0.id) }//.count(where: 5)
+        pokemon
+            .lazy
+            .filter { [playedPokemonIDs] in playedPokemonIDs.contains($0.id) }
+            .prefix(20)
+            .map { $0 }
     }
     
     var otherPokemon: [Pokemon] {
         pokemon.filter { !playedPokemonIDs.contains($0.id) }
-        //pokemon
     }
     
     init(
@@ -70,6 +74,7 @@ class PokemonListViewModel: PokemonListViewModelType {
             guard paginationHandler.hasMoreData else { return }
             Task { try await fetchRemotePokemon() }
         case .selectPokemon(let pokemonID):
+            if isPlayed(pokemonID: pokemonID) { return }//handle later
             pokemonListActionSubject.send(PokemonListAction.selectPokemon(pokemonID))
         }
     }
@@ -86,16 +91,6 @@ class PokemonListViewModel: PokemonListViewModelType {
                                     .compactMap { $0.pokemon?.id }
                 
                 playedPokemonIDs = Set(playedIDs)
-                
-                print(playedPokemonIDs)
-                _ = user?.playedPokemons.map { poke in
-                    print(userDomain.playedPokemons.count)
-                    print(playedPokemonIDs.count)
-                    print("***** user played Pokemon: \(poke.pokemon?.name))")
-                    print("***** user played Pokemon: \(poke.id))")
-                    print("***** user played Pokemon: \(poke.pokemon))")
-                    print("***** user played Pokemon: \(poke.pokemon?.id))")
-                }
                 
             } catch {
                 print("unable to find user")
@@ -172,7 +167,7 @@ class PokemonListViewModel: PokemonListViewModelType {
         paginationHandler.updateFromDomain(pagination)
     }
     
-    private func updatePokemonPlayLaterStatus(pokemonID: Int) {
-        //add logic later
+    func isPlayed(pokemonID: Int) -> Bool {
+        playedPokemonIDs.contains(pokemonID)
     }
 }
