@@ -22,7 +22,7 @@ public final class SDPreference {
     
     init(
         id: UUID = UUID(),
-        showWinAnimation: Bool = false,
+        showWinAnimation: Bool = true,
         enableSilhouetteMode: Bool = true,
         lastUpdated: Date
     ) {

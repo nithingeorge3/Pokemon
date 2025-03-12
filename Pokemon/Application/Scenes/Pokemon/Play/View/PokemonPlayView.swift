@@ -25,6 +25,11 @@ struct PokemonPlayView<ViewModel: PokemonPlayViewModelType>: View {
                 gameContentView
             }
         }
+        .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
+            Button("Ok") { viewModel.errorMessage = nil }
+        } message: {
+            Text(viewModel.errorMessage ?? "")
+        }
         .onAppear(perform: handleOnAppear)
         .withCustomBackButton()
         .withCustomNavigationTitle(title: "Pokemon")
@@ -76,10 +81,6 @@ extension PokemonPlayView {
                     height: 150
                 )
                     .accessibilityIdentifier("PokemonImage")
-                
-//                imageView
-//                .blur(radius: viewModel.imageBlurRadius)//zero will show correct image, 10 with shadow
-//                .animation(.easeInOut(duration: 0.3), value: viewModel.imageBlurRadius)
                 
                 Group {
                     if viewModel.silhouetteMode {
@@ -171,10 +172,6 @@ struct AnswerButton: View {
     PokemonPlayView(viewModel: PreviewPlayViewModel.loading)
 }
 
-#Preview("Game Ready State") {
-    PokemonPlayView(viewModel: PreviewPlayViewModel.loaded)
-}
-
 #Preview("Silhouette Mode") {
     PokemonPlayView(viewModel: PreviewPlayViewModel.silhouette)
 }
@@ -201,7 +198,7 @@ private class PreviewPlayViewModel: PokemonPlayViewModelType {
     var currentScore: Int = 0
     var showCelebration: Bool = false
     var silhouetteMode: Bool = false
-    var imageBlurRadius: CGFloat = 0
+    var errorMessage: String? = nil
     
     static let loading: PreviewPlayViewModel = {
         let vm = PreviewPlayViewModel()
@@ -220,7 +217,6 @@ private class PreviewPlayViewModel: PokemonPlayViewModelType {
     static let silhouette: PreviewPlayViewModel = {
         let vm = loaded
         vm.silhouetteMode = true
-        vm.imageBlurRadius = 10
         return vm
     }()
     

@@ -9,7 +9,7 @@
 public enum SDError: Error, Equatable {
     case userNotFound
     case pokemonNotFound
-    case modelNotFound
+    case noUnplayedPokemon
     case modelObjNotFound
     case invalidRequest(reason: String)
 }

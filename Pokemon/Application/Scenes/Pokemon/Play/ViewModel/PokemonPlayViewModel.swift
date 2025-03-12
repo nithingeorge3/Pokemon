@@ -8,6 +8,7 @@
 import Foundation
 import PokemonNetworking
 import Observation
+import PokemonDataStore
 
 @MainActor
 protocol PokemonPlayViewModelType: AnyObject, Observable {
@@ -16,9 +17,7 @@ protocol PokemonPlayViewModelType: AnyObject, Observable {
     var selectedAnswer: Pokemon? { get set }
     var showResult: Bool { get set }
     var isLoading: Bool { get set }
-    
-    //not using
-    var imageBlurRadius: CGFloat { get }
+    var errorMessage: String? { get set }
     
     var currentScore: Int { get }
     var showCelebration: Bool { get }
@@ -35,22 +34,16 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     var selectedAnswer: Pokemon?
     var showResult: Bool = false
     var isLoading: Bool = false
-
+    var errorMessage: String? = nil
+    
     private var user: User?
 
     var currentScore: Int {
         user?.score ?? 0
     }
+    
     var showCelebration = false
     var silhouetteMode: Bool  = true
-    
-    var imageBlurRadius: CGFloat {
-        if silhouetteMode {
-            return showResult ? 0 : 10
-        } else {
-            return 0
-        }
-    }
     
     private var pokemonID: Pokemon.ID
     private let service: PokemonSDServiceType
@@ -105,10 +98,7 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
                 let allOptions = [main] + others
                 
                 pokemon = Pokemon(from: main)
-                
-//                print("\(pokemonID)")
-//                print("\(pokemon?.id)")
-                
+                                
                 answerOptions = allOptions
                     .map { Pokemon(from: $0) }
                     .shuffled()
@@ -124,31 +114,30 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     
     private func refreshGame() async {
         isLoading = true
+        let previousPokemonID = pokemonID
         resetGame()
+        
         Task {
             do {
-//#warning("pass previous played game, suppos etehy haven't played and trying to refersh new game + filter with already played")
-                let newPokemon = try await service.fetchRandomUnplayedPokemon()
+                let newPokemon = try await service.fetchRandomUnplayedPokemon(excluding: previousPokemonID)
                 let options = try await answerService.fetchRandomOptions(
                     excluding: newPokemon.id,
                     count: 3
                 )
 
                 let allOptions = [newPokemon] + options
-                
-//                print("Previous name: \(pokemon?.name) id : \(pokemonID)")
-                
+                                
                 pokemon = Pokemon(from: newPokemon)
                 pokemonID = newPokemon.id
-                
-//                print("New name: \(pokemon?.name) id : \(pokemonID)")
-                
+                                
                 self.answerOptions = allOptions
                     .map { Pokemon(from: $0) }
                     .shuffled()
                 
                 isLoading = false
                 
+            } catch let error as SDError {
+                handle(error)
             } catch {
                 print("Error refreshing game: \(error)")
                 isLoading = false
@@ -186,5 +175,15 @@ final class PokemonPlayViewModel: PokemonPlayViewModelType {
     
     private func playlater() {
         //add logic later
+    }
+    
+    private func handle(_ error: SDError) {
+        isLoading = false
+        switch error {
+        case .noUnplayedPokemon:
+            errorMessage = "No unplayed Pokemon found. Try again later."
+        default:
+            errorMessage = "An error occurred. Please try again. \(error)"
+        }
     }
 }
