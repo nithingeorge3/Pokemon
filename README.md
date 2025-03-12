@@ -17,6 +17,13 @@ SwiftUI-based application designed using the MVVM-C (Model-View-ViewModel-Coordi
 - View-Specific Model: Used in the view layer for rendering UI.
 5. Coordinator for Navigation: Coordinator pattern is used for managing navigation flow.
 
+
+## Screenshots 
+### iPhone Screens
+<img src="./Images/iPhone/onboarding1.png"  width="25%" height="25%">|<img src="./Images/iPhone/onboarding1.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGrid1.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGame1.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGameWon.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGameFail.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonPreference.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGridSectionSilhouetteDisabled.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGridSilhouetteDisabled.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGridSectionSilhouetteEnabled.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonSetting.png"  width="25%" height="25%">
+### iPad Screens
+<img src="./Images/Pad/recipeGrid1.png"  width="25%" height="25%">|<img src="./Images/Pad/recipeGrid2.png"  width="25%" height="25%">|<img src="./Images/Pad/recipeDetail2.png"  width="25%" height="25%">|<img src="./Images/Pad/recipeDetail3.png"  width="25%" height="25%">
+
 ## Scoring Logic Example
 
 **Scenario**: Player answers after 40 seconds (max allowed time: 30s)
