@@ -11,7 +11,9 @@ import SwiftData
 
 @main
 struct PokemonApp: App {
-    @StateObject private var appCoordinator = AppCoordinator()
+    @StateObject private var appCoordinator = AppCoordinator(
+        containerName: Constants.Pokemon.containerName
+    )
     
     var body: some Scene {
         WindowGroup {
@@ -31,6 +33,7 @@ struct PokemonApp: App {
 }
 
 //We can use binding through @observable macro
+//Later add a AppCoordinator Factory
 @MainActor
 class AppCoordinator: ObservableObject {
     enum State {
@@ -42,7 +45,7 @@ class AppCoordinator: ObservableObject {
     
     private let containerName: String
     
-    init(containerName: String = "Pokemon") {
+    init(containerName: String) {
         self.containerName = containerName
     }
     
