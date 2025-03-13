@@ -13,6 +13,9 @@ The **`PokemonDataStore`** module provides a simple, reusable wrapper for data p
 
 ---
 
+## Database Schema
+<img src="./Images/dataStore.png"  width="100%" height="100%">
+
 Handles Pokemon data interactions.
 ```swift
 public protocol PaginationSDRepositoryType: Sendable {
