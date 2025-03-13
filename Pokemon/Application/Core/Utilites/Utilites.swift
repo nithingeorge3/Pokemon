@@ -13,6 +13,7 @@ enum Constants {
         static let listItemSize: CGFloat = 120
         static let fetchLimit: Int = 40
         static let placeholderImage = "pokemonPlaceholder"
+        static let containerName = "Pokemon"
     }
 }
 
