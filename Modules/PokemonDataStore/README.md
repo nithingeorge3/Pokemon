@@ -15,10 +15,6 @@ The **`PokemonDataStore`** module provides a simple, reusable wrapper for data p
 
 ## Database Schema
 <img src="./docs/dataStore.png" width="100%" height="100%">
-<img src="docs/dataStore.png" width="100%" height="100%">
-
-## Database Schema
-![Database Schema](docs/dataStore.png)
 
 Handles Pokemon data interactions.
 ```swift
