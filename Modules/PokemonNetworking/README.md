@@ -1,10 +1,3 @@
-//
-//  README.md
-//  PokemonNetworking
-//
-//  Created by Nitin George on 08/03/2025.
-//
-
 # **PokemonNetworking**
 
 The **`PokemonNetworking`** provides a simple, reusable API wrapper around the network back end, facilitating data retrieval. It abstracts the complexity of networking and parsing, offering a clean interface for developers to interact with API endpoints.
