@@ -15,6 +15,7 @@ public protocol PokemonRepositoryType: Sendable {
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain]
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain
+    func fetchPokemonCount() async throws -> Int
     
     //gaming
     func fetchRandomOptions(excluding id: Int, count: Int) async throws -> [PokemonDomain]
@@ -34,19 +35,22 @@ final class PokemonRepository: PokemonRepositoryType {
     private let pokemonSDRepo: PokemonSDRepositoryType
     private let paginationSDRepo: PaginationSDRepositoryType
     private let userSDRepo: UserSDRepositoryType
+    private let maxPokemonCount: Int
     
     init(
         parser: ServiceParserType,
         requestBuilder: RequestBuilderType,
         pokemonSDRepo: PokemonSDRepositoryType,
         paginationSDRepo: PaginationSDRepositoryType,
-        userSDRepo: UserSDRepositoryType
+        userSDRepo: UserSDRepositoryType,
+        maxPokemonCount: Int = 1302
     ) {
         self.parser = parser
         self.requestBuilder = requestBuilder
         self.pokemonSDRepo = pokemonSDRepo
         self.paginationSDRepo = paginationSDRepo
         self.userSDRepo =  userSDRepo
+        self.maxPokemonCount = maxPokemonCount
     }
     
     func fetchPokemon(endPoint: EndPoint) async throws -> [PokemonDomain] {
@@ -73,16 +77,14 @@ final class PokemonRepository: PokemonRepositoryType {
                 return pokemonDomains
             }
             
-            try await pokemonSDRepo.savePokemon(pokemonDomains)
-            
             var pagination = try await paginationSDRepo.fetchPokemonPagination(.pokemon)
-            pagination.totalCount = responseDTO.count
+            pagination.totalCount = min(responseDTO.count, maxPokemonCount)
             pagination.currentPage += 40
             pagination.lastUpdated = Date()
             
-            //updating Pagination
             try await paginationSDRepo.updatePokemonPagination(pagination)
             
+            try await savePokemon(pokemonDomains)
             
             let pageSize = endPoint.pokemonFetchInfo.1
             let offset = endPoint.pokemonFetchInfo.0
@@ -95,11 +97,28 @@ final class PokemonRepository: PokemonRepositoryType {
             throw NetworkError.noNetworkAndNoCache(context: error)
         }
     }
+    
+    private func savePokemon(_ pokemonDomains: [PokemonDomain]) async throws {
+        let spaceLeft = try await getAvailablePokemonSlots()
+        if spaceLeft > 0 {
+            let storeablePokemon = Array(pokemonDomains.prefix(spaceLeft))
+            try await pokemonSDRepo.savePokemon(storeablePokemon)
+        }
+    }
+    
+    private func getAvailablePokemonSlots() async throws -> Int {
+        let count = try await fetchPokemonCount()
+        return max(maxPokemonCount - count, 0)
+    }
 }
 
 extension PokemonRepository {
     func fetchPokemon(for pokemonID: Int) async throws -> PokemonDomain {
         try await pokemonSDRepo.fetchPokemon(for: pokemonID)
+    }
+    
+    func fetchPokemonCount() async throws -> Int {
+        try await pokemonSDRepo.fetchPokemonCount()
     }
     
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain] {

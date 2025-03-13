@@ -9,7 +9,7 @@ import Foundation
 import PokemonDomain
 
 public protocol PokemonServiceFactoryType {
-    static func makePokemonService(userSDRepo: UserSDRepositoryType, pokemonSDRepo: PokemonSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonServiceProvider
+    static func makePokemonService(userSDRepo: UserSDRepositoryType, pokemonSDRepo: PokemonSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType, maxPokemonCount: Int) -> PokemonServiceProvider
 }
 
 //Later remove inject PaginationSDRepositoryType when we sepearte Repository
@@ -25,13 +25,14 @@ public final class PokemonServiceFactory: PokemonServiceFactoryType, @unchecked 
     private static let serviceParser: ServiceParserType = ServiceParser()
     private static let requestBuilder: RequestBuilderType = RequestBuilder()
     
-    public static func makePokemonService(userSDRepo: UserSDRepositoryType, pokemonSDRepo: PokemonSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType) -> PokemonServiceProvider {
+    public static func makePokemonService(userSDRepo: UserSDRepositoryType, pokemonSDRepo: PokemonSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType, maxPokemonCount: Int = 1302) -> PokemonServiceProvider {
         let pokemonRepository: PokemonRepositoryType = PokemonRepository(
             parser: serviceParser,
             requestBuilder: requestBuilder,
             pokemonSDRepo: pokemonSDRepo,
             paginationSDRepo: paginationSDRepo,
-            userSDRepo: userSDRepo
+            userSDRepo: userSDRepo,
+            maxPokemonCount: maxPokemonCount
         )
         return PokemonServiceImp(pokemonRepository: pokemonRepository)
     }
