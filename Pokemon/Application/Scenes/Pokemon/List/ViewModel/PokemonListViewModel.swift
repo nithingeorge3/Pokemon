@@ -77,12 +77,12 @@ class PokemonListViewModel: PokemonListViewModelType {
                 do {
                     let pokeSDCount = try await service.fetchPokemonCount()
                     
-                    //If we still have fewer than 150 in local DB, fetch from local
+                    //if we still have fewer than in local DB, fetch from local
                     if pokemon.count < pokeSDCount {
                         localOffset += Constants.Pokemon.fetchLimit
                         try await fetchLocalPokemon()
                     }
-                    // Otherwise, check the remote pagination
+                    //check the remote pagination
                     else if paginationHandler.hasMoreData {
                         try await fetchRemotePokemon()
                     }
