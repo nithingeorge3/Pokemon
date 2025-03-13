@@ -79,5 +79,6 @@ We need to follow a streamlined Git workflow to maintain code quality:
 
 ### Pull Requests (PRs)  
 1. Target `develop` for all PRs.  
-2. **Rebase & Squash**: Clean up commits before merging to maintain linear history.  
-3. Review: At least three approval required.
+2. **Rebase & Squash**: Clean up commits before merging to maintain linear history.
+3. Add a short ticket/feature info to the PR.
+4. Review: At least three approval required.

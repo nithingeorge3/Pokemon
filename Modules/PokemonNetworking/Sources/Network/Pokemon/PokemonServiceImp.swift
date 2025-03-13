@@ -19,10 +19,8 @@ final class PokemonServiceImp: PokemonServiceProvider {
     func fetchPokemon(endPoint: EndPoint) async throws(NetworkError) -> [PokemonDomain] {
         do {
             return try await pokemonRepository.fetchPokemon(endPoint: endPoint)
-//            let allPokemon = try await pokemonRepository.fetchPokemon(endPoint: endPoint)
-//            return allPokemon
-//                .shuffled()
-//                .map { $0 }
+                .shuffled()
+                .map { $0 }
             
         } catch {
             throw NetworkError.failedToDecode
@@ -45,12 +43,9 @@ extension PokemonServiceImp {
     }
     
     func fetchPokemon(offset: Int = 0, pageSize: Int = 40) async throws -> [PokemonDomain] {
-        return try await pokemonRepository.fetchPokemon(offset: offset, pageSize: pageSize)
-        
-//        let allPokemon = try await pokemonRepository.fetchPokemon(offset: offset, pageSize: pageSize)
-//        return allPokemon
-//            .shuffled()
-//            .map { $0 }
+        try await pokemonRepository.fetchPokemon(offset: offset, pageSize: pageSize)
+            .shuffled()
+            .map { $0 }
     }
     
     func fetchPokemonPagination(_ entityType: EntityType) async throws -> PaginationDomain {
