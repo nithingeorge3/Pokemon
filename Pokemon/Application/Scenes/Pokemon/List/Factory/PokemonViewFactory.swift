@@ -11,10 +11,6 @@ protocol PokemonViewFactoryType {
     @MainActor func makePokemonGridView<ViewModel: PokemonListViewModelType>(
         viewModel: ViewModel
     ) -> PokemonListView<ViewModel>
-    
-//    @MainActor func makePokemonListView<ViewModel: PokemonViewModelType>(
-//        viewModel: ViewModel
-//    ) -> PokemonView<ViewModel>
 }
 
 final class PokemonViewFactory: PokemonViewFactoryType {
@@ -23,10 +19,4 @@ final class PokemonViewFactory: PokemonViewFactoryType {
     ) -> PokemonListView<ViewModel> {
         PokemonListView(viewModel: viewModel)
     }
-    
-//    @MainActor func makePokemonListView<ViewModel: PokemonViewModelType>(
-//        viewModel: ViewModel
-//    ) -> PokemonView<ViewModel> {
-//        PokemonView(viewModel: viewModel)
-//    }
 }

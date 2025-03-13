@@ -64,11 +64,22 @@
 			);
 			target = 286ACCF82D7F88F800D97CE9 /* PokemonTests */;
 		};
+		2893822F2D8376B2004B8573 /* Exceptions for "SnapshotTests" folder in "PokemonTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Extensions/SwiftUI+Snapshot.swift",
+				Pokemon/Gameview/PokemonGameViewTests.swift,
+			);
+			target = 286ACCF82D7F88F800D97CE9 /* PokemonTests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		281E0A132D7C47D900217DE5 /* SnapshotTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2893822F2D8376B2004B8573 /* Exceptions for "SnapshotTests" folder in "PokemonTests" target */,
+			);
 			path = SnapshotTests;
 			sourceTree = "<group>";
 		};

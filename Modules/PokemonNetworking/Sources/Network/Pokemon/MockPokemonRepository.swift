@@ -117,7 +117,6 @@ extension MockPokemonRepository {
         UserDomain(isGuest: true, lastActive: Date(timeIntervalSince1970: 0))
     }
     
-    
     func updatePreferences(_ newPref: PreferenceDomain) async throws {
         
     }

@@ -9,7 +9,6 @@ import Combine
 import Foundation
 import PokemonDomain
 
-//ToDo: update to GameService
 final class PokemonAnswerServiceImp: PokemonAnswerServiceType {
     private let pokemonRepository: PokemonRepositoryType
             

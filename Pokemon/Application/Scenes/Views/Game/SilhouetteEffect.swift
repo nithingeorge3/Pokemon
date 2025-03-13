@@ -15,11 +15,11 @@ struct SilhouetteModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            // Base effect controls
+            //Base effect controls
             .saturation(isActive ? 0 : 1)
             .brightness(isActive ? -darkness : 0)
             .contrast(isActive ? 1 + sharpness : 1)
-            // Edge detection overlay
+            //Edge detection overlay
             .overlay(
                 LinearGradient(
                     gradient: Gradient(colors: [

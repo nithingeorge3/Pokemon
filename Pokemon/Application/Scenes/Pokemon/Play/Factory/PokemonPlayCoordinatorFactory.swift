@@ -12,7 +12,6 @@ protocol PokemonPlayCoordinatorFactoryType {
     @MainActor func makePokemonPlayCoordinator(pokemonID: Pokemon.ID, service: PokemonSDServiceType, userService: PokemonUserServiceType, answerService: PokemonAnswerServiceType) -> PokemonPlayCoordinator
 }
 
-// later create answerService: PokemonAnswerServiceType from PokemonPlayCoordinatorFactory
 final class PokemonPlayCoordinatorFactory: PokemonPlayCoordinatorFactoryType {
     func makePokemonPlayCoordinator(pokemonID: Pokemon.ID, service: PokemonSDServiceType, userService: PokemonUserServiceType, answerService: PokemonAnswerServiceType) -> PokemonPlayCoordinator {
         let viewModelFactory: PokemonPlayViewModelFactoryType = PokemonPlayViewModelFactory()

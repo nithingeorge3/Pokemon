@@ -15,7 +15,7 @@ private struct Scoring {
     static let maxPoints: Int = 10
     static let maxTime: Double = 30
     
-    // Returns ratio of time remaining, between 0 and 1
+    //Returns ratio of time remaining
     static func timeRatio(elapsed: Double) -> Double {
         guard maxTime > 0 else { return 0 }
         let normalized = min(max(elapsed / maxTime, 0), 1)

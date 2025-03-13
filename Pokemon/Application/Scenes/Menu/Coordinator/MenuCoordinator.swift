@@ -21,7 +21,7 @@ final class MenuCoordinator: Coordinator, TabItemProviderType {
         _tabItem
     }
     
-    //When we use seperate repository for UserInteraction w ecan avoid to inject PaginationSDRepositoryType & PokemonSDRepositoryType
+    //When we use seperate repository for UserInteraction we can avoid PaginationSDRepositoryType & PokemonSDRepositoryType injection
     init(menuViewFactory: MenuViewFactoryType, tabItem: TabItem, userSDRepo: UserSDRepositoryType, paginationSDRepo: PaginationSDRepositoryType, pokemonSDRepo: PokemonSDRepositoryType) {
         self.menuViewFactory = menuViewFactory
         _tabItem = tabItem
