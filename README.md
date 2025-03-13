@@ -69,7 +69,7 @@ finalScore = max(2, min(10, 0)) → 2
 3. PokemonDomain: Provides bridge between PokemonNetworking and PokemonDataStore. It avoiding teh circular dependency.
 
 ## Contribution Guidelines  
-We ne to follow a streamlined Git workflow to maintain code quality:  
+We need to follow a streamlined Git workflow to maintain code quality:  
 
 ### Branching Strategy  
 - `master`: **Release-ready code only** (protected branch).  

@@ -24,7 +24,7 @@ protocol PaginationHandlerType: AnyObject {
 @Observable
 final class PaginationHandler: PaginationHandlerType {
     var currentPage: Int = 0
-    var totalItems: Int = 0
+    var totalItems: Int = 40
     var isLoading: Bool = false
     var lastUpdated: Date = Date()
     

@@ -17,7 +17,6 @@ public final class SDUserPokemon {
     public var lastOutcomeRaw: String
     public var isMarkedForPlayLater: Bool
 
-    //@Relationship(inverse: \SDUser.preference)
     public var user: SDUser?
     public var pokemon: SDPokemon?
     

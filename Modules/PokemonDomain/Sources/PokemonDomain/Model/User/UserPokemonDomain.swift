@@ -11,12 +11,6 @@ public enum GameOutcome: String, Codable, Sendable {
     case unplayed, win, fail
 }
 
-//public enum GameOutcome: Codable {
-//    case unplayed
-//    case win(score: Int)
-//    case fail(reason: String)
-//}
-
 public struct GameSession: Codable {
     let date: Date
     let outcome: GameOutcome

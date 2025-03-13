@@ -45,7 +45,7 @@ struct PokemonGridView: View {
                         pokemonGrid(for: otherPokemon, size: gridSize)
                     }
 
-                    if !otherPokemon.isEmpty && hasMoreData {
+                    if !otherPokemon.isEmpty {
                         ProgressView()
                             .opacity(showProgress ? 1 : 0)
                             .frame(height: 50, alignment: .center)

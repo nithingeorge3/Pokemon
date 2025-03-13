@@ -15,7 +15,6 @@ struct UserPokemon: Identifiable, Hashable {
     let isMarkedForPlayLater: Bool
     
     let gameplayHistory: [GameSession]
-    
     let selectedOptions: GameOptions?
 
     let user: User?

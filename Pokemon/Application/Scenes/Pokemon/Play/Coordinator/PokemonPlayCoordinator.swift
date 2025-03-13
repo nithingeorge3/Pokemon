@@ -18,7 +18,6 @@ enum PokemonPlayActions {
     case playlater
 }
 
-
 final class PokemonPlayCoordinator: Coordinator {
     private let viewModelFactory: PokemonPlayViewModelFactoryType
     private let viewFactory: PokemonPlayViewFactoryType

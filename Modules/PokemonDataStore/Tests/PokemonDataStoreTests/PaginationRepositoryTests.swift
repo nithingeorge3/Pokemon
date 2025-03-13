@@ -41,7 +41,7 @@ extension PaginationRepositoryTests {
         let pagination = try await repository.fetchPokemonPagination(.pokemon)
         
         XCTAssertEqual(pagination.entityType, .pokemon)
-        XCTAssertEqual(pagination.totalCount, 0)
+        XCTAssertEqual(pagination.totalCount, 20)
         XCTAssertEqual(pagination.currentPage, 0)
     }
     

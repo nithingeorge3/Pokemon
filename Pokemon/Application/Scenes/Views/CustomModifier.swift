@@ -57,20 +57,6 @@ struct CustomNavigationScoreView<ScoreContent: View>: ViewModifier {
     }
 }
 
-//struct CustomNavigationScoreView<Content: View>: ViewModifier {
-//    let content: Content
-//
-//    func body(content base: ContentOf<Self>) -> some View {
-//        base
-//            .navigationBarTitleDisplayMode(.inline)
-//            .toolbar {
-//                ToolbarItem(placement: .principal) {
-//                    self.content
-//                }
-//            }
-//    }
-//}
-
 extension View {
     func withCustomBackButton(action: (() -> Void)? = nil) -> some View {
         modifier(CustomBackButtonModifier(action: action))

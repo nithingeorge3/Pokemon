@@ -40,6 +40,7 @@ class PokemonListViewModel: PokemonListViewModelType {
     var pokemonListActionSubject = PassthroughSubject<PokemonListAction, Never>()
     
     private var playedPokemonIDs: Set<Int> = []
+    private var localOffset = 0
     
     var playedPokemon: [Pokemon] {
         pokemon
@@ -72,10 +73,25 @@ class PokemonListViewModel: PokemonListViewModelType {
             guard paginationHandler.hasMoreData else { return }
             Task { try await fetchRemotePokemon() }
         case .loadMore:
-            guard paginationHandler.hasMoreData else { return }
-            Task { try await fetchRemotePokemon() }
+            Task {
+                do {
+                    let pokeSDCount = try await service.fetchPokemonCount()
+                    
+                    //if we still have fewer than in local DB, fetch from local
+                    if pokemon.count < pokeSDCount {
+                        localOffset += Constants.Pokemon.fetchLimit
+                        try await fetchLocalPokemon()
+                    }
+                    //check the remote pagination
+                    else if paginationHandler.hasMoreData {
+                        try await fetchRemotePokemon()
+                    }
+                } catch {
+                    print("error: \(error)")
+                }
+            }
         case .selectPokemon(let pokemonID):
-            if isPlayed(pokemonID: pokemonID) { return }//handle later
+            if isPlayed(pokemonID: pokemonID) { return }
             pokemonListActionSubject.send(PokemonListAction.selectPokemon(pokemonID))
         }
     }
@@ -114,14 +130,14 @@ class PokemonListViewModel: PokemonListViewModelType {
         Task {
             do {
                 let pokemonDomains = try await service.fetchPokemon(
-                        offset: 0,
+                        offset: localOffset,
                         pageSize: Constants.Pokemon.fetchLimit
                     )
                 
                 let storedPokemon = pokemonDomains.map { Pokemon(from: $0) }
                 
                 if storedPokemon.count > 0 {
-                    pokemon = storedPokemon
+                    pokemon.append(contentsOf: storedPokemon)
                     state = .success
                 }
             } catch {

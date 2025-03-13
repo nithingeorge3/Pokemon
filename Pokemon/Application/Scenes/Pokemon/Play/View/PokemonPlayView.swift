@@ -189,7 +189,7 @@ struct AnswerButton: View {
 }
 
 // MARK: - Preview ViewModel
-private class PreviewPlayViewModel: PokemonPlayViewModelType {
+public class PreviewPlayViewModel: PokemonPlayViewModelType {
     var pokemon: Pokemon?
     var answerOptions: [Pokemon] = []
     var selectedAnswer: Pokemon?

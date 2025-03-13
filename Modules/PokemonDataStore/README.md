@@ -40,8 +40,6 @@ public protocol UserSDRepositoryType: Sendable {
     func updateScore(_ points: Int) async throws
     func getCurrentUser() async throws -> UserDomain
     
-    
-    //ToDo: later use WritableKeyPath and inject userID
     func updatePreferences(_ newPref: PreferenceDomain) async throws
     func getCurrentPreferences() async throws -> PreferenceDomain
     

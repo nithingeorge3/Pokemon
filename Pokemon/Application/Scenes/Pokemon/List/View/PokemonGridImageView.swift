@@ -27,13 +27,6 @@ struct PokemonGridImageView: View {
                     imageView
                 }
             }
-            
-            /*
-            Text(pokemon.name)
-                .font(.system(size: 14, weight: .semibold))
-                .multilineTextAlignment(.center)
-                .lineLimit(1)
-            */
         }
     }
 }

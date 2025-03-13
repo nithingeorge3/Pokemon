@@ -23,8 +23,7 @@ final class ServiceParser: ServiceParserType {
             let decoder = createDecoder()
             let decodedObject = try decoder.decode(T.self, from: data)
             return decodedObject
-        } catch let decodingError {
-            print("PokemonParser - Decoding error: \(decodingError)")
+        } catch {
             throw NetworkError.failedToDecode
         } 
     }

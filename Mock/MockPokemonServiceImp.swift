@@ -39,6 +39,10 @@ extension MockPokemonServiceImp: PokemonServiceProvider {
         }
     }
     
+    func fetchPokemonCount() async throws -> Int {
+        stubbedPokemon.count
+    }
+    
     func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain] {
         stubbedPokemon
     }

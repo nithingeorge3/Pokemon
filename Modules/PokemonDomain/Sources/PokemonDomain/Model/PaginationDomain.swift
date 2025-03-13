@@ -18,7 +18,7 @@ public struct PaginationDomain: Identifiable, @unchecked Sendable {
     public var currentPage: Int
     public var lastUpdated: Date
     
-    public init(id: UUID = UUID(), entityType: EntityType = .pokemon, totalCount: Int = 0, currentPage: Int = 0, lastUpdated: Date = Date()) {
+    public init(id: UUID = UUID(), entityType: EntityType = .pokemon, totalCount: Int = 20, currentPage: Int = 0, lastUpdated: Date = Date()) {
         self.id = id
         self.entityType = entityType
         self.totalCount = totalCount
