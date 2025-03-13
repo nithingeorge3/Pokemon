@@ -18,8 +18,7 @@ final class PokemonServiceImp: PokemonServiceProvider {
 
     func fetchPokemon(endPoint: EndPoint) async throws(NetworkError) -> [PokemonDomain] {
         do {
-            let allPokemon = try await pokemonRepository.fetchPokemon(endPoint: endPoint)
-            return allPokemon
+            return try await pokemonRepository.fetchPokemon(endPoint: endPoint)
                 .shuffled()
                 .map { $0 }
             
@@ -44,8 +43,7 @@ extension PokemonServiceImp {
     }
     
     func fetchPokemon(offset: Int = 0, pageSize: Int = 40) async throws -> [PokemonDomain] {
-        let allPokemon = try await pokemonRepository.fetchPokemon(offset: offset, pageSize: pageSize)
-        return allPokemon
+        try await pokemonRepository.fetchPokemon(offset: offset, pageSize: pageSize)
             .shuffled()
             .map { $0 }
     }
