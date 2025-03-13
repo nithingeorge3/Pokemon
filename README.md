@@ -13,10 +13,12 @@
 5. Build & Run:
 6. Select a simulator or device (iOS 16+) and press Cmd+R.
 
-## Overview
+## Architecture Overview
 - SwiftUI-based application designed using the MVVM-C (Model-View-ViewModel-Coordinator) architecture for scalability, modularity, and testability. 
 - Implements Repository Pattern for abstracting data sources (API + SwiftData) and Factory Pattern for dependency injection.
 - Uses SwiftData for local persistence and async/await for concurrency.
+
+<img src="./docs/mvvmc-architecture.png"  width="100%" height="100%">
 
 ## Key Dependencies
 - SwiftData: Local persistence for user preferences and collected Pokémon.
