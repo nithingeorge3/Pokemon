@@ -18,8 +18,6 @@ final class PokemonRepositoryTests: XCTestCase {
     override func setUp() async throws {
         container = DataStoreManagerFactory.makeSharedContainer(for: "TestContainer")
         repository = PokemonSDRepository(container: container)
-        
-        try await insertTestPokemon()
     }
     
     @MainActor
@@ -39,6 +37,8 @@ final class PokemonRepositoryTests: XCTestCase {
 
 extension PokemonRepositoryTests {
     func testSaveAndFetchPokemonWithPagination() async throws {
+        try await insertTestPokemon()
+        
         let fetchedPokemon = try await repository.fetchPokemon(offset: 0, pageSize: 1)
         
         XCTAssertEqual(fetchedPokemon.count, 1)
@@ -47,13 +47,40 @@ extension PokemonRepositoryTests {
     }
     
     func testSaveAndFetchPokemon() async throws {
+        try await insertTestPokemon()
+        
         let fetchedPokemon = try await repository.fetchPokemon(for: 1)
         
         XCTAssertEqual(fetchedPokemon.id, 1)
         XCTAssertEqual(fetchedPokemon.name, "bulbasaur")
     }
     
+    func testfetchPokemonCount_2() async throws {
+        let pokemon = [
+                PokemonDomain(id: 1, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/1/")!),
+                PokemonDomain(id: 2, name: "bulbasaur", url: URL(string: "https://pokeapi.co/api/v2/pokemon/2/")!)
+            ]
+            
+        try await insertTestPokemon(pokemon)
+        
+        let fetchedPokemonCount = try await repository.fetchPokemonCount()
+        
+        XCTAssertEqual(fetchedPokemonCount, 2)
+        XCTAssertNotEqual(fetchedPokemonCount, 6)
+    }
+    
+    func testfetchPokemonCount_5() async throws {
+        try await insertTestPokemon()
+        
+        let fetchedPokemonCount = try await repository.fetchPokemonCount()
+        
+        XCTAssertEqual(fetchedPokemonCount, 5)
+        XCTAssertNotEqual(fetchedPokemonCount, 6)
+    }
+    
     func testFetchPokemonPagination() async throws {
+        try await insertTestPokemon()
+        
         let page0 = try await repository.fetchPokemon(offset: 0, pageSize: 2)
         let page1 = try await repository.fetchPokemon(offset: 1, pageSize: 2)
         
@@ -73,6 +100,8 @@ extension PokemonRepositoryTests {
     }
     
     func test_fetchRandomOptions_sortsByIdDescending() async throws {
+        try await insertTestPokemon()
+        
         let result = try await repository.fetchRandomOptions(excluding: 5, count: 3)
         
         let ids = result.map(\.id)
@@ -80,12 +109,16 @@ extension PokemonRepositoryTests {
     }
     
     func test_fetchRandomOptions_returnsAllAvailableWhenCountExceeds() async throws {
+        try await insertTestPokemon()
+        
         let result = try await repository.fetchRandomOptions(excluding: 1, count: 5)
         
         XCTAssertEqual(result.count, 4)
     }
     
-    func test_fetchRandomOptions_withZeroCount() async {
+    func test_fetchRandomOptions_withZeroCount() async throws {
+        try await insertTestPokemon()
+        
         do {
             _ = try await repository.fetchRandomOptions(excluding: 1, count: 0)
             XCTFail("Should throw error for zero count")
@@ -95,6 +128,8 @@ extension PokemonRepositoryTests {
     }
     
     func test_fetchRandomOptions_withNonExistentExclusion() async throws {
+        try await insertTestPokemon()
+        
         let result = try await repository.fetchRandomOptions(excluding: 999, count: 3)
         
         XCTAssertEqual(result.count, 3)

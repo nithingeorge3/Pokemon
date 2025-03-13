@@ -69,6 +69,7 @@ class PokemonListViewModel: PokemonListViewModelType {
         switch action {
         case .refresh:
             Task { try await fetchUserInfo() }
+            guard paginationHandler.hasMoreData else { return }
             Task { try await fetchRemotePokemon() }
         case .loadMore:
             guard paginationHandler.hasMoreData else { return }
@@ -133,7 +134,9 @@ class PokemonListViewModel: PokemonListViewModelType {
         guard !paginationHandler.isLoading else {
             return
         }
+        
         paginationHandler.isLoading = true
+        
         Task {
             do {
                 let pokemonDomains = try await service.fetchPokemon(

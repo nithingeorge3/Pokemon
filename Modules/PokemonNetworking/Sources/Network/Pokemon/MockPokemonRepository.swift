@@ -73,6 +73,10 @@ final class MockPokemonRepository: PokemonRepositoryType, @unchecked Sendable {
         return pokemon
     }
     
+    func fetchPokemonCount() async throws -> Int {
+        0
+    }
+    
     func fetchRandomUnplayedPokemon(excluding excludedID: Int? = nil) async throws -> PokemonDomain {
         let id = randomNumber()
         

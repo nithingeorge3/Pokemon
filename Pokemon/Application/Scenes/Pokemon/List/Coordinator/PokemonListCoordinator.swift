@@ -53,10 +53,19 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
         self.paginationSDRepo = paginationSDRepo
         self.pokemonSDRepo = pokemonSDRepo
         
-        //I need to create a seperate repository for user interaction. so that that we can avoid unwanted injection
-        self.service = PokemonServiceFactory.makePokemonService(userSDRepo: userSDRepo, pokemonSDRepo: pokemonSDRepo, paginationSDRepo: paginationSDRepo)
+        self.service = PokemonServiceFactory.makePokemonService(
+            userSDRepo: userSDRepo,
+            pokemonSDRepo: pokemonSDRepo,
+            paginationSDRepo: paginationSDRepo,
+            maxPokemonCount: Constants.Pokemon.maximumPokemonCount
+        )
         
-        self.userService = PokemonUserServiceFactory.makePokemonUserService(userSDRepo: userSDRepo, pokemonSDRepo: pokemonSDRepo, paginationSDRepo: paginationSDRepo)
+        //I need to create a seperate repository for user interaction. so that that we can avoid unwanted injection
+        self.userService = PokemonUserServiceFactory.makePokemonUserService(
+            userSDRepo: userSDRepo,
+            pokemonSDRepo: pokemonSDRepo,
+            paginationSDRepo: paginationSDRepo
+        )
         
         let paginationHandler: PaginationHandlerType = PaginationHandler()
         

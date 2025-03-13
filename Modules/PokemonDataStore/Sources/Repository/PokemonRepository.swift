@@ -33,6 +33,18 @@ public final class PokemonSDRepository: PokemonSDRepositoryType {
         }
     }
     
+    public func fetchPokemonCount() async throws -> Int {
+        try await dataStore.performBackgroundTask { context in
+            do {
+                let descriptor = FetchDescriptor<SDPokemon>()
+                return try context.fetchCount(descriptor)
+                
+            } catch {
+                throw SDError.countOperationFailed
+            }
+        }
+    }
+    
     public func fetchPokemon(offset: Int, pageSize: Int) async throws -> [PokemonDomain] {
         try await dataStore.performBackgroundTask { context in
             
