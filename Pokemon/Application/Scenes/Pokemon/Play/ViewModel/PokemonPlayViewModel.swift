@@ -215,10 +215,10 @@ extension PokemonPlayViewModel {
         guard let startTime = questionStartTime else { return Scoring.basePoints }
         
         let elapsedTime = abs(startTime.timeIntervalSinceNow)
-        //Calculate time ratio (0...1 where 1 = answered instantly)
+        //calculate time ratio (0...1 where 1 = answered instantly)
         let ratio = Scoring.timeRatio(elapsed: elapsedTime)
         
-        //Convert to even integer score within base/max bounds
+        //convert to even integer score within base/max bounds
         let rawScore = Double(Scoring.maxPoints) * ratio
         let rounded = Int(rawScore.rounded(.toNearestOrEven))
         

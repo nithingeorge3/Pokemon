@@ -29,7 +29,7 @@ struct GameScoreView: View {
                 )
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Current score")
+        .accessibilityLabel("GameScoreView")
         .accessibilityValue("\(score)")
     }
 }
