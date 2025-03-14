@@ -26,7 +26,7 @@ struct RefreshButton: View {
                 .foregroundColor(.blue)
                 .rotationEffect(.degrees(rotationAngle))
         }
-        .accessibilityLabel("Refresh")
+        .accessibilityLabel("GameRefreshButton")
     }
 }
 

@@ -73,9 +73,11 @@ We need to follow a streamlined Git workflow to maintain code quality:
 
 ### Branching Strategy  
 - `master`: **Release-ready code only** (protected branch).  
-- `develop`: Integration branch for features/fixes.  
+- `develop`: Integration branch for features/fixes (protected branch).  
 - Feature Work: Create branches prefixed with `feature/` (e.g., `feature/pokemon-game-view`).  
 - Fixes/Docs: Use `fix/` or `docs/` prefixes (e.g., `fix/score-calculation`).  
+- Release Preparation: Create branches prefixed with `release/` (e.g., `release/1.0.0`).
+- Hotfixes: Create branches prefixed with `hotfix/` (e.g., `hotfix/1.0.1`).
 
 ### Pull Requests (PRs)  
 1. Target `develop` for all PRs.  

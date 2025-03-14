@@ -38,7 +38,6 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
                 if isEmpty {
                     EmptyStateView(message: "No pokemon found. Please try again later.")
                 } else {
-                    EmptyView()
                     PokemonGridView(silhouetteMode: $viewModel.silhouetteMode, playedPokemon: viewModel.playedPokemon, otherPokemon: viewModel.otherPokemon, hasMoreData: viewModel.paginationHandler.hasMoreData) { pokemon in
                         viewModel.send(.selectPokemon(pokemon.id))
                     } onReachBottom: {
