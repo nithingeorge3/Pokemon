@@ -77,14 +77,7 @@ final class PokemonRepository: PokemonRepositoryType {
                 return pokemonDomains
             }
             
-            var pagination = try await paginationSDRepo.fetchPokemonPagination(.pokemon)
-            pagination.totalCount = min(responseDTO.count, maxPokemonCount)
-            pagination.currentPage += 40
-            pagination.lastUpdated = Date()
-            
-            try await paginationSDRepo.updatePokemonPagination(pagination)
-            
-            try await savePokemon(pokemonDomains)
+            try await savePaginationAndPokemon(pokemonDomains, totalCount: responseDTO.count)
             
             let pageSize = endPoint.pokemonFetchInfo.1
             let offset = endPoint.pokemonFetchInfo.0
@@ -98,17 +91,21 @@ final class PokemonRepository: PokemonRepositoryType {
         }
     }
     
-    private func savePokemon(_ pokemonDomains: [PokemonDomain]) async throws {
-        let spaceLeft = try await getAvailablePokemonSlots()
+    private func savePaginationAndPokemon(_ pokemonDomains: [PokemonDomain], totalCount: Int) async throws {
+        let count = try await fetchPokemonCount()
+        let spaceLeft = max(maxPokemonCount - count, 0)
+        
+        var pagination = try await paginationSDRepo.fetchPokemonPagination(.pokemon)
+        pagination.totalCount = min(totalCount, maxPokemonCount)
+        pagination.currentPage += min(spaceLeft, 40)
+        pagination.lastUpdated = Date()
+        
+        try await paginationSDRepo.updatePokemonPagination(pagination)
+        
         if spaceLeft > 0 {
             let storeablePokemon = Array(pokemonDomains.prefix(spaceLeft))
             try await pokemonSDRepo.savePokemon(storeablePokemon)
         }
-    }
-    
-    private func getAvailablePokemonSlots() async throws -> Int {
-        let count = try await fetchPokemonCount()
-        return max(maxPokemonCount - count, 0)
     }
 }
 

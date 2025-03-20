@@ -67,26 +67,30 @@ final class PokemonListCoordinator: ObservableObject, Coordinator, TabItemProvid
             paginationSDRepo: paginationSDRepo
         )
         
-        let paginationHandler: PaginationHandlerType = PaginationHandler()
-        
         if ProcessInfo.processInfo.arguments.contains("-ui-testing") {
             let service: PokemonServiceProvider = MockPokemonServiceImp()
             let userService: PokemonUserServiceType = MockPokemonUserServiceImp()
-            let paginationHandler: PaginationHandlerType = MockPaginationHandler()
+            let remotePagination: RemotePaginationHandlerType = MockRemotePaginationHandler()
+            let localPagination: LocalPaginationHandlerType = MockLocalPaginationHandler()
             
             let vm = await modelFactory.makePokemonListViewModel(
                 service: service,
                 userService: userService,
-                paginationHandler: paginationHandler
+                remotePagination: remotePagination,
+                localPagination: localPagination
             )
 
             self.viewModel = vm
             
         } else {
+            let remotePagination: RemotePaginationHandlerType = RemotePaginationHandler()
+            let localPagination: LocalPaginationHandlerType = LocalPaginationHandler()
+            
             let vm = await modelFactory.makePokemonListViewModel(
                 service: service,
                 userService: userService,
-                paginationHandler: paginationHandler
+                remotePagination: remotePagination,
+                localPagination: localPagination
             )
 
             self.viewModel = vm

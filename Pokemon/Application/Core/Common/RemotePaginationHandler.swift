@@ -1,5 +1,5 @@
 //
-//  PaginationState.swift
+//  RemotePaginationHandler.swift
 //  Pokemon
 //
 //  Created by Nitin George on 08/03/2025.
@@ -9,7 +9,7 @@ import Foundation
 import Observation
 
 @MainActor
-protocol PaginationHandlerType: AnyObject {
+protocol RemotePaginationHandlerType: AnyObject {
     var currentPage: Int { get set }
     var totalItems: Int { get set }
     var hasMoreData: Bool { get }
@@ -22,14 +22,14 @@ protocol PaginationHandlerType: AnyObject {
 }
 
 @Observable
-final class PaginationHandler: PaginationHandlerType {
+final class RemotePaginationHandler: RemotePaginationHandlerType {
     var currentPage: Int = 0
-    var totalItems: Int = 40
+    var totalItems: Int = Constants.Pokemon.fetchLimit//40
     var isLoading: Bool = false
     var lastUpdated: Date = Date()
     
     var hasMoreData: Bool {
-        totalItems > currentPage
+        totalItems > currentPage || totalItems < Constants.Pokemon.maximumPokemonCount
     }
     
     func reset() {
