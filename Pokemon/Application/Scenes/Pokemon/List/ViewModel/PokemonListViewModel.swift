@@ -68,7 +68,7 @@ class PokemonListViewModel: PokemonListViewModelType {
         self.localPagination = localPagination
         
         Task { try await updateLocalPagination() }
-        Task { try await fetchPokemonPagination() }
+        Task { try await updateRemotePagination() }
     }
     
     func send(_ action: PokemonListAction) {
@@ -118,11 +118,11 @@ class PokemonListViewModel: PokemonListViewModelType {
         }
     }
     
-    private func fetchPokemonPagination() async throws {
+    private func updateRemotePagination() async throws {
         Task {
             do {
                 let paginationDomain = try await service.fetchPokemonPagination(.pokemon)
-                updateRemotePagination(Pagination(from: paginationDomain))
+                remotePagination.updateFromDomain(Pagination(from: paginationDomain))
             } catch {
                 print("\(error)")
             }
@@ -132,6 +132,7 @@ class PokemonListViewModel: PokemonListViewModelType {
     private func fetchLocalPokemon() async throws {
         Task {
             do {
+                //do w eneed thsi code?
                 let count = try await service.fetchPokemonCount()
                 localPagination.updateTotalItems(count)
                 
@@ -177,7 +178,7 @@ class PokemonListViewModel: PokemonListViewModelType {
                 let newPokemon = pokemonDomains.map { Pokemon(from: $0) }
                 updatePokemon(with: newPokemon)
                 
-                try await fetchPokemonPagination()
+                try await updateRemotePagination()
             } catch {
                 if pokemon.count == 0 {
                     state = .failed(error: error)
