@@ -1,7 +1,7 @@
 # Pokemon
 ## Requirements
 - Xcode 15+ (for SwiftData support)
-- iOS 16.0+
+- iOS 17.0+
 - Swift 5.9
 
 ## Getting Started
@@ -41,7 +41,7 @@
 
 ## Screenshots 
 ### iPhone Screens
-<img src="./Images/iPhone/onboarding1.png"  width="25%" height="25%">|<img src="./Images/iPhone/onboarding1.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGrid1.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGame1.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGameWon.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGameFail.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonPreference.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGridSectionSilhouetteDisabled.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGridSilhouetteDisabled.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGridSectionSilhouetteEnabled.png"  width="25%" height="25%">|<img src="./Images/iPhone/completedGame.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonSetting.png"  width="25%" height="25%">
+<img src="./Images/iPhone/onboarding1.png"  width="25%" height="25%">|<img src="./Images/iPhone/onboarding1.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGrid1.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGame1.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGameWon.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGameFail.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonPreference.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonGridSectionSilhouetteDisabled.png"  width="25%" height="25%">|<img src="./Images/iPhone/completedGame.png"  width="25%" height="25%">|<img src="./Images/iPhone/pokemonSettings.png"  width="25%" height="25%">
 ### iPad Screens
 <img src="./Images/iPad/onboarding1.png"  width="25%" height="25%">|<img src="./Images/iPad/onboarding1.png"  width="25%" height="25%">|<img src="./Images/iPad/pokemonGrid1.png"  width="25%" height="25%">|<img src="./Images/iPad/pokemonGame.png"  width="25%" height="25%">|<img src="./Images/iPad/pokemonGameWon.png"  width="25%" height="25%">|<img src="./Images/iPad/pokemonGameFail.png"  width="25%" height="25%">|<img src="./Images/iPad/pokemonPreference.png"  width="25%" height="25%">|<img src="./Images/iPad/pokemonGridSilhouetteDisabled.png"  width="25%" height="25%">|<img src="./Images/iPad/pokemonGameSilhouetteDisabled.png"  width="25%" height="25%">
 

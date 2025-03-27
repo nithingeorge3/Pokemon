@@ -16,10 +16,10 @@ final class MenuViewModelFactory: MenuViewModelFactoryType {
     @MainActor
     func makeMenuViewModel(userService: PokemonUserServiceType) -> MenuViewModel {
         let items = [
-            SidebarItem(title: "Settings", type: .navigation),
+//            SidebarItem(title: "Settings", type: .navigation),
             SidebarItem(title: "Preferences", type: .navigation),
-            SidebarItem(title: "Login", type: .action),
-            SidebarItem(title: "Logout", type: .action)
+//            SidebarItem(title: "Login", type: .action),
+//            SidebarItem(title: "Logout", type: .action)
         ]
         return MenuViewModel(items: items, userService: userService)
     }

@@ -38,7 +38,7 @@ struct PokemonListView<ViewModel: PokemonListViewModelType>: View {
                 if isEmpty {
                     EmptyStateView(message: "No pokemon found. Please try again later.")
                 } else {
-                    PokemonGridView(silhouetteMode: $viewModel.silhouetteMode, playedPokemon: viewModel.playedPokemon, otherPokemon: viewModel.otherPokemon, hasMoreData: viewModel.paginationHandler.hasMoreData) { pokemon in
+                    PokemonGridView(silhouetteMode: $viewModel.silhouetteMode, playedPokemon: viewModel.playedPokemon, otherPokemon: viewModel.otherPokemon, hasMoreData: viewModel.remotePagination.hasMoreData) { pokemon in
                         viewModel.send(.selectPokemon(pokemon.id))
                     } onReachBottom: {
                         viewModel.send(.loadMore)
@@ -111,7 +111,8 @@ private class PreviewPokemonListViewModel: PokemonListViewModelType {
     var playedPokemon: [Pokemon] { [] }
     var silhouetteMode = true
     var otherPokemon: [Pokemon] { pokemon }
-    var paginationHandler: PaginationHandlerType = PreviewPaginationHandler()
+    var remotePagination: RemotePaginationHandlerType = PreviewRemotePaginationHandler()
+    var localPagination: LocalPaginationHandlerType = PreviewLocalPaginationHandler()
     var pokemonListActionSubject = PassthroughSubject<PokemonListAction, Never>()
     var state: ResultState
     
@@ -131,7 +132,7 @@ private class PreviewPokemonListViewModel: PokemonListViewModelType {
     }
 }
 
-private class PreviewPaginationHandler: PaginationHandlerType {
+private class PreviewRemotePaginationHandler: RemotePaginationHandlerType {
     var currentPage: Int = 1
     var totalItems: Int = 10
     var hasMoreData: Bool = true
@@ -155,4 +156,26 @@ private class PreviewPaginationHandler: PaginationHandlerType {
         lastUpdated = pagination.lastUpdated
     }
 }
+
+private class PreviewLocalPaginationHandler: LocalPaginationHandlerType {
+    var currentOffset: Int = 0
+    var pageSize: Int = 0
+    var totalItems: Int = 10
+    var isLoading: Bool = false
+    var lastUpdated: Date = Date()
+
+    var hasMoreData: Bool = false
+    
+    func reset() {
+    }
+    
+    func incrementOffset() {
+        currentOffset += pageSize
+    }
+    
+    func updateTotalItems(_ newValue: Int) {
+        totalItems = newValue
+    }
+}
+
 #endif

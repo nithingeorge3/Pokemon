@@ -8,11 +8,11 @@
 import PokemonNetworking
 
 protocol PokemonViewModelFactoryType {
-    @MainActor func makePokemonListViewModel(service: PokemonServiceProvider, userService: PokemonUserServiceType, paginationHandler: PaginationHandlerType) async -> PokemonListViewModel
+    @MainActor func makePokemonListViewModel(service: PokemonServiceProvider, userService: PokemonUserServiceType, remotePagination: RemotePaginationHandlerType, localPagination: LocalPaginationHandlerType) async -> PokemonListViewModel
 }
 
 final class PokemonViewModelFactory: PokemonViewModelFactoryType {
-    func makePokemonListViewModel(service: PokemonServiceProvider, userService: PokemonUserServiceType, paginationHandler: PaginationHandlerType) async -> PokemonListViewModel {
-        PokemonListViewModel(service: service, userService: userService, paginationHandler: paginationHandler)
+    func makePokemonListViewModel(service: PokemonServiceProvider, userService: PokemonUserServiceType, remotePagination: RemotePaginationHandlerType, localPagination: LocalPaginationHandlerType) async -> PokemonListViewModel {
+        PokemonListViewModel(service: service, userService: userService, remotePagination: remotePagination, localPagination: localPagination)
     }
 }

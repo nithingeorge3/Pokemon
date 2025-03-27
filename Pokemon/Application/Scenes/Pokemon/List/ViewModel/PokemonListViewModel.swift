@@ -17,7 +17,8 @@ protocol PokemonListViewModelType: AnyObject, Observable {
     var user: User? { get set }
     var playedPokemon: [Pokemon] { get }
     var otherPokemon: [Pokemon] { get }
-    var paginationHandler: PaginationHandlerType { get }
+    var remotePagination: RemotePaginationHandlerType { get }
+    var localPagination: LocalPaginationHandlerType { get }
     var pokemonListActionSubject: PassthroughSubject<PokemonListAction, Never> { get  set }
     var state: ResultState { get }
     var silhouetteMode: Bool { get set }
@@ -35,7 +36,8 @@ class PokemonListViewModel: PokemonListViewModelType {
     
     let service: PokemonServiceProvider
     let userService: PokemonUserServiceType
-    var paginationHandler: PaginationHandlerType
+    var remotePagination: RemotePaginationHandlerType
+    var localPagination: LocalPaginationHandlerType
     
     var pokemonListActionSubject = PassthroughSubject<PokemonListAction, Never>()
     
@@ -57,33 +59,34 @@ class PokemonListViewModel: PokemonListViewModelType {
     init(
         service: PokemonServiceProvider,
         userService: PokemonUserServiceType,
-        paginationHandler: PaginationHandlerType
+        remotePagination: RemotePaginationHandlerType,
+        localPagination: LocalPaginationHandlerType
     ) {
         self.service = service
         self.userService = userService
-        self.paginationHandler = paginationHandler
-        Task { try await fetchPokemonPagination() }
-        Task { try await fetchLocalPokemon() }
+        self.remotePagination = remotePagination
+        self.localPagination = localPagination
+        
+        Task { try await updateLocalPagination() }
+        Task { try await updateRemotePagination() }
     }
     
     func send(_ action: PokemonListAction) {
         switch action {
         case .refresh:
             Task { try await fetchUserInfo() }
-            guard paginationHandler.hasMoreData else { return }
-            Task { try await fetchRemotePokemon() }
+            
+            if localPagination.hasMoreData {
+                Task { try await fetchLocalPokemon() }
+            } else if remotePagination.hasMoreData {
+                Task { try await fetchRemotePokemon() }
+            }
         case .loadMore:
             Task {
                 do {
-                    let pokeSDCount = try await service.fetchPokemonCount()
-                    
-                    //if we still have fewer than in local DB, fetch from local
-                    if pokemon.count < pokeSDCount {
-                        localOffset += Constants.Pokemon.fetchLimit
+                    if localPagination.hasMoreData {
                         try await fetchLocalPokemon()
-                    }
-                    //check the remote pagination
-                    else if paginationHandler.hasMoreData {
+                    } else if remotePagination.hasMoreData {
                         try await fetchRemotePokemon()
                     }
                 } catch {
@@ -115,11 +118,11 @@ class PokemonListViewModel: PokemonListViewModelType {
         }
     }
     
-    private func fetchPokemonPagination() async throws {
+    private func updateRemotePagination() async throws {
         Task {
             do {
                 let paginationDomain = try await service.fetchPokemonPagination(.pokemon)
-                updatePagination(Pagination(from: paginationDomain))
+                remotePagination.updateFromDomain(Pagination(from: paginationDomain))
             } catch {
                 print("\(error)")
             }
@@ -129,15 +132,20 @@ class PokemonListViewModel: PokemonListViewModelType {
     private func fetchLocalPokemon() async throws {
         Task {
             do {
+                //do w eneed thsi code?
+                let count = try await service.fetchPokemonCount()
+                localPagination.updateTotalItems(count)
+                
                 let pokemonDomains = try await service.fetchPokemon(
-                        offset: localOffset,
-                        pageSize: Constants.Pokemon.fetchLimit
+                    offset: localPagination.currentOffset,
+                    pageSize: localPagination.pageSize
                     )
                 
                 let storedPokemon = pokemonDomains.map { Pokemon(from: $0) }
                 
                 if storedPokemon.count > 0 {
                     pokemon.append(contentsOf: storedPokemon)
+                    localPagination.incrementOffset()
                     state = .success
                 }
             } catch {
@@ -146,18 +154,23 @@ class PokemonListViewModel: PokemonListViewModelType {
         }
     }
     
+    private func updateLocalPagination() async throws {
+        let count = try await service.fetchPokemonCount()
+        localPagination.updateTotalItems(count)
+    }
+    
     private func fetchRemotePokemon() async throws {
-        guard !paginationHandler.isLoading else {
+        guard !remotePagination.isLoading else {
             return
         }
         
-        paginationHandler.isLoading = true
+        remotePagination.isLoading = true
         
         Task {
             do {
                 let pokemonDomains = try await service.fetchPokemon(
                     endPoint: .pokemon(
-                        offset: paginationHandler.currentPage,
+                        offset: remotePagination.currentPage,
                         limit: Constants.Pokemon.fetchLimit
                     )
                 )
@@ -165,7 +178,7 @@ class PokemonListViewModel: PokemonListViewModelType {
                 let newPokemon = pokemonDomains.map { Pokemon(from: $0) }
                 updatePokemon(with: newPokemon)
                 
-                try await fetchPokemonPagination()
+                try await updateRemotePagination()
             } catch {
                 if pokemon.count == 0 {
                     state = .failed(error: error)
@@ -182,8 +195,8 @@ class PokemonListViewModel: PokemonListViewModelType {
         state = .success
     }
     
-    private func updatePagination(_ pagination: Pagination) {
-        paginationHandler.updateFromDomain(pagination)
+    private func updateRemotePagination(_ pagination: Pagination) {
+        remotePagination.updateFromDomain(pagination)
     }
     
     func isPlayed(pokemonID: Int) -> Bool {
